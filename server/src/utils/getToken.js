@@ -1,7 +1,7 @@
 import { getCookieOptions } from "./getCookieOptions.js";
 import { generateAccessToken, generateRefreshToken } from "./token.js";
 
-const getToken = async (user, res) => {
+const getToken = async (user) => {
     const accessToken = generateAccessToken(user);
     const refreshToken = generateRefreshToken(user);
 
