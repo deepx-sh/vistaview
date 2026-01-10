@@ -233,7 +233,7 @@ export const verifyPasswordResetOTP = asyncHandler(async (req, res) => {
 export const resetPassword = asyncHandler(async (req, res) => {
     const { resetToken, newPassword, confirmPassword } = req.body;
 
-    if (password !== confirmPassword) {
+    if (newPassword !== confirmPassword) {
         throw new ApiError(400,"Password do not match")
     }
     let decodedInfo;
@@ -244,4 +244,23 @@ export const resetPassword = asyncHandler(async (req, res) => {
         throw new ApiError(400,"Invalid or expired reset token")
     }
     
+    const user = await User.findById(decodedInfo._id);
+
+    if (!user) {
+        throw new ApiError(404,"User not found")
+    }
+
+    if (decodedInfo.email !== user.email) {
+        throw new ApiError(400,"Invalid reset token")
+    }
+    if (decodedInfo.purpose !== "resetPassword") {
+        throw new ApiError(400,"Invalid reset token purpose")
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    user.password = hashedPassword;
+    user.refreshToken = undefined;
+    await user.save();
+
+    return res.status(200).json(new ApiResponse(200,{},"Password reset successfully. You can now log in with your new password"))
 })
