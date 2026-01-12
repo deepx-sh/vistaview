@@ -5,7 +5,7 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 const sendEmail = async ({ to, subject, html }) => {
     try {
         const mailOptions = {
-            from: `VistaView - <${process.env.SENDGRID_FROM_EMAIL}>`,
+            from: `VistaView  <${process.env.SENDGRID_FROM_EMAIL}>`,
             to,
             subject,
             html

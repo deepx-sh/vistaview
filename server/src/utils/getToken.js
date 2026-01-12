@@ -1,4 +1,4 @@
-import { getCookieOptions } from "./getCookieOptions.js";
+
 import { generateAccessToken, generateRefreshToken } from "./token.js";
 
 const getToken = async (user) => {

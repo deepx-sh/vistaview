@@ -24,7 +24,7 @@ export const verifyEmailTemplate = (name,otp) => {
           <table width="100%" max-width="480px" style="background:#ffffff;border-radius:8px;padding:24px;">
             <tr>
               <td style="text-align:center;">
-                <h2 style="color:#0F766E;margin-bottom:8px;">PlaceTrust</h2>
+                <h2 style="color:#0F766E;margin-bottom:8px;">VistaView</h2>
                 <p style="color:#334155;font-size:16px;margin:0;">
                   Verify your email address
                 </p>
@@ -33,7 +33,7 @@ export const verifyEmailTemplate = (name,otp) => {
 
             <tr>
               <td style="padding:20px 0;color:#334155;font-size:14px;">
-                Hi ,<br /><br />
+                Hi , ${safeName}<br /><br />
                 Thanks for signing up on <b>VistaView</b>.
                 Use the verification code below to complete your registration.
               </td>
@@ -95,7 +95,7 @@ export const resetPasswordTemplate = (name, otp) => {
           <table width="100%" max-width="480px" style="background:#ffffff;border-radius:8px;padding:24px;">
             <tr>
               <td style="text-align:center;">
-                <h2 style="color:#0F766E;margin-bottom:8px;">PlaceTrust</h2>
+                <h2 style="color:#0F766E;margin-bottom:8px;">VistaView</h2>
                 <p style="color:#334155;font-size:16px;margin:0;">
                   Password Reset Request
                 </p>
@@ -104,7 +104,7 @@ export const resetPasswordTemplate = (name, otp) => {
 
             <tr>
               <td style="padding:20px 0;color:#334155;font-size:14px;">
-                Hi ,<br /><br />
+                Hi , ${safeName}<br /><br />
                 We received a request to reset your VistaView password.
                 Use the code below to continue.
               </td>

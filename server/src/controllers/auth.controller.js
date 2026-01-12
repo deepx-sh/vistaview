@@ -1,4 +1,4 @@
-import User from '../models/user.model.js';
+import {User} from '../models/user.model.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken'
 import { generateOTP } from '../utils/generateOTP.js';
@@ -8,11 +8,12 @@ import { ApiError } from '../utils/ApiError.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
 import { sendOTP } from '../utils/sendOTP.js';
 import { getCookieOptions } from '../utils/getCookieOptions.js';
+import { generateAccessToken } from '../utils/token.js';
 
 // Register
 
 export const register = asyncHandler(async (req, res) => {
-    const { name, email, password } = req.body;
+    const { name, email, password } = req.body || {};
 
     const userExist = await User.findOne({ email });
 
@@ -132,9 +133,9 @@ export const login = asyncHandler(async (req, res) => {
 });
 
 export const logout = asyncHandler(async (req, res) => {
-    if (req.user) {
+    if (req?.user) {
         req.user.refreshToken = undefined;
-        await user.save();
+        await req.user.save();
     }
 
     return res.status(200).clearCookie("accessToken",getCookieOptions(0)).clearCookie("refreshToken",getCookieOptions(0)).json(new ApiResponse(200,{},"Logged out successfully"))
@@ -257,10 +258,42 @@ export const resetPassword = asyncHandler(async (req, res) => {
         throw new ApiError(400,"Invalid reset token purpose")
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
     user.password = hashedPassword;
     user.refreshToken = undefined;
     await user.save();
 
     return res.status(200).json(new ApiResponse(200,{},"Password reset successfully. You can now log in with your new password"))
+});
+
+
+export const refreshToken = asyncHandler(async (req, res) => {
+    
+    const token = req.cookies.refreshToken;
+
+    if (!token) {
+        throw new ApiError(401,"Refresh token is missing")
+    }
+
+    let decodedInfo; 
+
+    try {
+       decodedInfo = await jwt.verify(token, process.env.JWT_REFRESH_TOKEN_SECRET);
+    } catch (error) {
+        throw new ApiError(401,"Invalid or expired refresh token")
+    }
+
+    const user = await User.findById(decodedInfo.id);
+
+    if (!user) {
+        throw new ApiError(401,"User is not found")
+    }
+
+    if (user.refreshToken !== token) {
+        throw new ApiError(401,"Refresh token does not match")
+    }
+
+    const accessToken = generateAccessToken(user);
+
+    return res.status(200).cookie("accessToken",accessToken,getCookieOptions(15*60*1000)).json(new ApiResponse(200,{},"Access token refreshed successfully"))
 })

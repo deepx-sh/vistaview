@@ -38,16 +38,16 @@ const userSchema = new mongoose.Schema({
     },
     emailVerificationCode: {
         type: String,
-        minlength: 6,
-        maxlength:6
+        // minlength: 6,
+        // maxlength:6
     },
     emailVerificationExpires: {
         type: Date
     },
     resetPasswordCode: {
         type: String,
-        minlength: 6,
-        maxlength:6,
+        // minlength: 6,
+        // maxlength:6,
     },
     resetPasswordExpires: {
         type:Date
