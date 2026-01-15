@@ -12,5 +12,8 @@ export const createPlace = asyncHandler(async (req, res) => {
         status:"pending"
     })
 
+    if (!place) {
+        throw new ApiError(400,"Failed to create place")
+    }
     return res.status(201).json(new ApiResponse(201,place,"Place submitted for approval"))
 })
