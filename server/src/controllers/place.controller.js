@@ -82,7 +82,7 @@ export const updatePlace = asyncHandler(async (req, res) => {
     return res.status(200).json(new ApiResponse(200, place, "Place updated and sent for re-approval"));
 });
 
-// Delete Place (OWNER
+// Delete Place (OWNER)
 
 export const deletePlace = asyncHandler(async (req, res) => {
     const place = await Place.findById(req.params.id);
@@ -99,3 +99,18 @@ export const deletePlace = asyncHandler(async (req, res) => {
 
     return res.status(200).json(new ApiResponse(200,{},"Place deleted successfully"))
 });
+
+
+// Admin APPROVE/REJECT 
+export const approvePlace = asyncHandler(async (req, res) => {
+    const place = await Place.findById(req.params.id);
+
+     if (!place) {
+        throw new ApiError(404, "Place not found");
+    }
+
+    place.status = req.body.status; //Approve or Rejected
+    await place.save();
+
+    return res.status(200).json(new ApiResponse(200,place,`Place ${place.status} successfully`))
+})
