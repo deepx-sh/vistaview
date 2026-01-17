@@ -112,6 +112,16 @@ const placeSchema = new mongoose.Schema({
     }
 }, { timestamps: true });
 
+// Text search
+// Without this mongodb can only match exact values will make searching slow and hard
+// With this mongodb break words and searched in multiple field at once will make fast for this we use $text operator
+placeSchema.index({
+    name: "text",
+    description: "text",
+    "location.city": "text",
+    "location.state": "text"
+});
+
 placeSchema.index({ location: "2dsphere" });
 
 export const Place = mongoose.model("Place", placeSchema);
