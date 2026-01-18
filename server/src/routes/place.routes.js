@@ -7,13 +7,15 @@ import {authorizeRoles} from '../middlewares/role.middleware.js'
 import validate from '../middlewares/validate.middleware.js';
 
 import { createPlaceSchema, updatePlaceSchema } from '../validators/place.validators';
+import { searchPlaces } from '../controllers/place.search.controller.js';
+import { searchPlaceSchema } from '../validators/place.search.validators.js';
 
 const router = express.Router();
 
 // Public
 router.get("/", getPlaces);
 router.get("/:id", getPlaceById);
-
+router.get("/search",validate(searchPlaceSchema),searchPlaces)
 // Owner
 router.post("/", authMiddleware, authorizeRoles("owner"), validate(createPlaceSchema), createPlace);
 router.put("/:id", authMiddleware, authorizeRoles("owner"), validate(updatePlaceSchema), updatePlace);
