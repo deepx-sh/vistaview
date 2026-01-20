@@ -1,5 +1,5 @@
-import { Place } from "../models/place.model";
-import { ApiResponse } from "../utils/ApiResponse";
+import { Place } from "../models/place.model.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
 export const searchPlaces = asyncHandler(async (req, res) => {

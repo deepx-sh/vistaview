@@ -1,7 +1,7 @@
-import { Place } from "../models/place.model";
-import { ApiError } from "../utils/ApiError";
-import { ApiResponse } from "../utils/ApiResponse";
-import { asyncHandler } from "../utils/asyncHandler";
+import { Place } from "../models/place.model.js";
+import { ApiError } from "../utils/ApiError.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 
 export const nearbyPlaces = asyncHandler(async (req, res) => {
     const { lat, lng, distance } = req.query;
