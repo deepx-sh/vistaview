@@ -1,21 +1,24 @@
 import express from 'express';
 
-import { createPlace, getPlaces, getPlaceById, updatePlace, deletePlace, approvePlace } from '../controllers/place.controller';
+import { createPlace, getPlaces, getPlaceById, updatePlace, deletePlace, approvePlace } from '../controllers/place.controller.js';
 
-import { authMiddleware } from '../middlewares/auth.middleware';
+import { authMiddleware } from '../middlewares/auth.middleware.js';
 import {authorizeRoles} from '../middlewares/role.middleware.js'
 import validate from '../middlewares/validate.middleware.js';
 
-import { createPlaceSchema, updatePlaceSchema } from '../validators/place.validators';
+import { createPlaceSchema, updatePlaceSchema } from '../validators/place.validators.js';
 import { searchPlaces } from '../controllers/place.search.controller.js';
 import { searchPlaceSchema } from '../validators/place.search.validators.js';
+import { geoSearchSchema } from '../validators/place.geo.validators.js';
+import { nearbyPlaces } from '../controllers/place.geo.controller.js';
 
 const router = express.Router();
 
 // Public
 router.get("/", getPlaces);
 router.get("/:id", getPlaceById);
-router.get("/search",validate(searchPlaceSchema),searchPlaces)
+router.get("/search", validate(searchPlaceSchema), searchPlaces)
+router.get("/nearby",validate(geoSearchSchema),nearbyPlaces)
 // Owner
 router.post("/", authMiddleware, authorizeRoles("owner"), validate(createPlaceSchema), createPlace);
 router.put("/:id", authMiddleware, authorizeRoles("owner"), validate(updatePlaceSchema), updatePlace);
