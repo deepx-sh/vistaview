@@ -11,6 +11,7 @@ import { searchPlaces } from '../controllers/place.search.controller.js';
 import { searchPlaceSchema } from '../validators/place.search.validators.js';
 import { geoSearchSchema } from '../validators/place.geo.validators.js';
 import { nearbyPlaces } from '../controllers/place.geo.controller.js';
+import uploadPlaceImages from '../config/multerPlace.js';
 
 const router = express.Router();
 
@@ -20,7 +21,7 @@ router.get("/:id", getPlaceById);
 router.get("/search", validate(searchPlaceSchema), searchPlaces)
 router.get("/nearby",validate(geoSearchSchema),nearbyPlaces)
 // Owner
-router.post("/", authMiddleware, authorizeRoles("owner"), validate(createPlaceSchema), createPlace);
+router.post("/", authMiddleware, authorizeRoles("owner"), uploadPlaceImages.array("images",5),validate(createPlaceSchema), createPlace);
 router.put("/:id", authMiddleware, authorizeRoles("owner"), validate(updatePlaceSchema), updatePlace);
 router.delete("/:id", authMiddleware, authorizeRoles("owner"), deletePlace);
 

@@ -1,13 +1,22 @@
 import { Place } from '../models/place.model.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
+import { ApiError } from '../utils/ApiError.js';
 
 
 // Create Place (OWNER)
 
 export const createPlace = asyncHandler(async (req, res) => {
+    if (!req.files || req.files.length === 0) {
+        throw new ApiError(400,"At least one place image is required")
+    }
+    const images = req.files.map(file => ({
+        url: file.path,
+        publicId:file.filename
+    }))
     const place = await Place.create({
         ...req.body,
+        images,
         owner: req.user._id,
         status:"pending"
     })
@@ -74,6 +83,9 @@ export const updatePlace = asyncHandler(async (req, res) => {
     if (place.owner.toString() !== req.user._id.toString()) {
         throw new ApiError(403,"You are not authorized to update this place")
     }
+
+    const { deletedImages = [] } = req.body;
+    
 
     Object.assign(place, req.body);
     place.status = "pending"; //Re-approval required after update
