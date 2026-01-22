@@ -2,6 +2,7 @@ import { Place } from '../models/place.model.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
 import { ApiError } from '../utils/ApiError.js';
+import deleteImageFromCloudinary from '../utils/deleteImageFromCloudinary.js';
 
 
 // Create Place (OWNER)
@@ -85,8 +86,33 @@ export const updatePlace = asyncHandler(async (req, res) => {
     }
 
     const { deletedImages = [] } = req.body;
-    
+     if (place.images.length- deletedImages.length +(req.files ? req.files.length :0)===0) {
+        throw new ApiError(400,"At least one place image is required")
+    }
+    if (deletedImages.length > 0) {
+        // Delete images from cloudinary
+        for (const publicId of deletedImages) {
+            await deleteImageFromCloudinary(publicId)
+        }
+    }
 
+    // Remove deleted images from DB
+    place.images = place.images.filter(img => !deletedImages.includes(img.publicId));
+
+   
+
+    if (place.images.length + (req.files ? req.files.length : 0) > 5) {
+        throw new ApiError(400,"A maximum of 5 images are allowed per place")
+    }
+    // Add new images
+
+    if (req.files && req.files.length > 0) {
+        const newImages = req.files.map(file => ({
+            url: file.path,
+            publicId:file.filename
+        }))
+        place.images.push(...newImages)
+    }
     Object.assign(place, req.body);
     place.status = "pending"; //Re-approval required after update
     await place.save();
@@ -107,6 +133,10 @@ export const deletePlace = asyncHandler(async (req, res) => {
         throw new ApiError(403,"You are not authorized to update this place")
     }
 
+    // Delete images from cloudinary
+    for (const img of place.images) {
+        await deleteImageFromCloudinary(img.publicId);
+    }
     await place.deleteOne();
 
     return res.status(200).json(new ApiResponse(200,{},"Place deleted successfully"))
