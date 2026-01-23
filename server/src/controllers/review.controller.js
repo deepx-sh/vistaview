@@ -52,4 +52,38 @@ export const addReview = asyncHandler(async (req, res) => {
 
     return res.status(201).json(new ApiResponse(201, review, "Review added successfully"));
     
+});
+
+
+// UPDATE REVIEW
+
+export const updateReview = asyncHandler(async (req, res) => {
+    const review = await Review.findById(req.params.reviewId);
+
+    if (!review || review.isDeleted) {
+        throw new ApiError(404,"Review not found")
+    }
+
+    // Check same user perform update
+    if (review.user.toString() !== req.user._id.toString()) {
+        throw new ApiError(403,"You are not authorized to update this review")
+    }
+
+    // Update fields
+
+    if (req.body.rating !== undefined) {
+        review.rating = req.body.rating;
+    }
+
+    if (req.body.comment) {
+        review.comment = req.body.comment;
+        review.spamScore = spamDetector(req.body.comment);
+    }
+
+    await review.save();
+
+    // Recalculate place rating
+    await recalculatePlaceRating(review.place);
+
+    return res.status(200).json(new ApiResponse(200,review,"Review updated successfully"))
 })
