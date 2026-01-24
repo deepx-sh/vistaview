@@ -80,6 +80,30 @@ export const updateReview = asyncHandler(async (req, res) => {
         review.spamScore = spamDetector(req.body.comment);
     }
 
+    const { deletedImages = [] } = req.body;
+    if (deletedImages.length > 0) {
+        // Delete images from cloudinary
+        for (const publicId of deletedImages) {
+            await cloudinary.uploader.destroy(publicId);
+        }
+    }
+
+    // Remove deleted images from DB
+    review.images = review.images.filter(img => !deletedImages.includes(img.publicId));
+
+    if (review.images.length - deletedImages.length + (req.files ? req.files.length : 0) > 5) {
+        throw new ApiError(400, "A maximum of 5 images are allowed per review");
+    }
+
+    // Add updated images
+    if (req.files && req.files.length > 0) {
+        const newImages = req.files.map(file => ({
+            url: file.path,
+            publicId: file.filename
+        }));
+        review.images.push(...newImages);
+    }
+    
     await review.save();
 
     // Recalculate place rating
