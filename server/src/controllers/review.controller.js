@@ -86,4 +86,32 @@ export const updateReview = asyncHandler(async (req, res) => {
     await recalculatePlaceRating(review.place);
 
     return res.status(200).json(new ApiResponse(200,review,"Review updated successfully"))
+});
+
+// DELETE REVIEW
+
+export const deleteReview = asyncHandler(async (req, res) => {
+    const review = await Review.findById(req.params.reviewId);
+
+    if (!review || review.isDeleted) {
+        throw new ApiError(404,"Review not found")
+    }
+
+    // Check same user perform deletion
+    if (review.user.toString() !== req.user._id.toSting()) {
+        throw new ApiError(403,"You are not authorized to delete this review")
+    }
+
+    // Delete images from cloudinary
+    for (const img of review.images) { 
+        await cloudinary.uploader.destroy(img.publicId)
+    }
+    
+    // Soft delete
+    review.isDeleted = true;
+    await review.save();
+
+    await recalculatePlaceRating(review.place);
+
+    return res.status(200).json(new ApiResponse(200,{},"Review deleted successfully"))
 })
