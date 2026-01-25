@@ -28,8 +28,8 @@ export const addReview = asyncHandler(async (req, res) => {
 
     const spamScore = spamDetector(comment);
 
-    if (req.files && req.files.length > 5) {
-        throw new ApiError(400, "A maximum of 5 images are allowed per review");
+    if (req.files && req.files.length > 3) {
+        throw new ApiError(400, "A maximum of 3 images are allowed per review");
     }
 
     const images = req.files?.map(file => ({
@@ -91,8 +91,8 @@ export const updateReview = asyncHandler(async (req, res) => {
     // Remove deleted images from DB
     review.images = review.images.filter(img => !deletedImages.includes(img.publicId));
 
-    if (review.images.length - deletedImages.length + (req.files ? req.files.length : 0) > 5) {
-        throw new ApiError(400, "A maximum of 5 images are allowed per review");
+    if (review.images.length - deletedImages.length + (req.files ? req.files.length : 0) > 3) {
+        throw new ApiError(400, "A maximum of 3 images are allowed per review");
     }
 
     // Add updated images
@@ -103,7 +103,7 @@ export const updateReview = asyncHandler(async (req, res) => {
         }));
         review.images.push(...newImages);
     }
-    
+
     await review.save();
 
     // Recalculate place rating
@@ -138,4 +138,31 @@ export const deleteReview = asyncHandler(async (req, res) => {
     await recalculatePlaceRating(review.place);
 
     return res.status(200).json(new ApiResponse(200,{},"Review deleted successfully"))
+});
+
+// LIKE REVIEW
+export const likeReview = asyncHandler(async (req, res) => {
+    const review = await Review.findById(req.params.reviewId);
+
+    if (!review) {
+        throw new ApiError(404,"Review not found")
+    }
+
+    if (review.user.toString() === req.user._id.toString()) {
+        throw new ApiError(400,"You cannot like your own review")
+    }
+
+    const index = review.helpfulVotes.indexOf(req.user._id);
+
+    if (index === -1) {
+        review.helpfulVotes.push(req.user._id);
+    } else {
+        review.helpfulVotes.splice(index, 1);
+    }
+
+
+    await review.save();
+    const likes = review.helpfulVotes.length;
+
+    return res.status(200).json(new ApiResponse(200,likes,"Review like updated"))
 })
