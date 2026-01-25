@@ -4,6 +4,7 @@ import cors from 'cors';
 import authRoutes from './routes/auth.routes.js'
 import placeRoutes from './routes/place.routes.js'
 import userRoutes from './routes/user.routes.js'
+import reviewRoutes from './routes/review.routes.js';
 import { ApiError } from './utils/ApiError.js';
 const app = express();
 
@@ -21,7 +22,10 @@ app.get("/", (req, res) => {
 
 app.use("/api/v1/auth", authRoutes)
 app.use("/api/v1/places", placeRoutes)
-app.use("/api/v1/users",userRoutes)
+app.use("/api/v1/users", userRoutes)
+app.use("/api/v1/reviews", reviewRoutes);
+
+
 app.use((err, req, res, next) => {
   if (err instanceof ApiError) {
     return res.status(err.statusCode).json({
