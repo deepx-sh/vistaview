@@ -66,6 +66,62 @@ const userSchema = new mongoose.Schema({
     },
     refreshToken: {
         type:String
+    },
+
+    ownerProfile: {
+        businessName: {
+            type: String,
+            trim: true,
+            minlength: [3, "Business name must be at least 3 characters"],
+            maxlength:[100,"Business name cannot exceed 100 characters"]
+        },
+        businessAddress: {
+            type: String,
+            trim: true,
+            minlength: [10, "Business address must be at least 10 characters"],
+            maxlength:[300,"Business address cannot exceed 300 characters"]
+        },
+        contactNumber: {
+            type: String,
+            validate: {
+                validator: function (v) {
+                    return /^[0-9]{10}$/.test(v);
+                },
+                message:"Contact number must be a valid 10-digit number"
+            }
+        },
+
+        documents: [
+            {
+                url: {
+                    type: String,
+                    required:true
+                },
+                publicId: {
+                    type: String,
+                    required:true
+                }
+            }
+        ],
+
+        status: {
+            type: String,
+            enum: {
+                values: ["not_applied", "pending", "approved", "rejected"],
+                message:"Invalid owner verification status"
+            },
+            default:"not_applied"
+        },
+        appliedAt: {
+            type:Date
+        },
+        approvedAt: {
+            type:Date
+        },
+        rejectedReason: {
+            type: String,
+            maxlength:[200,"Rejection reason cannot exceed 200 characters"]
+        }
     }
 }, { timestamps: true });
 
