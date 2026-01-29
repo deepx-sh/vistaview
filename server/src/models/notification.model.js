@@ -7,15 +7,18 @@ const notificationSchema = new mongoose.Schema({
         ref: "User",
         required:true
     },
-    title: {
+    type: {
         type: String,
+        enum:["review","reply","admin"],
         required: true,
-        maxlength:100
     },
     message: {
         type: String,
         required: true,
         maxlength:500
+    },
+    link: {
+        type:String
     },
     isRead: {
         type: Boolean,
