@@ -5,6 +5,8 @@ import authRoutes from './routes/auth.routes.js'
 import placeRoutes from './routes/place.routes.js'
 import userRoutes from './routes/user.routes.js'
 import reviewRoutes from './routes/review.routes.js';
+import adminRoutes from './routes/admin.routes.js';
+import ownerRoutes from './routes/owner.routes.js'
 import { ApiError } from './utils/ApiError.js';
 const app = express();
 
@@ -24,7 +26,8 @@ app.use("/api/v1/auth", authRoutes)
 app.use("/api/v1/places", placeRoutes)
 app.use("/api/v1/users", userRoutes)
 app.use("/api/v1/reviews", reviewRoutes);
-
+app.use("/api/v1/owners", ownerRoutes);
+app.use("/api/v1/admin",adminRoutes)
 
 app.use((err, req, res, next) => {
   if (err instanceof ApiError) {
