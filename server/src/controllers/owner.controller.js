@@ -85,4 +85,38 @@ export const replyToReview = asyncHandler(async (req, res) => {
         reply:review.ownerReply
     }
     return res.status(200).json(new ApiResponse(200,responseData,"Reply added successfully"))
+});
+
+
+export const updateReply = asyncHandler(async (req, res) => {
+    const { reviewId } = req.params;
+    const { text } = req.body;
+
+    const review = await Review.findById(reviewId);
+
+    if (!review || !review.ownerReply) {
+        throw new ApiError(404,"Reply not found")
+    }
+
+    review.ownerReply.text = text
+    review.ownerReply.repliedAt = new Date()
+    
+    await review.save();
+
+    return res.status(200).json(new ApiResponse(200,{},"Reply updated successfully"))
+});
+
+
+export const deleteReply = asyncHandler(async (req, res) => {
+    const review = await Review.findById(req.params.reviewId);
+
+    if (!review || !review.ownerReply) {
+        throw new ApiError(404,"Reply not found")
+    }
+
+    review.ownerReply = undefined;
+
+    await review.save();
+
+    return res.status(200).json(new ApiResponse(200,{},"Reply deleted successfully"))
 })
