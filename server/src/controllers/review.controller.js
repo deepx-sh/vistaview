@@ -7,6 +7,7 @@ import {asyncHandler} from "../utils/asyncHandler.js"
 import { ApiError } from "../utils/ApiError.js";
 import recalculatePlaceRating from "../utils/recalculatePlaceRating.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
+import createNotification from "../utils/createNotification.js";
 
 
 // ADD REVIEW
@@ -49,6 +50,15 @@ export const addReview = asyncHandler(async (req, res) => {
     // Update place stats
    
     await recalculatePlaceRating(placeId);
+    const place = await Place.findById(placeId);
+
+
+    await createNotification({
+        user: place.owner,
+        type: "review",
+        message: `New review added to your place "${place.name}"`,
+        link:`/owners/places/${place._id}`
+    })
 
     return res.status(201).json(new ApiResponse(201, review, "Review added successfully"));
     
