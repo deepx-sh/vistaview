@@ -24,7 +24,7 @@ export const authMiddleware = asyncHandler(async (req, res, next) => {
     }
 
     if (user.isBlocked) {
-        throw new ApiError(403,"User account is blocked")
+        throw new ApiError(403,"Your account has been blocked by admin")
     }
 
     req.user = user;

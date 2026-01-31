@@ -120,6 +120,9 @@ export const login = asyncHandler(async (req, res) => {
         throw new ApiError(401,"Invalid email or password")
     }
 
+    if (user.isBlocked) {
+        throw new ApiError(403,"Your account is blocked")
+    }
     const { accessToken, refreshToken } = await getToken(user);
 
     const responseData = {
@@ -289,6 +292,9 @@ export const refreshToken = asyncHandler(async (req, res) => {
         throw new ApiError(401,"User is not found")
     }
 
+    if (user.isBlocked) {
+        throw new ApiError(403,"Your account is blocked")
+    }
     if (user.refreshToken !== token) {
         throw new ApiError(401,"Refresh token does not match")
     }

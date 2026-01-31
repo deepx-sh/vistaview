@@ -64,6 +64,13 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
+    blockedAt: {
+        type:Date
+    },
+    blockedReason: {
+        type: String,
+        maxlength:200
+    },
     refreshToken: {
         type:String
     },

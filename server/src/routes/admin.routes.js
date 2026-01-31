@@ -5,10 +5,13 @@ import { authorizeRoles } from '../middlewares/role.middleware.js'
 import { reviewOwner, getPendingOwners } from '../controllers/admin.controller.js'
 
 import { getPendingPlaces, approvePlace, rejectPlace, toggleFeaturePlace, getAllPlacesAdmin } from '../controllers/admin.places.controller.js';
-import { getFlaggedReviews,getAllReviewsAdmin,adminDeleteReview,restoreReview,hardDeleteReview } from '../controllers/admin.review.controller.js';
+import { getFlaggedReviews, getAllReviewsAdmin, adminDeleteReview, restoreReview, hardDeleteReview } from '../controllers/admin.review.controller.js';
+import { getAllUsers,blockUser,unblockUser } from '../controllers/admin.user.controller.js';
 import { rejectPlaceSchema,featurePlaceSchema } from '../validators/admin.place.validators.js';
 import validate from '../middlewares/validate.middleware.js';
 import { authorizeRoles } from './../middlewares/role.middleware';
+import { unblockUser } from './../controllers/admin.user.controller';
+import { blockUserSchema } from '../validators/admin.user.validators.js';
 const router = express.Router();
 
 router.get("/owners/pending", authMiddleware, authorizeRoles("admin"), getPendingOwners);
@@ -27,5 +30,10 @@ router.get("/reviews", authMiddleware, authorizeRoles("admin"), getAllReviewsAdm
 router.patch("/reviews/:id/delete", authMiddleware, authorizeRoles("admin"), adminDeleteReview);
 router.patch("/reviews/:id/restore", authMiddleware, authorizeRoles("admin"), restoreReview);
 router.delete("/reviews/:id", authMiddleware, authorizeRoles("admin"), hardDeleteReview);
+
+
+router.get("/users", authMiddleware, authorizeRoles("admin"), getAllUsers);
+router.patch("/users/:id/block", authMiddleware, authorizeRoles("admin"), validate(blockUserSchema), blockUser);
+router.patch("/users/:id/unblock",authMiddleware, authorizeRoles("admin"),unblockUser)
 
 export default router;
