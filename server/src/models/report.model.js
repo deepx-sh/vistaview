@@ -18,14 +18,28 @@ const reportSchema = new mongoose.Schema({
     },
     reason: {
         type: String,
+        enum:["spam","fake","offensive","misleading","copyright","other"],
         required: true,
-        minlength: 10,
-        maxlength: 500
     },
     status: {
         type: String,
-        enum: ["pending", "resolved"],
+        enum: ["pending", "resolved","rejected"],
         default: "pending"
+    },
+    message: {
+        type: String,
+        maxlength:300
+    },
+    reviewedBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref:"User"
+    },
+    reviewedAt: {
+        type:Date
+    },
+    adminNote: {
+        type: String,
+        maxlength:300
     }
 }, { timestamps: true });
 
