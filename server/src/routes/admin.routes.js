@@ -6,7 +6,9 @@ import { reviewOwner, getPendingOwners } from '../controllers/admin.controller.j
 
 import { getPendingPlaces, approvePlace, rejectPlace, toggleFeaturePlace, getAllPlacesAdmin } from '../controllers/admin.places.controller.js';
 import { getFlaggedReviews, getAllReviewsAdmin, adminDeleteReview, restoreReview, hardDeleteReview } from '../controllers/admin.review.controller.js';
-import { getAllUsers,blockUser,unblockUser } from '../controllers/admin.user.controller.js';
+import { getAllUsers, blockUser, unblockUser } from '../controllers/admin.user.controller.js';
+import { getPendingReports, getAllReports, resolveReport, rejectReport } from '../controllers/admin.report.controller.js';
+import { reviewReportSchema } from '../validators/admin.report.validators.js';
 import { rejectPlaceSchema,featurePlaceSchema } from '../validators/admin.place.validators.js';
 import validate from '../middlewares/validate.middleware.js';
 import { authorizeRoles } from './../middlewares/role.middleware';
@@ -34,6 +36,12 @@ router.delete("/reviews/:id", authMiddleware, authorizeRoles("admin"), hardDelet
 
 router.get("/users", authMiddleware, authorizeRoles("admin"), getAllUsers);
 router.patch("/users/:id/block", authMiddleware, authorizeRoles("admin"), validate(blockUserSchema), blockUser);
-router.patch("/users/:id/unblock",authMiddleware, authorizeRoles("admin"),unblockUser)
+router.patch("/users/:id/unblock", authMiddleware, authorizeRoles("admin"), unblockUser)
+
+
+router.get("/reports/pending", authMiddleware, authorizeRoles("admin"), getPendingReports);
+router.get("/reports", authMiddleware, authorizeRoles("admin"), getAllReports);
+router.patch("/reports/:id/resolve", authMiddleware, authorizeRoles("admin"), validate(reviewReportSchema), resolveReport);
+router.patch("/reports/:id/reject",authMiddleware, authorizeRoles("admin"),validate(reviewReportSchema),rejectReport)
 
 export default router;
