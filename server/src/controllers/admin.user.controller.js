@@ -1,7 +1,10 @@
+import sendEmail from "../config/mailer";
 import { User } from "../models/user.model";
 import { ApiError } from "../utils/ApiError";
 import { ApiResponse } from "../utils/ApiResponse";
 import { asyncHandler } from "../utils/asyncHandler";
+import { accountBlockedTemplate } from "../utils/emailTemplates/accountBlocked";
+import { accountUnblockedTemplate } from "../utils/emailTemplates/accountUnblocked";
 
 // GET ALL USERS
 
@@ -16,7 +19,7 @@ export const getAllUsers = asyncHandler(async (req, res) => {
         count: users.length,
         users
     }
-    return res.status(200).json(new ApiResponse(200,users,"All users fetched successfully"))
+    return res.status(200).json(new ApiResponse(200,responseData,"All users fetched successfully"))
 });
 
 // BLOCK USER
@@ -37,7 +40,11 @@ export const blockUser = asyncHandler(async (req, res) => {
     user.blockedReason = req.body.reason;
 
     await user.save();
-
+    await sendEmail({
+        to: user.email,
+        subject: "Account Blocked",
+        html:accountBlockedTemplate(req.body.reason)
+    })
     return res.status(200).json(new ApiResponse(200,{},"User blocked successfully"))
 });
 
@@ -58,6 +65,10 @@ export const unblockUser = asyncHandler(async (req, res) => {
 
     await user.save();
 
-
+    await sendEmail({
+        to: user.email,
+        subject: "Account Unblocked",
+        html: accountUnblockedTemplate(),
+    })
     return res.status(200).json(new ApiResponse(200,{},"User unblocked successfully"))
 })
