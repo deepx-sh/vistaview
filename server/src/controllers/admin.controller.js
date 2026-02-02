@@ -55,7 +55,7 @@ export const reviewOwner = asyncHandler(async (req, res) => {
 
     if (status === "rejected") {
         await sendEmail({
-            to: user.name,
+            to: user.email,
             subject: "Owner Verification Rejected",
             html:ownerRejectedTemplate(user.name,rejectedReason)
         })

@@ -1,7 +1,11 @@
+import sendEmail from "../config/mailer";
 import { Place } from "../models/place.model";
+import { User } from "../models/user.model";
 import { ApiError } from "../utils/ApiError";
 import { ApiResponse } from "../utils/ApiResponse";
 import { asyncHandler } from "../utils/asyncHandler";
+import { placeApprovedTemplate } from "../utils/emailTemplates/placeApproved";
+import { placeRejectedTemplate } from "../utils/emailTemplates/placeRejected";
 
 // GET PENDING PLACES
 export const getPendingPlaces = asyncHandler(async (req, res) => {
@@ -17,7 +21,7 @@ export const getPendingPlaces = asyncHandler(async (req, res) => {
 
 // APPROVE PLACE
 export const approvePlace = asyncHandler(async (req, res) => {
-    const place = await Place.findById(req.params.id);
+    const place = await Place.findById(req.params.id).populate("owner","email");
 
     if (!place) {
         throw new ApiError(404,"Place not found")
@@ -28,14 +32,18 @@ export const approvePlace = asyncHandler(async (req, res) => {
 
 
     await place.save();
-
+    await sendEmail({
+        to: owner.email,
+        subject: "Place Approved",
+        html:placeApprovedTemplate(place.name)
+    })
     return res.status(200).json(new ApiResponse(200,{},"Place approved"))
 });
 
 
 // REJECT PLACE
 export const rejectPlace = asyncHandler(async (req, res) => {
-    const place = await Place.findById(req.params.id);
+    const place = await Place.findById(req.params.id).populate("owner","email");
 
     if (!place) {
         throw new ApiError(404,"No place found")
@@ -47,6 +55,11 @@ export const rejectPlace = asyncHandler(async (req, res) => {
 
     await place.save();
 
+    await sendEmail({
+        to: owner.email,
+        subject: "Place Rejected",
+        html:placeRejectedTemplate(place.name,req.body.reason)
+    })
     return res.status(200).json(new ApiResponse(200, {}, "Place rejected"));
 });
 
