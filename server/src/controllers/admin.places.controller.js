@@ -33,7 +33,7 @@ export const approvePlace = asyncHandler(async (req, res) => {
 
     await place.save();
     await sendEmail({
-        to: owner.email,
+        to: place.owner.email,
         subject: "Place Approved",
         html:placeApprovedTemplate(place.name)
     })
@@ -56,7 +56,7 @@ export const rejectPlace = asyncHandler(async (req, res) => {
     await place.save();
 
     await sendEmail({
-        to: owner.email,
+        to: place.owner.email,
         subject: "Place Rejected",
         html:placeRejectedTemplate(place.name,req.body.reason)
     })

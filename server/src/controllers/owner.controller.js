@@ -1,10 +1,12 @@
 import cloudinary from '../config/cloudinary.js';
+import sendEmail from '../config/mailer.js';
 import { Place } from '../models/place.model.js';
 import { Review } from '../models/review.model.js';
 import { ApiError } from '../utils/ApiError.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
 import {asyncHandler} from "../utils/asyncHandler.js"
 import createNotification from '../utils/createNotification.js';
+import { ownerReplyTemplate } from '../utils/emailTemplates/ownerReply.js';
 
 export const applyForOwner = asyncHandler(async (req, res) => {
     const user = req.user;
@@ -46,7 +48,7 @@ export const replyToReview = asyncHandler(async (req, res) => {
     const { reviewId } = req.params;
     const { text } = req.body;
 
-    const review = await Review.findById(reviewId);
+    const review = await Review.findById(reviewId).populate("user","email");
 
     if (!review || review.isDeleted) {
         throw new ApiError(404,"Review not found")
@@ -81,6 +83,11 @@ export const replyToReview = asyncHandler(async (req, res) => {
         link:`place/${place._id}`
     })
 
+    await sendEmail({
+        to: review.user.email,
+        subject: "Owner Replied",
+        html:ownerReplyTemplate(place.name,text)
+    })
     const responseData = {
         reply:review.ownerReply
     }
