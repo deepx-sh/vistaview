@@ -1,6 +1,9 @@
 import {asyncHandler} from '../utils/asyncHandler.js'
 import { ApiError } from '../utils/ApiError.js'
 import {ApiResponse} from '../utils/ApiResponse.js'
+import sendEmail from '../config/mailer.js';
+import { ownerApprovedTemplate } from '../utils/emailTemplates/ownerApproved.js';
+import { ownerRejectedTemplate } from '../utils/emailTemplates/ownerRejected.js';
 
 
 export const getPendingOwners = asyncHandler(async (req, res) => {
@@ -42,5 +45,20 @@ export const reviewOwner = asyncHandler(async (req, res) => {
 
     await user.save();
 
+    if (status === "approved") {
+        await sendEmail({
+            to: user.email,
+            subject: "Owner Verification Approved",
+            html: ownerApprovedTemplate(user.name),
+        })
+    }
+
+    if (status === "rejected") {
+        await sendEmail({
+            to: user.name,
+            subject: "Owner Verification Rejected",
+            html:ownerRejectedTemplate(user.name,rejectedReason)
+        })
+    }
     return res.status(200).json(new ApiResponse(200,{},`Owner request ${status}`))
 })
