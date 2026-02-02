@@ -8,6 +8,7 @@ import { getPendingPlaces, approvePlace, rejectPlace, toggleFeaturePlace, getAll
 import { getFlaggedReviews, getAllReviewsAdmin, adminDeleteReview, restoreReview, hardDeleteReview } from '../controllers/admin.review.controller.js';
 import { getAllUsers, blockUser, unblockUser } from '../controllers/admin.user.controller.js';
 import { getPendingReports, getAllReports, resolveReport, rejectReport } from '../controllers/admin.report.controller.js';
+import { getAdminDashboard } from '../controllers/admin.dashboard.controller.js';
 import { reviewReportSchema } from '../validators/admin.report.validators.js';
 import { rejectPlaceSchema,featurePlaceSchema } from '../validators/admin.place.validators.js';
 import validate from '../middlewares/validate.middleware.js';
@@ -44,4 +45,6 @@ router.get("/reports", authMiddleware, authorizeRoles("admin"), getAllReports);
 router.patch("/reports/:id/resolve", authMiddleware, authorizeRoles("admin"), validate(reviewReportSchema), resolveReport);
 router.patch("/reports/:id/reject",authMiddleware, authorizeRoles("admin"),validate(reviewReportSchema),rejectReport)
 
+
+router.get("/dashboard",authMiddleware,authorizeRoles("admin"),getAdminDashboard)
 export default router;
