@@ -1,8 +1,8 @@
-import { Place } from "../models/place.model";
-import { Review } from "../models/review.model";
-import { ApiError } from "../utils/ApiError";
-import { ApiResponse } from "../utils/ApiResponse";
-import { asyncHandler } from "../utils/asyncHandler";
+import { Place } from "../models/place.model.js";
+import { Review } from "../models/review.model.js";
+import { ApiError } from "../utils/ApiError.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 
 
 export const getOwnerDashBoard = asyncHandler(async (req, res) => {

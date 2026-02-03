@@ -16,4 +16,4 @@ router.put("/:reviewId", authMiddleware, uploadPlaceImages.array("images", 3), v
 router.delete("/:reviewId", authMiddleware, deleteReview);
 router.post("/:reviewId/like", authMiddleware, likeReview);
 
-export default router();
+export default router;

@@ -1,7 +1,7 @@
-import { User } from "../models/user.model";
-import { Place } from "../models/place.model";
-import { Review } from "../models/review.model";
-import { Report } from "../models/report.model";
+import { User } from "../models/user.model.js";
+import { Place } from "../models/place.model.js";
+import { Review } from "../models/review.model.js";
+import { Report } from "../models/report.model.js";
 import {asyncHandler} from "../utils/asyncHandler.js"
 import { ApiResponse } from "../utils/ApiResponse.js";
 

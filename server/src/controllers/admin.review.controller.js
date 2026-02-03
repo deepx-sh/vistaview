@@ -1,10 +1,10 @@
-import { Review } from "../models/review.model";
-import { Place } from "../models/place.model";
+import { Review } from "../models/review.model.js";
 
-import recalculatePlaceRating from './../utils/recalculatePlaceRating';
-import { asyncHandler } from "../utils/asyncHandler";
-import { ApiError } from "../utils/ApiError";
-import { ApiResponse } from "../utils/ApiResponse";
+
+import recalculatePlaceRating from './../utils/recalculatePlaceRating.js';
+import { asyncHandler } from "../utils/asyncHandler.js";
+import { ApiError } from "../utils/ApiError.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
 
 // GET FLAGGED REVIEWS
 

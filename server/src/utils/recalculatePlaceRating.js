@@ -1,5 +1,5 @@
-import { Review } from "../models/review.model";
-import { Place } from "../models/place.model";
+import { Review } from "../models/review.model.js";
+import { Place } from "../models/place.model.js";
 
 const recalculatePlaceRating = async (placeId) => {
    const reviews = await Review.find({

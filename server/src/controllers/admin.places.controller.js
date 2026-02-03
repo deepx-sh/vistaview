@@ -1,11 +1,10 @@
-import sendEmail from "../config/mailer";
-import { Place } from "../models/place.model";
-import { User } from "../models/user.model";
-import { ApiError } from "../utils/ApiError";
-import { ApiResponse } from "../utils/ApiResponse";
-import { asyncHandler } from "../utils/asyncHandler";
-import { placeApprovedTemplate } from "../utils/emailTemplates/placeApproved";
-import { placeRejectedTemplate } from "../utils/emailTemplates/placeRejected";
+import sendEmail from "../config/mailer.js";
+import { Place } from "../models/place.model.js";
+import { ApiError } from "../utils/ApiError.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import { placeApprovedTemplate } from "../utils/emailTemplates/placeApproved.js";
+import { placeRejectedTemplate } from "../utils/emailTemplates/placeRejected.js";
 
 // GET PENDING PLACES
 export const getPendingPlaces = asyncHandler(async (req, res) => {

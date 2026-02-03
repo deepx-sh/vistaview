@@ -1,4 +1,4 @@
-import { Review } from "../models/review.model";
+import { Review } from "../models/review.model.js";
 import { Place } from "../models/place.model.js";
 
 import spamDetector from "../utils/spamDetector.js";

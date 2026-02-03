@@ -1,4 +1,4 @@
-import baseTemplate from "./baseTemplate";
+import baseTemplate from "./baseTemplate.js";
 
 export const accountBlockedTemplate = (reason) =>
     baseTemplate({

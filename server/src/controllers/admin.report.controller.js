@@ -1,7 +1,7 @@
-import { Report } from './../models/report.model';
-import { asyncHandler } from "../utils/asyncHandler";
-import { ApiError } from '../utils/ApiError';
-import { ApiResponse } from '../utils/ApiResponse';
+import { Report } from './../models/report.model.js';
+import { asyncHandler } from "../utils/asyncHandler.js";
+import { ApiError } from '../utils/ApiError.js';
+import { ApiResponse } from '../utils/ApiResponse.js';
 
 export const getPendingReports = asyncHandler(async (req, res) => {
     const reports = await Report.find({ status: "pending" }).populate("reporter", "name email").sort({ createdAt: -1 });

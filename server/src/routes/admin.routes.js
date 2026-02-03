@@ -12,8 +12,6 @@ import { getAdminDashboard } from '../controllers/admin.dashboard.controller.js'
 import { reviewReportSchema } from '../validators/admin.report.validators.js';
 import { rejectPlaceSchema,featurePlaceSchema } from '../validators/admin.place.validators.js';
 import validate from '../middlewares/validate.middleware.js';
-import { authorizeRoles } from './../middlewares/role.middleware';
-import { unblockUser } from './../controllers/admin.user.controller';
 import { blockUserSchema } from '../validators/admin.user.validators.js';
 const router = express.Router();
 

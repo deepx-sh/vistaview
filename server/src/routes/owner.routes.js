@@ -1,6 +1,6 @@
 import express from 'express';
-import { authMiddleware } from '../middlewares/auth.middleware';
-import validate from '../middlewares/validate.middleware';
+import { authMiddleware } from '../middlewares/auth.middleware.js';
+import validate from '../middlewares/validate.middleware.js';
 import { applyForOwner, deleteReply, replyToReview, updateReply } from '../controllers/owner.controller.js';
 import { applyOwnerSchema } from '../validators/owner.validators.js';
 import uploadOwnerDocs from '../config/multerOwnerDocs.js';
