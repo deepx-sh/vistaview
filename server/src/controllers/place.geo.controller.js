@@ -4,7 +4,7 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
 export const nearbyPlaces = asyncHandler(async (req, res) => {
-    const { lat, lng, distance } = req.query;
+    const { lat, lng, distance=10 } = req.query;
     
     // This will use MongoDB's geospatial query to find approved places within the specified distance
     const places = await Place.find({
