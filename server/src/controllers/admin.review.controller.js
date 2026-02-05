@@ -85,7 +85,7 @@ export const restoreReview = asyncHandler(async (req, res) => {
 export const hardDeleteReview = asyncHandler(async (req, res) => {
     const review = await Review.findById(req.params.id);
 
-    if (!reviews) {
+    if (!review) {
         throw new ApiError(404,"No review found")
     }
 

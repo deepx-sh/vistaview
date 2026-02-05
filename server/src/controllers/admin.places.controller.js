@@ -75,7 +75,7 @@ export const toggleFeaturePlace = asyncHandler(async (req, res) => {
     place.isFeatured = req.body.isFeatured;
     await place.save();
 
-    return res.status(200).json(new ApiResponse(200,{},`Place ${req.body.isFeatured} ? "featured": "un-featured"`))
+    return res.status(200).json(new ApiResponse(200,{},`Place ${req.body.isFeatured? 'featured' : 'un-featured'} successfully`))
 });
 
 

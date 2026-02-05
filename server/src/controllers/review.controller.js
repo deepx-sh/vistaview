@@ -132,7 +132,7 @@ export const deleteReview = asyncHandler(async (req, res) => {
     }
 
     // Check same user perform deletion
-    if (review.user.toString() !== req.user._id.toSting()) {
+    if (review.user.toString() !== req.user._id.toString()) {
         throw new ApiError(403,"You are not authorized to delete this review")
     }
 
