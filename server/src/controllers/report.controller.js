@@ -1,7 +1,7 @@
-import { Report } from "../models/report.model";
-import { ApiError } from "../utils/ApiError";
-import { ApiResponse } from "../utils/ApiResponse";
-import { asyncHandler } from "../utils/asyncHandler";
+import { Report } from "../models/report.model.js";
+import { ApiError } from "../utils/ApiError.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 
 export const createReport = asyncHandler(async (req, res) => {
     const { targetType, targetId, reason, message } = req.body;
@@ -9,7 +9,7 @@ export const createReport = asyncHandler(async (req, res) => {
     // prevent duplicate report by same user on same target
 
     const existing = await Report.findOne({
-        reporter: req.user_id,
+        reporter: req.user._id,
         targetType,
         targetId,
         status:"pending"
@@ -21,7 +21,7 @@ export const createReport = asyncHandler(async (req, res) => {
     }
 
     await Report.create({
-        reporter: req.user_id,
+        reporter: req.user._id,
         targetType,
         targetId,
         reason,

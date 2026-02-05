@@ -8,7 +8,7 @@ export const createReportSchema = Joi.object({
             'any.only': 'Target type must be either review or place',
         }),
     
-    targetId: Joi.string().required().messaged({
+    targetId: Joi.string().required().messages({
         'any.required': 'Target ID is required',
     }),
 
