@@ -30,7 +30,8 @@ export const applyOwnerSchema = Joi.object({
         .pattern(/^[0-9]{10}$/)
         .required()
         .messages({
-            'string.pattern.base':'Contact number must be a valid 10-digit number'
+            'string.pattern.base': 'Contact number must be a valid 10-digit number',
+            'any.required':'Contact Number is required'
         }),
     
     documents: Joi.array().items(
