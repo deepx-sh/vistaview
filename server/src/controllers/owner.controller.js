@@ -11,6 +11,9 @@ import { ownerReplyTemplate } from '../utils/emailTemplates/ownerReply.js';
 export const applyForOwner = asyncHandler(async (req, res) => {
     const user = req.user;
 
+    if (!user.isEmailVerified) {
+        throw new ApiError(400,"Please verify your email before applying for owner verification")
+    }
     if (user.ownerProfile?.status === "pending") {
         throw new ApiError(400,"Verification already pending")
     }
@@ -80,7 +83,7 @@ export const replyToReview = asyncHandler(async (req, res) => {
         user: review.user,
         type: "reply",
         message: `Owner replied to your review on ${place.name}`,
-        link:`place/${place._id}`
+        link:`/place/${place._id}`
     })
 
     await sendEmail({
