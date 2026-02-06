@@ -23,6 +23,12 @@ export const getPendingOwners = asyncHandler(async (req, res) => {
 export const reviewOwner = asyncHandler(async (req, res) => {
     const { status, rejectedReason } = req.body;
 
+    if (!status) {
+        throw new ApiError(400,"Status is required to approve or reject owner")
+    }
+    if (status !== "approved" && status !== "rejected") {
+        throw new ApiError(400, "Status must be either approved or rejected");
+    }
     const user = await User.findById(req.params.userId);
 
     if (!user || user.ownerProfile?.status !== "pending") {
@@ -36,7 +42,7 @@ export const reviewOwner = asyncHandler(async (req, res) => {
     }
 
     if (status === "rejected") {
-        if (!rejectedReason) {
+        if (!rejectedReason.trim()) {
             throw new ApiError(400,"Rejected reason is required")
         } else {
             user.ownerProfile.status = "rejected";
