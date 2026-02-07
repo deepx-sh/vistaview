@@ -87,4 +87,9 @@ export const createPlaceSchema = Joi.object({
     })
 });
 
-export const updatePlaceSchema = createPlaceSchema.min(1);
+export const updatePlaceSchema = createPlaceSchema.fork(
+    Object.keys(createPlaceSchema.describe().keys),
+    (schema) => schema.optional()
+).min(1).messages({
+    'object.min': 'At least one field must be provided for update',
+});
