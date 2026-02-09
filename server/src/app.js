@@ -8,6 +8,7 @@ import reviewRoutes from './routes/review.routes.js';
 import adminRoutes from './routes/admin.routes.js';
 import ownerRoutes from './routes/owner.routes.js'
 import reportRoutes from './routes/report.routes.js'
+import wishlistRoutes from './routes/wishlist.routes.js'
 import { ApiError } from './utils/ApiError.js';
 import multer from 'multer';
 const app = express();
@@ -27,6 +28,7 @@ app.get("/", (req, res) => {
 app.use("/api/v1/auth", authRoutes)
 app.use("/api/v1/places", placeRoutes)
 app.use("/api/v1/users", userRoutes)
+app.use("api/v1/wishlist",wishlistRoutes)
 app.use("/api/v1/reviews", reviewRoutes);
 app.use("/api/v1/reports",reportRoutes)
 app.use("/api/v1/owners", ownerRoutes);
