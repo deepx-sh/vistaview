@@ -1,5 +1,15 @@
-const validate = (schema) => (req,res,next)=>{
-    const { error } = schema.validate(req.body, {
+const validate = (schema) => (req, res, next) => {
+    const dataToValidate = {
+        ...req.body,
+    }
+
+    if (req.files && req.files.length > 0) {
+        dataToValidate.images = req.files.map(file => ({
+           url: file.path,
+            publicID: file.filename
+        }))
+    }
+    const { error } = schema.validate(dataToValidate, {
         abortEarly:false
     })
 
