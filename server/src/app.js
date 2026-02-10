@@ -28,7 +28,7 @@ app.get("/", (req, res) => {
 app.use("/api/v1/auth", authRoutes)
 app.use("/api/v1/places", placeRoutes)
 app.use("/api/v1/users", userRoutes)
-app.use("api/v1/wishlist",wishlistRoutes)
+app.use("/api/v1/wishlist",wishlistRoutes)
 app.use("/api/v1/reviews", reviewRoutes);
 app.use("/api/v1/reports",reportRoutes)
 app.use("/api/v1/owners", ownerRoutes);

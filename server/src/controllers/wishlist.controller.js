@@ -36,6 +36,11 @@ export const removeFromWishlist = asyncHandler(async (req, res) => {
 
     const user = await User.findById(req.user._id);
 
+    let isFound = user.wishlist.find(id => id.toString() === placeId);
+
+    if (!isFound) {
+        throw new ApiError(404,"Place not found in wishlist")
+    }
     user.wishlist = user.wishlist.filter(
         id => id.toString() !== placeId
     );
