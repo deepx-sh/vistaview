@@ -27,6 +27,10 @@ export const addReview = asyncHandler(async (req, res) => {
         throw new ApiError(400, "You already reviewed this place");
     }
 
+    const place = await Place.findById(placeId);
+    if (!place || place.status !== "approved") {
+        throw new ApiError(404,"Place not found or not approved yet")
+    }
     const spamScore = spamDetector(comment);
 
     if (req.files && req.files.length > 3) {
@@ -50,7 +54,7 @@ export const addReview = asyncHandler(async (req, res) => {
     // Update place stats
    
     await recalculatePlaceRating(placeId);
-    const place = await Place.findById(placeId);
+    // const place = await Place.findById(placeId);
 
 
     await createNotification({

@@ -51,7 +51,12 @@ export const updateReviewSchema = Joi.object({
                 }),
                 publicID: Joi.string().optional()
             })
-        ).optional()
+    ).optional(),
+    
+    deletedImages: Joi.array().items(Joi.string()).optional().messages({
+        'array.base': 'Deleted images must be an array of strings',
+        'string.base':'Each deleted image ID must be a string'
+    })
 }).min(1).messages({
     'object.min': 'At least one field(rating, comment, images) must be provided for update',
 })
