@@ -23,7 +23,7 @@ router.get("/nearby",validate(geoSearchSchema),nearbyPlaces)
 router.get("/:id", getPlaceById);
 // Owner
 router.post("/", authMiddleware, authorizeRoles("owner"), uploadPlaceImages.array("images",5),parseMultiPartData,validate(createPlaceSchema), createPlace);
-router.put("/:id", authMiddleware, authorizeRoles("owner"),uploadPlaceImages.array("images",5), validate(updatePlaceSchema), updatePlace);
+router.put("/:id", authMiddleware, authorizeRoles("owner"),uploadPlaceImages.array("images",5),parseMultiPartData, validate(updatePlaceSchema), updatePlace);
 router.delete("/:id", authMiddleware, authorizeRoles("owner"), deletePlace);
 
 // Admin
