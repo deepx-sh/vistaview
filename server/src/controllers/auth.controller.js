@@ -269,7 +269,13 @@ export const resetPassword = asyncHandler(async (req, res) => {
     return res.status(200).json(new ApiResponse(200,{},"Password reset successfully. You can now log in with your new password"))
 });
 
+export const getMe = asyncHandler(async (req, res) => {
+    const responseData = {
+        user:req.user
+    }
 
+    return res.status(200).json(new ApiResponse(200,responseData,"User fetched successfully"))
+})
 export const refreshToken = asyncHandler(async (req, res) => {
     
     const token = req.cookies.refreshToken;

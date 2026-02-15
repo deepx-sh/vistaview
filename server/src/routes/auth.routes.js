@@ -1,6 +1,6 @@
 import express from 'express';
 
-import { register, verifyEmailOTP, login, resendVerifyOTP, sendPasswordResetOTP, verifyPasswordResetOTP, resetPassword, refreshToken, logout } from '../controllers/auth.controller.js';
+import { register, verifyEmailOTP, login, resendVerifyOTP, sendPasswordResetOTP, verifyPasswordResetOTP, resetPassword, refreshToken, logout, getMe } from '../controllers/auth.controller.js';
 
 import validate from '../middlewares/validate.middleware.js';
 
@@ -22,6 +22,7 @@ router.post("/forgot-password", validate(sendPasswordResetOTPSchema), sendPasswo
 router.post("/verify-reset-otp", validate(verifyPasswordResetOTPSchema), verifyPasswordResetOTP);
 router.post("/reset-password", validate(resetPasswordSchema), resetPassword);
 
+router.get("/me",authMiddleware,getMe)
 router.post("/refresh-token", refreshToken);
 
 
