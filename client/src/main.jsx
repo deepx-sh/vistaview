@@ -6,13 +6,18 @@ import './index.css'
 import App from './App.jsx'
 import { RouterProvider } from 'react-router-dom';
 import { router } from './app/router';
+import {Toaster} from 'react-hot-toast'
+import AuthInitializer from './components/common/AuthInitializer';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <Provider store={store}>
-      <RouterProvider router={router}>
+      <AuthInitializer>
+        <RouterProvider router={router}>
         <App />
-      </RouterProvider>
+        </RouterProvider>
+        <Toaster/>
+      </AuthInitializer>
     </Provider>
   </StrictMode>,
 )
