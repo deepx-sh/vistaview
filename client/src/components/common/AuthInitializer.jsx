@@ -10,8 +10,8 @@ const AuthInitializer = ({ children }) => {
     const { data, isSuccess, isError, isLoading } = useGetMeQuery();
     
     useEffect(() => {
-        if (isSuccess && data?.user) {
-            dispatch(setUser(data.user))
+        if (isSuccess && data?.data?.user) {
+            dispatch(setUser(data.data.user))
         }
 
         if (isError) {
