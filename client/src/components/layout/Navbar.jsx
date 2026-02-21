@@ -14,10 +14,14 @@ const Navbar = () => {
   const [open, setOpen] = useState(false);
 
   const handleLogout = async () => {
-    await logoutUser();
+    try {
+      await logoutUser();
     dispatch(logout());
-    toast.success("Logout successfully");
+    toast.success("Logged out successfully");
     navigate("/login");
+    } catch (error) {
+      toast.error(error?.data?.message || "Logout failed")
+    }
   };
   return (
     <nav className="bg-surface border-border border-b">
@@ -25,7 +29,7 @@ const Navbar = () => {
         {/* Logo */}
         <Link to="/" className="flex items-center gap-1.5">
           <div className="bg-primary px-3 py-1.5 rounded-md">
-            <span className="text-text-primary text-lg font-bold">V</span>
+            <span className="text-white text-lg font-bold">V</span>
           </div>
 
           <h3 className="text-primary text-xl font-semibold">VistaView</h3>
