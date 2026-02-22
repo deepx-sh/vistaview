@@ -70,7 +70,7 @@ const Footer = () => {
               {/* Bottom Section */}
 
               <div className="border-t border-border mt-10 pt-6 text-center text-sm text-text-muted">
-                   © 2026 PlaceTrust. All rights reserved.
+                   © 2026 VistaView. All rights reserved.
               </div>
           </div>
     </footer>

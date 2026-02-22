@@ -7,7 +7,7 @@ import { logout } from "../../features/auth/authSlice";
 import toast from "react-hot-toast";
 
 const Navbar = () => {
-  const { isAuthenticated, role, user } = useSelector((state) => state.auth);
+  const { isAuthenticated, role} = useSelector((state) => state.auth);
   const [logoutUser] = useLogoutMutation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
