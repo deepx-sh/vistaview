@@ -36,11 +36,25 @@ export const searchPlaces = asyncHandler(async (req, res) => {
         }
     }
 
-    const places = await Place.find(query, {
-        score: q ? { $meta: "textScore" } : undefined //textScore is how well does this document match the search words and meta give special metadata not normal fields like it will give relevance score for the document so we can sort by best matches and its calculate for every query time and score not stored in db
-    }).sort(q ? { score: { $meta: "textScore" } } : { createdAt: -1 })
-        .skip((Number(page) - 1) * Number(limit))
-        .limit(Number(limit)); //if searching text is present then sort by best match first if not then sort by newest place
+    // const places = await Place.find(query, {
+    //     score: q ? { $meta: "textScore" } : undefined //textScore is how well does this document match the search words and meta give special metadata not normal fields like it will give relevance score for the document so we can sort by best matches and its calculate for every query time and score not stored in db
+    // }).sort(q ? { score: { $meta: "textScore" } } : { createdAt: -1 })
+    //     .skip((Number(page) - 1) * Number(limit))
+    //     .limit(Number(limit)); //if searching text is present then sort by best match first if not then sort by newest place
+    
+    let dbQuery = Place.find(query);
+
+    if (q) {
+        dbQuery = dbQuery
+            .select({ score: { $meta: "textScore" } })
+            .sort({score:{$meta:"textScore"}})
+    } else {
+        dbQuery=dbQuery.sort({isFeatured:-1,createdAt:-1})
+    }
+
+    const places = await dbQuery
+        .select((Number(page) - 1) * Number(limit))
+        .limit(Number(page))
     
     const responseData = {
         page,
