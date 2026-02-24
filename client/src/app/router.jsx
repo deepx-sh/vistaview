@@ -9,6 +9,7 @@ import PublicRoutes from "../components/common/PublicRoutes";
 import PublicLayout from "../components/layout/PublicLayout";
 import AuthLayout from "../components/layout/AuthLayout";
 import Home from "../pages/Home";
+import Places from "../pages/Place";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -18,6 +19,10 @@ export const router = createBrowserRouter([
         index: true,
         element: <Home></Home>,
       },
+      {
+        path: "/places",
+        element:<Places/>
+      }
     ],
   },
   {

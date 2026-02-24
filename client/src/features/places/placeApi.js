@@ -4,7 +4,7 @@ export const placeApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
         getPlaces: builder.query({
             query: (params) => ({
-                url: "/places",
+                url: "/places/search",
                 params
             }),
             providesTags:["Place"]
