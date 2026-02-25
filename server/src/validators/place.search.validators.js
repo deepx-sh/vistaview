@@ -6,7 +6,8 @@ export const searchPlaceSchema = Joi.object({
     category: Joi.string().valid("beach", "temple", "hill", "hotel", "heritage", "city", "nature"),
     
     city: Joi.string(),
-    
+    sortBy: Joi.string().valid("price", "rating", "createdAt"),
+    sortOrder:Joi.string().valid("asc","desc"),
     minRating: Joi.number().min(1).max(5),
     
     minPrice: Joi.number().min(0),
