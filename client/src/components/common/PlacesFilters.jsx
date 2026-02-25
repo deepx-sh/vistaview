@@ -20,6 +20,7 @@ const PlacesFilters = () => {
     const [minRating, setMinRating] = useState(searchParams.get("minRating") || "");
     const [minPrice, setMinPrice] = useState(searchParams.get("minPrice") || "");
     const [maxPrice, setMaxPrice] = useState(searchParams.get("maxPrice") || "");
+    const [sort, setSort] = useState(searchParams.get("sort") || "");
 
     useEffect(() => {
         const timeout = setTimeout(() => {
@@ -50,6 +51,11 @@ const PlacesFilters = () => {
         if (minPrice) params.minPrice = minPrice;
         if (maxPrice) params.maxPrice = maxPrice;
 
+        if (sort) {
+            const [sortBy, sortOrder] = sort.split("-");
+            params.sortBy = sortBy;
+            params.sortOrder = sortOrder;
+        }
         params.page = 1;
         
         setSearchParams(params);
@@ -62,6 +68,7 @@ const PlacesFilters = () => {
         setMinRating("");
         setMinPrice("");
         setMaxPrice("");
+        setSort("");
         setSearchParams({});
     }
   return (
@@ -105,7 +112,16 @@ const PlacesFilters = () => {
                   <option value="3">3 & Above</option>
                   <option value="2">2 & Above</option>
               </select>
-
+              <select value={sort}
+                  onChange={(e) => setSort(e.target.value)}
+                  className='border border-border focus:ring-2 focus:ring-primary rounded-md px-3 py-2'
+              >
+                  
+                  <option value="">Newest</option>
+                  <option value="rating-desc">Highest Rated</option>
+                  <option value="price-asc">Budget: Low to High</option>
+                  <option value="price-desc">Budget: High to Low</option>
+              </select>
               <input type="number"
                   placeholder='Min Budget'
                   value={minPrice}
@@ -119,7 +135,7 @@ const PlacesFilters = () => {
                   onChange={(e) => setMaxPrice(e.target.value)}
                   className='border border-border focus:right-2 focus:ring-primary rounded-md px-3 py-2'
               />
-
+            
               <div className='flex gap-2'>
                   <button onClick={handleApply} className='flex-1 bg-primary text-white rounded-md py-2 hover:bg-primary-hover hover:cursor-pointer transition duration-200'>Apply</button>
                   <button onClick={handleClear} className='flex-1 bg-danger text-white rounded-md py-2 hover:bg-danger/80 hover:cursor-pointer transition duration-200'>Clear</button>
