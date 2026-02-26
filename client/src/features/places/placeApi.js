@@ -8,8 +8,12 @@ export const placeApi = baseApi.injectEndpoints({
                 params
             }),
             providesTags:["Place"]
+        }),
+        getPlaceById: builder.query({
+            query: (id) => `/places/${id}`,
+            providesTags:["Places"]
         })
     })
 });
 
-export const {useGetPlacesQuery}=placeApi
+export const {useGetPlacesQuery,useGetPlaceByIdQuery}=placeApi

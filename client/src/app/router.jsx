@@ -10,6 +10,7 @@ import PublicLayout from "../components/layout/PublicLayout";
 import AuthLayout from "../components/layout/AuthLayout";
 import Home from "../pages/Home";
 import Places from "../pages/Place";
+import PlaceDetails from "../pages/PlaceDetails";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -22,6 +23,10 @@ export const router = createBrowserRouter([
       {
         path: "/places",
         element:<Places/>
+      },
+      {
+        path: "/places/:id",
+        element:<PlaceDetails/>
       }
     ],
   },
