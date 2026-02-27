@@ -3,6 +3,7 @@ import {useParams} from 'react-router-dom'
 import { Star, MapPin, Heart } from 'lucide-react'
 import LoadingSkeleton from './../components/common/LoadingSkeleton';
 import { useGetPlaceByIdQuery } from '../features/places/placeApi';
+import ImageGallery from '../components/common/ImageGallery';
 
 
 const PlaceDetails = () => {
@@ -15,8 +16,8 @@ const PlaceDetails = () => {
   return (
       <div className='max-w-6xl mx-auto px-6 py-12'>
           {/* Image */}
-          <div className='rounded-xl overflow-hidden mb-8'>
-              <img src={place.data.images[0]?.url} alt={place.data.name}  className='w-full h-[400px] object-cover'/>
+          <div className='mb-8'>
+              <ImageGallery images={place?.data?.images}/>
           </div>
 
           {/* Header */}
