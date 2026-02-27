@@ -11,6 +11,7 @@ import AuthLayout from "../components/layout/AuthLayout";
 import Home from "../pages/Home";
 import Places from "../pages/Place";
 import PlaceDetails from "../pages/PlaceDetails";
+import Wishlist from "../pages/Wishlist";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -27,6 +28,12 @@ export const router = createBrowserRouter([
       {
         path: "/places/:id",
         element:<PlaceDetails/>
+      },
+      {
+         path: "wishlist",
+      element: <ProtectedRoutes>
+          <Wishlist/>
+      </ProtectedRoutes>
       }
     ],
   },

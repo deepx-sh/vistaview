@@ -54,7 +54,7 @@ const Navbar = () => {
                   Admin Panel
                 </Link>
               )}
-
+              <Link to="/wishlist" className="hover:text-primary">Wishlist</Link>
               <button
                 onClick={handleLogout}
                 className="text-danger hover:underline"

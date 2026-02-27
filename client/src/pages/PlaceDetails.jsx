@@ -4,6 +4,7 @@ import { Star, MapPin, Heart } from 'lucide-react'
 import LoadingSkeleton from './../components/common/LoadingSkeleton';
 import { useGetPlaceByIdQuery } from '../features/places/placeApi';
 import ImageGallery from '../components/common/ImageGallery';
+import WishlistButton from '../components/common/WishlistButton';
 
 
 const PlaceDetails = () => {
@@ -47,10 +48,8 @@ const PlaceDetails = () => {
                         ${place.data.pricing.min} - ${place.data.pricing.max}
                   </p>
 
-                  <button className='flex items-center gap-2 border border-border px-4 py-2 rounded-md hover:bg-surface cursor-pointer hover:border-primary transition duration-200'>
-                      <Heart size={16} />
-                      Save
-                  </button>
+                  {/* Wishlist Button */}
+                  <WishlistButton placeId={place.data._id}/>
               </div>
           </div>
 
