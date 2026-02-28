@@ -5,6 +5,7 @@ import LoadingSkeleton from './../components/common/LoadingSkeleton';
 import { useGetPlaceByIdQuery } from '../features/places/placeApi';
 import ImageGallery from '../components/common/ImageGallery';
 import WishlistButton from '../components/common/WishlistButton';
+import ReviewList from '../components/reviews/ReviewList';
 
 
 const PlaceDetails = () => {
@@ -69,9 +70,7 @@ const PlaceDetails = () => {
                   Reviews
               </h2>
 
-              <p className='text-text-muted'>
-                  Work in progress....
-              </p>
+              <ReviewList placeId={place?.data?._id}/>
           </div>
     </div>
   )
