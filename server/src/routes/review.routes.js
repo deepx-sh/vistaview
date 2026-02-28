@@ -3,12 +3,13 @@ import { authMiddleware } from '../middlewares/auth.middleware.js'
 import validate  from '../middlewares/validate.middleware.js'
 import uploadPlaceImages from '../config/multerPlace.js';
 
-import { addReview, updateReview, deleteReview, likeReview } from '../controllers/review.controller.js';
+import { addReview, updateReview, deleteReview, likeReview, getPlaceReviews } from '../controllers/review.controller.js';
 
 import { createReviewSchema, updateReviewSchema } from '../validators/review.validators.js';
 
 const router = express.Router();
 
+router.get("/place/:placeId",getPlaceReviews)
 router.post("/:placeId", authMiddleware, uploadPlaceImages.array("images", 3), validate(createReviewSchema), addReview);
 
 router.put("/:reviewId", authMiddleware, uploadPlaceImages.array("images", 3), validate(updateReviewSchema), updateReview);

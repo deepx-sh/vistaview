@@ -9,7 +9,19 @@ import recalculatePlaceRating from "../utils/recalculatePlaceRating.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import createNotification from "../utils/createNotification.js";
 
+// Get Review for a Place
 
+export const getPlaceReviews = asyncHandler(async (req, res) => {
+    const placeId = req.params.placeId;
+
+    const reviews = await Review.find({ place: placeId, isDeleted: false }).populate("user", "name avatar").sort({ createdAt: -1 });
+
+    if (!reviews) {
+        throw new ApiError(404,"No reviews found for this place")
+    }
+    
+    return res.status(200).json(new ApiResponse(200,reviews,"Reviews fetched successfully"))
+})
 // ADD REVIEW
 
 export const addReview = asyncHandler(async (req, res) => {
