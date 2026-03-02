@@ -35,8 +35,21 @@ export const addReview = asyncHandler(async (req, res) => {
         place: placeId
     });
 
+    const coolingDays = 7;
+
     if (existing) {
-        throw new ApiError(400, "You already reviewed this place");
+        if (!existing.isDeleted) {
+            throw new ApiError(400, "You already reviewed this place");
+        }
+
+        const daysSinceDeleted = (Date.now() - new Date(existing.deletedAt)) / (1000 * 60 * 60 * 24)
+        
+        if (daysSinceDeleted < coolingDays) {
+            const daysLeft = Math.ceil(coolingDays - daysSinceDeleted);
+            throw new ApiError(400,`You can re-review this place in ${daysLeft} days`)
+        }
+
+        await Review.findByIdAndDelete(existing._id)
     }
 
     const place = await Place.findById(placeId);
@@ -159,6 +172,7 @@ export const deleteReview = asyncHandler(async (req, res) => {
     
     // Soft delete
     review.isDeleted = true;
+    review.deletedAt=new Date()
     await review.save();
 
     await recalculatePlaceRating(review.place);
