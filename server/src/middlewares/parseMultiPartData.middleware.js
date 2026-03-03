@@ -12,5 +12,9 @@ export const parseMultiPartData = asyncHandler(async (req, res, next) => {
     if (typeof req.body?.timings === "string") {
         req.body.timings=JSON.parse(req.body.timings)
     }
+    
+    if(typeof req.body?.deletedImages==="string"){
+        req.body.deletedImages=JSON.parse(req.body.deletedImages)
+    }
     next();
 })
