@@ -3,15 +3,21 @@ import {useParams} from 'react-router-dom'
 import { Star, MapPin, Heart } from 'lucide-react'
 import LoadingSkeleton from './../components/common/LoadingSkeleton';
 import { useGetPlaceByIdQuery } from '../features/places/placeApi';
+import { useGetPlaceReviewsQuery } from '../features/reviews/reviewsApi';
 import ImageGallery from '../components/common/ImageGallery';
 import WishlistButton from '../components/common/WishlistButton';
 import ReviewList from '../components/reviews/ReviewList';
+import AddReviewForm from '../components/reviews/AddReviewForm';
 
 
 const PlaceDetails = () => {
     const { id } = useParams();
     const { data: place, isLoading } = useGetPlaceByIdQuery(id);
-
+    const { data: reviewData, isLoading: reviewLoading } = useGetPlaceReviewsQuery(id)
+    console.log(place);
+    
+    console.log(reviewData);
+    
     if (isLoading) return <LoadingSkeleton />
     
     if(!place) return <p className='text-center py-20'>Place not found</p>
@@ -69,8 +75,8 @@ const PlaceDetails = () => {
               <h2 className='tex-xl font-semibold mb-6'>
                   Reviews
               </h2>
-
-              <ReviewList placeId={place?.data?._id}/>
+                <AddReviewForm placeId={id} reviews={reviewData?.data || []}/>
+              <ReviewList reviews={reviewData?.data || []} isLoading={reviewLoading} />
           </div>
     </div>
   )
