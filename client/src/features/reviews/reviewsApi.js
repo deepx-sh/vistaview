@@ -13,7 +13,7 @@ export const reviewApi = baseApi.injectEndpoints({
                 method: "POST",
                 body:data
             }),
-            invalidatesTags:["Review"]
+            invalidatesTags:["Review","Place"]
         }),
 
         updateReview: builder.mutation({
@@ -31,8 +31,15 @@ export const reviewApi = baseApi.injectEndpoints({
                 method: "DELETE",
             }),
             invalidatesTags:["Review","Place"]
+        }),
+        toggleHelpful: builder.mutation({
+            query: (reviewId) => ({
+                url: `/reviews/${reviewId}/like`,
+                method:"POST"
+            }),
+            invalidatesTags:["Review"]
         })
     })
 });
 
-export const {useGetPlaceReviewsQuery,useAddReviewMutation,useUpdateReviewMutation,useDeleteReviewMutation}=reviewApi
+export const {useGetPlaceReviewsQuery,useAddReviewMutation,useUpdateReviewMutation,useDeleteReviewMutation,useToggleHelpfulMutation}=reviewApi
