@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { Star, Pencil, Trash, Form, X } from 'lucide-react'
-import { useUpdateReviewMutation,useDeleteReviewMutation } from '../../features/reviews/reviewsApi'
+import { Star, Pencil, Trash, Form, X,ThumbsUp } from 'lucide-react'
+import { useUpdateReviewMutation,useDeleteReviewMutation,useToggleHelpfulMutation } from '../../features/reviews/reviewsApi'
 import { useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
 const ReviewCards = ({ review }) => {
@@ -13,16 +13,10 @@ const ReviewCards = ({ review }) => {
 
     const [updateReview,{isLoading}] = useUpdateReviewMutation();
     const [deleteReview] = useDeleteReviewMutation();
+    const [toggleHelpful] = useToggleHelpfulMutation();
     const [existingImages, setExistingImages] = useState(review.images || []);
     const [newImages, setNewImages] = useState([]);
     const [deletedImages, setDeletedImages] = useState([]);
-    
-    console.log(existingImages);
-    console.log(existingImages.length);
-    console.log(deletedImages.length);
-    console.log(newImages.length);
-    
-    
     
     const handleUpdate = async () => {
         if (comment.trim().length < 10) {
@@ -91,6 +85,28 @@ const ReviewCards = ({ review }) => {
             .join("")
             .toUpperCase()
         : "U";
+    
+    const isHelpful = review.helpfulVotes?.some(
+        (u)=>u===currentUser?._id
+    )
+
+    const handleHelpful = async () => {
+        if (!currentUser) {
+            toast.error("Please log in to mark as helpful")
+            return
+        }
+
+        try {
+            await toggleHelpful(review._id)
+            toast.success(isHelpful ? "Marked as not helpful":"Marked as helpful")
+        } catch (error) {
+            if (error?.data?.message) {
+                toast.error(error.data.message)
+            } else {
+                toast.error("An error occurred Please try again")
+            }
+        }
+    }
   return (
       <div className='border border-border rounded-lg p-6 bg-surface'>
           {/* Header */}
@@ -195,6 +211,11 @@ const ReviewCards = ({ review }) => {
                   </p>
               </div>
           )}
+
+          {/* Helpful Button */}
+          <div className='mt-4 flex items-center gap-4'>
+              <button onClick={handleHelpful} className={`flex items-center gap-2 text-sm ${isHelpful ? "text-primary" : "text-text-muted"}`}><ThumbsUp size={16} className={isHelpful ? "fill-primary" : ""} />{review.helpfulVotes?.length||0}</button>
+          </div>
       </div>
   )
 }
