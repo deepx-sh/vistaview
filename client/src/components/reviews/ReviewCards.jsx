@@ -3,6 +3,7 @@ import { Star, Pencil, Trash, Form, X,ThumbsUp } from 'lucide-react'
 import { useUpdateReviewMutation,useDeleteReviewMutation,useToggleHelpfulMutation } from '../../features/reviews/reviewsApi'
 import { useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
+import ImageModal from '../common/ImageModal';
 const ReviewCards = ({ review }) => {
     const { user: currentUser } = useSelector((state) => state.auth);
     const user = review.user
@@ -17,6 +18,8 @@ const ReviewCards = ({ review }) => {
     const [existingImages, setExistingImages] = useState(review.images || []);
     const [newImages, setNewImages] = useState([]);
     const [deletedImages, setDeletedImages] = useState([]);
+    const [modalOpen, setModalOpen] = useState(false);
+    const [currentImageIndex,setCurrentImageIndex]=useState(0)
     
     const handleUpdate = async () => {
         if (comment.trim().length < 10) {
@@ -97,7 +100,7 @@ const ReviewCards = ({ review }) => {
         }
 
         try {
-            await toggleHelpful(review._id)
+            await toggleHelpful(review._id).unwrap()
             toast.success(isHelpful ? "Marked as not helpful":"Marked as helpful")
         } catch (error) {
             if (error?.data?.message) {
@@ -195,8 +198,8 @@ const ReviewCards = ({ review }) => {
                   {review.images?.length>0 && !isEditing && (
               <div className='flex gap-3 mt-3 flex-wrap'>
                   {review.images.map((img, index) => (
-                        <img key={index} src={img.url} alt="Review" className='w-20 h-20 object-cover rounded-md' />
-                    ))}
+                      <img src={img.url} alt="Review Image" key={index} onClick={() => { setCurrentImageIndex(index); setModalOpen(true)}} className='w-20 h-20 object-cover rounded-md cursor-pointer hover:opacity-80'/>
+                  ))}
               </div>
                   )}
           {/* Owner Reply */}
@@ -216,6 +219,10 @@ const ReviewCards = ({ review }) => {
           <div className='mt-4 flex items-center gap-4'>
               <button onClick={handleHelpful} className={`flex items-center gap-2 text-sm ${isHelpful ? "text-primary" : "text-text-muted"}`}><ThumbsUp size={16} className={isHelpful ? "fill-primary" : ""} />{review.helpfulVotes?.length||0}</button>
           </div>
+
+          {modalOpen && (
+              <ImageModal images={review.images} currentIndex={currentImageIndex} setCurrentIndex={setCurrentImageIndex}onClose={()=>setModalOpen(false)}/>
+          )}
       </div>
   )
 }
