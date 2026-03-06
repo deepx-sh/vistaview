@@ -86,8 +86,8 @@ const AddReviewForm = ({placeId,reviews}) => {
 
   if (alreadyReviewed) {
     return (
-      <div className="border border-border rounded-lg p-6 bg-surface text-center">
-        <p className="text-text-muted">
+      <div className="border border-danger mt-2 mb-2 rounded-lg p-6 bg-surface text-center">
+        <p className=" text-danger">
           You have already reviewed this place
         </p>
       </div>

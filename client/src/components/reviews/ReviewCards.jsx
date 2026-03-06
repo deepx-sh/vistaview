@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
-import { Star, Pencil, Trash, Form, X,ThumbsUp } from 'lucide-react'
+import { Star, Pencil, Trash, Form, X,ThumbsUp,Flag } from 'lucide-react'
 import { useUpdateReviewMutation,useDeleteReviewMutation,useToggleHelpfulMutation } from '../../features/reviews/reviewsApi'
 import { useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
 import ImageModal from '../common/ImageModal';
+import ReportReviewModal from './ReportReviewModal';
 const ReviewCards = ({ review }) => {
     const { user: currentUser } = useSelector((state) => state.auth);
     const user = review.user
@@ -19,7 +20,8 @@ const ReviewCards = ({ review }) => {
     const [newImages, setNewImages] = useState([]);
     const [deletedImages, setDeletedImages] = useState([]);
     const [modalOpen, setModalOpen] = useState(false);
-    const [currentImageIndex,setCurrentImageIndex]=useState(0)
+    const [currentImageIndex, setCurrentImageIndex] = useState(0)
+    const [showReportModal,setShowReportModal]=useState(false)
     
     const handleUpdate = async () => {
         if (comment.trim().length < 10) {
@@ -164,7 +166,7 @@ const ReviewCards = ({ review }) => {
 
           {/* Comment */}
           {!isEditing ? (
-              <p className='text-text-secondary text-sm mb-4'>
+              <p className='text-text-secondary text-sm mb-4 wrap-break-word'>
                   {review.comment}
               </p>
           ) : (
@@ -218,8 +220,13 @@ const ReviewCards = ({ review }) => {
           {/* Helpful Button */}
           <div className='mt-4 flex items-center gap-4'>
               <button onClick={handleHelpful} className={`flex items-center gap-2 text-sm ${isHelpful ? "text-primary" : "text-text-muted"}`}><ThumbsUp size={16} className={isHelpful ? "fill-primary" : ""} />{review.helpfulVotes?.length||0}</button>
+              <button onClick={()=>setShowReportModal(true)} className='flex items-center gap-2 text-sm text-text-muted'><Flag size={16}/>Report</button>
           </div>
-
+        
+          
+          {showReportModal && (
+              <ReportReviewModal reviewId={review._id} onClose={()=>setShowReportModal(false)}/>
+          )}
           {modalOpen && (
               <ImageModal images={review.images} currentIndex={currentImageIndex} setCurrentIndex={setCurrentImageIndex}onClose={()=>setModalOpen(false)}/>
           )}
