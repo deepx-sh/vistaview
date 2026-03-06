@@ -8,7 +8,7 @@ import ImageGallery from '../components/common/ImageGallery';
 import WishlistButton from '../components/common/WishlistButton';
 import ReviewList from '../components/reviews/ReviewList';
 import AddReviewForm from '../components/reviews/AddReviewForm';
-
+import RatingBreakdown from '../components/reviews/RatingBreakdown';
 
 const PlaceDetails = () => {
     const { id } = useParams();
@@ -75,6 +75,7 @@ const PlaceDetails = () => {
               <h2 className='tex-xl font-semibold mb-6'>
                   Reviews
               </h2>
+              <RatingBreakdown reviews={reviewData?.data || []}/>
                 <AddReviewForm placeId={id} reviews={reviewData?.data || []}/>
               <ReviewList reviews={reviewData?.data || []} isLoading={reviewLoading} />
           </div>
