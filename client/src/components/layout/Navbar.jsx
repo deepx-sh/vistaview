@@ -55,6 +55,7 @@ const Navbar = () => {
                 </Link>
               )}
               <Link to="/wishlist" className="hover:text-primary">Wishlist</Link>
+              <Link to="/profile" className="hover:text-primary">Profile</Link>
               <button
                 onClick={handleLogout}
                 className="text-danger hover:underline"

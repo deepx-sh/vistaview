@@ -12,6 +12,7 @@ import Home from "../pages/Home";
 import Places from "../pages/Place";
 import PlaceDetails from "../pages/PlaceDetails";
 import Wishlist from "../pages/Wishlist";
+import Profile from "../pages/Profile";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -34,7 +35,13 @@ export const router = createBrowserRouter([
       element: <ProtectedRoutes>
           <Wishlist/>
       </ProtectedRoutes>
-      }
+      },
+      {
+        path: "profile",
+        element: <ProtectedRoutes>
+          <Profile/>
+      </ProtectedRoutes>
+     }
     ],
   },
   {
