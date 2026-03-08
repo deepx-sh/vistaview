@@ -119,7 +119,7 @@ const ReviewCards = ({ review }) => {
               
               <div className='flex items-center gap-4'>
                   {user?.avatar ? (
-                      <img src={user.avatar} alt={user.name} className='w-10 h-10 rounded-full object-cover'/>
+                      <img src={user.avatar} alt={user.name} className='w-10 border border-purple-600 h-10 rounded-full object-cover'/>
                   ) : (
                           <div className='w-10 h-10 rounded-full bg-primary text-white flex items-center  justify-center font-medium'>{initials}</div>
                   )}
