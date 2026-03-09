@@ -142,6 +142,22 @@ export const deletePlace = asyncHandler(async (req, res) => {
     return res.status(200).json(new ApiResponse(200,{},"Place deleted successfully"))
 });
 
+// Get Owner Place
+
+export const getOwnerPlaces = asyncHandler(async (req, res) => {
+    
+    if (req?.user?.role !== "owner") {
+        throw new ApiError(403,"Only owners can access their places")
+    }
+
+    const places = await Place.find({ owner: req.user._id }).sort({ createdAt: -1 })
+    
+    const responseData = {
+        places
+    }
+
+    res.status(200).json(new ApiResponse(200,responseData,"Owner places fetched successfully"))
+})
 
 // Admin APPROVE/REJECT 
 export const approvePlace = asyncHandler(async (req, res) => {
