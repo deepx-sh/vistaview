@@ -1,6 +1,6 @@
 import express from 'express';
 
-import { createPlace, getPlaces, getPlaceById, updatePlace, deletePlace, approvePlace } from '../controllers/place.controller.js';
+import { createPlace, getPlaces, getPlaceById, updatePlace, deletePlace, approvePlace, getOwnerPlaces } from '../controllers/place.controller.js';
 
 import { authMiddleware } from '../middlewares/auth.middleware.js';
 import {authorizeRoles} from '../middlewares/role.middleware.js'
@@ -18,6 +18,7 @@ const router = express.Router();
 
 // Public
 router.get("/", getPlaces);
+router.get("/owner",authMiddleware,authorizeRoles("owner"),getOwnerPlaces)
 router.get("/search", validate(searchPlaceSchema), searchPlaces)
 router.get("/nearby",validate(geoSearchSchema),nearbyPlaces)
 router.get("/:id", getPlaceById);

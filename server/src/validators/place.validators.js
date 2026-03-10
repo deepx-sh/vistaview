@@ -81,7 +81,7 @@ export const createPlaceSchema = Joi.object({
         })
     }).optional(),
 
-    bestTimeToVisit: Joi.string().trim().max(200).optional().messages({
+    bestTimeToVisit: Joi.string().trim().allow('').max(200).optional().messages({
         'string.base': 'Best time to visit must be a string',
         'string.max': 'Best time to visit must be at most 200 characters long',
     })
