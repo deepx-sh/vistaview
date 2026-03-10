@@ -1,0 +1,19 @@
+import { Navigate } from "react-router-dom";
+import React from 'react'
+import { useSelector } from "react-redux";
+
+const OwnerRoutes = ({ children }) => {
+    const { user, isAuthenticated } = useSelector((state) => state.auth);
+
+    if (!isAuthenticated) {
+        return <Navigate to="/login" replace/>
+    }
+
+    if (user?.role !== "owner") {
+        return <Navigate to="/" replace/>
+    }
+
+    return children;
+}
+
+export default OwnerRoutes
