@@ -13,6 +13,11 @@ import Places from "../pages/Place";
 import PlaceDetails from "../pages/PlaceDetails";
 import Wishlist from "../pages/Wishlist";
 import Profile from "../pages/Profile";
+import OwnerRoute from "../routes/OwnerRoutes";
+import OwnerLayout from "../components/layout/OwnerLayout";
+import { OwnerDashboard } from "../pages/owner/OwnerDashboard";
+import OwnerPlaces from "../pages/owner/OwnerPlaces";
+import AddPlace from "../pages/owner/AddPlace";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -43,6 +48,28 @@ export const router = createBrowserRouter([
       </ProtectedRoutes>
      }
     ],
+  },
+  {
+    path: "/owner",
+    element: (
+      <OwnerRoute>
+        <OwnerLayout/>
+      </OwnerRoute>
+    ),
+    children: [
+      {
+        index: true,
+        element:<OwnerDashboard/>
+      },
+      {
+        path: "places",
+        element:<OwnerPlaces/>
+      },
+      {
+        path: "add-place",
+        element:<AddPlace/>
+      }
+    ]
   },
   {
     path: "/",

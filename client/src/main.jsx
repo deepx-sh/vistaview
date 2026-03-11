@@ -6,7 +6,9 @@ import './index.css'
 import App from './App.jsx'
 import { RouterProvider } from 'react-router-dom';
 import { router } from './app/router';
-import {Toaster} from 'react-hot-toast'
+import { Toaster } from 'react-hot-toast'
+import "leaflet/dist/leaflet.css"
+import "./utils/leafletIconFix.js"
 import AuthInitializer from './components/common/AuthInitializer';
 
 createRoot(document.getElementById('root')).render(

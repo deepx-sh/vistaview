@@ -44,7 +44,7 @@ const Navbar = () => {
           {isAuthenticated ? (
             <>
               {role === "owner" && (
-                <Link to="/owner/dashboard" className="hover:text-primary">
+                <Link to="/owner" className="hover:text-primary">
                   Dashboard
                 </Link>
               )}
