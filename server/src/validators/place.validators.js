@@ -84,7 +84,11 @@ export const createPlaceSchema = Joi.object({
     bestTimeToVisit: Joi.string().trim().allow('').max(200).optional().messages({
         'string.base': 'Best time to visit must be a string',
         'string.max': 'Best time to visit must be at most 200 characters long',
-    })
+    }),
+    deletedImages: Joi.array().items(Joi.string()).optional().messages({
+            'array.base': 'Deleted images must be an array of strings',
+            'string.base':'Each deleted image ID must be a string'
+        })
 });
 
 export const updatePlaceSchema = createPlaceSchema.fork(
