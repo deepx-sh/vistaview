@@ -10,7 +10,7 @@ const PublicRoutes = ({children}) => {
     
     if (isAuthenticated) {
         if(role==="admin") return <Navigate to="/admin/dashboard" replace/>
-        if (role === "owner") return <Navigate to="/owner/dashboard" replace />
+        if (role === "owner") return <Navigate to="/owner" replace />
         return <Navigate to="/" replace/>
     }
   return children
