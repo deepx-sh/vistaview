@@ -1,215 +1,277 @@
-import { useState } from "react";
-import { useCreatePlaceMutation } from "../../features/owner/ownerPlaceApi";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from 'react'
+import { useForm } from 'react-hook-form';
+import { useCreatePlaceMutation } from '../../features/owner/ownerPlaceApi';
+import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
+import MapPicker from '../../components/common/MapPicker';
+import { X } from 'lucide-react';
 
-import React from 'react'
-import toast from "react-hot-toast";
-import MapPicker from "../../components/common/MapPicker";
-import { X } from "lucide-react";
-
+const CATEGORIES=["beach","temple","hill","hotel","heritage","city","nature"]
 const AddPlace = () => {
-    const navigate = useNavigate();
-    const [createPlace, { isLoading }] = useCreatePlaceMutation();
+  const navigate = useNavigate();
+  const [createPlace, { isLoading }] = useCreatePlaceMutation();
 
-    const [form, setForm] = useState({
-        name: "",
-        description: "",
-        category: "",
-        address: "",
-        city:"",
-        state: "",
-        lat: "",
-        lng: "",
-        minPrice: "",
-        maxPrice: "",
-        openTime: "",
-        closeTime: "",
-        bestTimeToVisit:""
-    })
-    const [coordinates, setCoordinates] = useState(null);
-    const [images, setImages] = useState([]);
+  const [coordinates, setCoordinates] = useState(null);
+  const [images, setImages] = useState([]);
 
-    const handleChange = (e) => {
-        setForm({
-            ...form,
-            [e.target.name]:e.target.value
-        })
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    formState:{errors},
+  } = useForm({
+    defaultValues: {
+      name: "",
+      description: "",
+      category: "",
+      address: "",
+      city: "",
+      state: "",
+      minPrice: "",
+      maxPrice: "",
+      openTime: "",
+      closeTime: "",
+      bestTimeToVisit:""
     }
+  })
 
-    const handleImageChange = (e) => {
-        const files = Array.from(e.target.files);
-        if (files.length + images.length > 5) {
-            toast.error("You can upload up to 5 images");
-            return;
-        }
-    setImages((prev)=>[...prev,...files])
+  const minPrice = watch("minPrice");
+
+  const setAddress = ({ address, city, state }) => {
+    setValue("address", address, { shouldValidate: true });
+    setValue("city", city, { shouldValidate: true });
+    setValue("state",state,{shouldValidate:true})
   }
-  const removeImage = (index) => {
+
+  const handleImageChange = (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length + images.length > 5) {
+      toast.error("You can upload up to 5 images")
+      return
+    }
+    setImages((prev) => [...prev, ...files]);
+  }
+
+  const removeImages = (index) => {
     setImages((prev) => prev.filter((_, i) => i !== index));
   }
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+  const onSubmit = async (data) => {
+    if (!coordinates?.lat || !coordinates?.lng) {
+      toast.error("Please select a location on the map");
+      return;
+    }
 
-        if (!form.name.trim()) {
-            toast.error("Place name is required");
-            return;
-        }
-        if (form.name.trim().length < 3 || form.name.trim().length > 100) {
-            toast.error("Place name must be between 3 and 100 characters");
-            return;
-        }
-        if (!form.description.trim()) {
-            toast.error("Description is required");
-            return;
-        }
-        if(form.description.trim().length<20 || form.description.trim().length>2000){
-            toast.error("Description must be between 20 and 2000 characters");
-            return
-        }
-        if (!form.category) {
-            toast.error("Category is required");
-            return;
-        }
+    if (images.length === 0) {
+      toast.error("At least one place image is required")
+      return
+    }
 
-        if (!form.address.trim()) {
-            toast.error("Address is required");
-            return;
-        }
+    const formData = new FormData();
 
-        if (!form.city.trim()) {
-            toast.error("City is required");
-            return;
-        }
+    formData.append("name", data.name.trim());
+    formData.append("description", data.description.trim());
+    formData.append("category", data.category);
+    formData.append("location[type]", "Point");
+    formData.append("location[address]", data.address.trim());
+    formData.append("location[city]", data.city.trim());
+    formData.append("location[state]", data.state.trim());
+    formData.append("location[coordinates][0]", coordinates.lng);
+    formData.append("location[coordinates][1]", coordinates.lat);
 
-        if (!form.state.trim()) {
-            toast.error("State is required");
-            return;
-        }
+    if (data.minPrice) formData.append("pricing[min]", parseInt(data.minPrice));
+    if (data.maxPrice) formData.append("pricing[max]", parseInt(data.maxPrice));
+    if (data.openTime) formData.append("timings[open]", data.openTime);
+    if (data.closeTime) formData.append("timings[close]", data.closeTime);
+    if (data.bestTimeToVisit) formData.append("bestTimeToVisit", data.bestTimeToVisit.trim())
+    
+    images.forEach((img) => formData.append("images", img));
 
-        if (!coordinates?.lat || !coordinates?.lng) {
-            toast.error("Latitude and Longitude are required");
-            return;
-        }
-
-        if (form.minPrice && form.maxPrice && parseInt(form.minPrice) > parseInt(form.maxPrice)) {
-            toast.error("Min price cannot be greater than max price");
-            return;
-        }
-
-        if (form.minPrice && parseInt(form.minPrice) < 0) {
-            toast.error("Min price cannot be negative");
-            return;
-        }
-
-        if (form.maxPrice && parseInt(form.maxPrice) < 0) {
-            toast.error("Max price cannot be negative");
-            return;
-        }
-        if (images.length === 0) {
-            toast.error("At least one place image is required");
-            return;
-        }
-
-        if (images.length > 5) {
-            toast.error("You can upload up to 5 images");
-            return;
-        }
-        const formData = new FormData();
-
-        formData.append("name", form.name.trim());
-        formData.append("description", form.description.trim());
-        formData.append("category", form.category);
-        formData.append("location[address]", form.address.trim());
-        formData.append("location[type]","Point")
-        formData.append("location[city]", form.city.trim());
-        formData.append("location[state]", form.state.trim());
-        formData.append("location[coordinates][0]", coordinates.lng);
-        formData.append("location[coordinates][1]", coordinates.lat);
-        formData.append("pricing[min]", parseInt(form.minPrice));
-        formData.append("pricing[max]", parseInt(form.maxPrice));
-        formData.append("bestTimeToVisit", form.bestTimeToVisit.trim());
-        
-        images.forEach((img) => {
-            formData.append("images", img);
-        })
-
-        try {
-            await createPlace(formData).unwrap();
-            toast.success("Place created successfully");
-            navigate("/owner/places")
-        } catch (error) {
-             if (error?.data?.errors?.length > 0) {
-                    error.data.errors.map((e)=> toast.error(e))
-            } else {
-                toast.error(error?.data?.message || "Failed to create place")
-                }
+    try {
+      await createPlace(formData).unwrap();
+      toast.success("Place submitted for approval");
+      navigate("/owner/places")
+    } catch (error) {
+      if (error?.data?.errors?.length > 0) {
+          error.data.errors.forEach((e)=>toast.error(e))
+      } else {
+        toast.error(error?.data?.message || "Failed to create place")
         }
     }
+  }
   return (
-      <div className="max-w-3xl mx-auto">
-          <h1 className="text-2xl font-semibold mb-6">
-              Add New Place
-          </h1>
+    <div className='max-w-3xl mx-auto'>
+      <h1 className='text-2xl font-semibold mb-6'>Add New Place</h1>
 
-          <form onSubmit={handleSubmit} className="space-y-5">
-              <input type="text" name="name" placeholder="Place Name" onChange={handleChange} required className="w-full border p-2 rounded" />
-              
-              <textarea name="description" placeholder="Description" onChange={handleChange} required className="w-full border p-2 rounded"></textarea>
+      <form onSubmit={handleSubmit(onSubmit)} className='space-y-5'>
+        {/* Name */}
+        <div>
+          <input type="text"
+            placeholder='Place Name'
+            className={`w-full border p-2 rounded ${errors.name ? "border-red-500" : ""}`}
+            {...register("name", {
+              required: "Place name is required",
+              minLength: { value: 3, message: "Place name must be at least 3 characters" },
+              maxLength:{value:100,message:"Place name must be at most 100 characters"}
+            })}
+          />
 
-              <select name="category" onChange={handleChange} className="w-full border p-2 rounded">
-                  <option value="">Select category</option>
-                  <option value="beach">Beach</option>
-                  <option value="temple">Temple</option>
-                  <option value="hill">Hill</option>
-                  <option value="hotel">Hotel</option>
-                  <option value="heritage">Heritage</option>
-                  <option value="city">City</option>
-                  <option value="nature">Nature</option>
-              </select>
+          {errors.name && <p className='text-red-500 text-sm mt-1'>{errors.name.message}</p>}
+        </div>
 
-              <input type="text" name="address" placeholder="Address" onChange={handleChange} className="w-full border p-2 rounded" required />
-              
-              <div className="grid grid-cols-2 gap-4">
-                  <input type="text" name="city" placeholder="City" onChange={handleChange} className="border p-2 rounded" required />
-                  <input type="text" name="state" placeholder="State" onChange={handleChange} className="border p-2 rounded" required/>
+        {/* Description */}
+        <div>
+          <textarea placeholder='Description'
+            rows={4}
+            className={`w-full border p-2 rounded ${errors.description ? "border-red-500" : ""}`}
+            {...register("description", {
+              required: "Description is required",
+              minLength: { value: 20, message: "Description must be at least 20 characters" },
+              maxLength:{value:2000,message:"Description must be at most 2000 characters"}
+            })}
+          />
+          {errors.description && <p className='text-red-500 text-sm mt-1'>{errors.description.message}</p>}
+        </div>
+
+        {/* Category */}
+        <div>
+          <select
+            className={`w-full border p-2 rounded ${errors.category ? "border-red-500" : ""}`}
+            {...register("category",{required:"Category is required"})}
+          >
+            <option value="">Select category</option>
+            {CATEGORIES.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat.charAt(0).toUpperCase()+ cat.slice(1)}
+              </option>
+            ))}
+          </select>
+
+          {errors.category && <p className='text-red-500 text-sm mt-1'>{errors.category.message}</p>}
+        </div>
+
+        {/* Address */}
+        <div>
+          <input type="text"
+            placeholder='Address'
+            className={`w-full border p-2 rounded ${errors.address ? "border-red-500" : ""}`}
+            {...register("address",{required:"Address is required"})}
+          />
+          {errors.address && <p className='text-red-500 text-sm mt-1'>{errors.address.message}</p>}
+        </div>
+
+        {/* City & State */}
+        <div className='grid grid-cols-2 gap-4'>
+          <div>
+            <input type="text"
+              placeholder='City'
+              className={`w-full border p-2 rounded ${errors.city ? "border-red-500" : ""}`}
+              {...register("city",{required:"City is required"})}
+            />
+            {errors.city && <p className='text-red-500 text-sm mt-1'>{errors.city.message}</p>}
+          </div>
+            
+          <div>
+            <input type="text"
+              placeholder='State'
+              className={`w-full border p-2 rounded ${errors.city ? "border-red-500" : ""}`}
+              {...register("state",{required:"State is required"})}
+            />
+            {errors.state && <p className='text-red-500 text-sm mt-1'>{errors.state.message}</p>}
+          </div>
+        </div>
+
+
+        {/* Map Picker */}
+        <div>
+          <p className='text-sm mb-2'>Select Location on Map</p>
+          <MapPicker setCoordinates={setCoordinates} setAddress={setAddress} />
+            {coordinates ? (
+              <p className='text-sm text-gray-500 mt-2'>
+                Selected: {coordinates.lat.toFixed(5)},{coordinates.lng.toFixed(5)}
+              </p>
+            ) : (
+                <p className='text-sm text-gray-400 mt-2'>No location selected</p>
+            )}
+        </div>
+
+        {/* Pricing */}
+        <div className='grid grid-cols-2 gap-4'>
+          <div>
+            <input type="number"
+              placeholder='Min Budget'
+              min={0}
+              className={`w-full border p-2 rounded ${errors.minPrice ? "border-red-500" : ""}`}
+              {...register("minPrice", {
+                min:{value:0,message:"Min price cannot be negative"}
+              })}
+            />
+            {errors.minPrice && <p className='text-red-500 text-sm mt-1'>{errors.minPrice.message}</p>}
+          </div>
+
+          <div>
+            <input type="number"
+              placeholder='Max Budget'
+              min={0}
+              className={`w-full border p-2 rounded ${errors.maxPrice ? "border-red-500" : ""}`}
+              {...register("maxPrice", {
+                min: { value: 0, message: "Max price cannot be negative" },
+                validate: (value) => {
+                  if (minPrice && value && parseInt(value) < parseInt(minPrice)) {
+                    return "Max price must be greater than min price"
+                  }
+                  return true
+                }
+              })}
+            />
+            {errors.maxPrice && <p className='text-red-500 text-sm mt-1'>{errors.maxPrice.message}</p>}
+          </div>
+        </div>
+
+        {/* Timings */}
+        <div className='grid grid-cols-2 gap-4'>
+          <input type="text"
+            placeholder='Open Time (e.g. 9:00 AM)'
+            className='border p-2 rounded'
+            {...register("openTime")}
+          />
+
+          <input type="text"
+            placeholder='Close Time (e.g. 6:00 PM)'
+            className='border p-2 rounded'
+            {...register("closeTime")}
+          />
+        </div>
+
+        {/* Best Time To Visit */}
+        <div>
+          <input type="text"
+            placeholder='Best time to visit'
+            className={`w-full border p-2 rounded ${errors.bestTimeToVisit ? "border-red-500" : ""}`}
+            {...register('bestTimeToVisit',{maxLength:{value:200,message:"Must be at most 200 characters"}})}
+          />
+          {errors.bestTimeToVisit && <p className='text-red-500 text-sm mt-1'>{errors.bestTimeToVisit.message}</p>}
+        </div>
+
+        {/* Image Upload */}
+        <div>
+          <input type="file" multiple accept='image/*' onChange={handleImageChange} />
+          <p className='text-xs text-gray-400 mt-1'>Up to 5 images allowed</p>
+        </div>
+        {images.length > 0 && (
+          <div className='flex gap-3 flex-wrap'>
+            {images.map((file, index) => (
+              <div key={index} className='relative'>
+                <img src={URL.createObjectURL(file)} alt="Preview" className='w-20 h-20 object-cover rounded-md' />
+                <button type='button' onClick={()=> removeImages(index)} className='absolute -top-2 -right-2 bg-black text-white rounded-full p-1'><X size={12}/></button>
               </div>
+            ))}
+          </div>
+        )}
 
-              <div>
-                  <p className="text-sm mb-2">Select Location</p>
-                  <MapPicker setCoordinates={setCoordinates} />
-                  {coordinates && (
-                      <p className="text-sm text-gray-500 mt-2">
-                          Selected: {coordinates.lat.toFixed(5)}, {coordinates.lng.toFixed(5)}
-                      </p>
-                  )}
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                  <input type="number" name="minPrice" placeholder="Min Budget" onChange={handleChange} className="border p-2 rounded" min={0}/>
-                  <input type="number" name="maxPrice" placeholder="Max Budget" onChange={handleChange} className="border p-2 rounded" min={0}/>
-              </div>
-              
-              <div className="grid grid-cols-2 gap-4">
-                  <input type="text" name="openTime" placeholder="Open Time" onChange={handleChange} className="border p-2 rounded"/>
-                  <input type="text" name="closeTime" placeholder="Close Time" onChange={handleChange} className="border p-2 rounded"/>
-              </div>
-
-              <input type="text" placeholder="Best time to visit" name="bestTimeToVisit" className="w-full border p-2 rounded" onChange={handleChange}/>
-              
-               <input type="file" multiple accept="image/*" onChange={handleImageChange}/>
-                      {images.length > 0 && (
-                        <div className="flex gap-3 flex-wrap">
-                          {images.map((file, index) => (
-                            <div key={index} className="relative">
-                              <img src={URL.createObjectURL(file)} alt="Preview" className="w-20 h-20 object-cover rounded-md" />
-                              <button type="button" onClick={()=>removeImage(index)} className="absolute -top-2 -right-2 bg-black text-white rounded-full p-1"><X size={12}/></button>
-                            </div>
-                          ))}
-                        </div>
-              )}
-              
-              <button className="bg-primary text-white px-5 py-2 rounded" disabled={isLoading}>{isLoading ? "Creating...":"Create place"}</button>
-          </form>
+        <button type='submit' className='bg-primary text-white px-5 py-2 rounded disabled:opacity-60' disabled={isLoading}>{isLoading ? "Creating...":"Create Place"}</button>
+      </form>
     </div>
   )
 }

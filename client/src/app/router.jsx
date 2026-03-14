@@ -18,6 +18,7 @@ import OwnerLayout from "../components/layout/OwnerLayout";
 import { OwnerDashboard } from "../pages/owner/OwnerDashboard";
 import OwnerPlaces from "../pages/owner/OwnerPlaces";
 import AddPlace from "../pages/owner/AddPlace";
+import EditPlace from "../pages/owner/EditPlace";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -68,6 +69,10 @@ export const router = createBrowserRouter([
       {
         path: "add-place",
         element:<AddPlace/>
+      },
+      {
+        path:"edit-place/:id",
+        element:<EditPlace/>
       }
     ]
   },
