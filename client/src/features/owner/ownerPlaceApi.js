@@ -34,8 +34,38 @@ export const ownerPlaceApi = baseApi.injectEndpoints({
         body:formData
       }),
       invalidatesTags:["Place"]
+    }),
+    getOwnerReviews: builder.query({
+      query: (params) => ({
+        url: "/owners/reviews",
+        params
+      }),
+      providesTags:["Review"]
+    }),
+    replyToReview: builder.mutation({
+      query: ({ reviewId, text }) => ({
+        url: `/owners/reviews/${reviewId}/reply`,
+        method: "POST",
+        body:{text}
+      }),
+      invalidatesTags:["Review"]
+    }),
+    updateReply: builder.mutation({
+      query: ({ reviewId, text }) => ({
+        url: `/owners/reviews/${reviewId}/reply`,
+        method: "PUT",
+        body:{text}
+      }),
+      invalidatesTags:["Review"]
+    }),
+    deleteReply: builder.mutation({
+      query: (reviewId) => ({
+        url: `/owners/reviews/${reviewId}/reply`,
+        method:"DELETE"
+      }),
+      invalidatesTags:["Review"]
     })
   })
 });
 
-export const {useGetOwnerPlacesQuery,useDeletePlaceMutation,useCreatePlaceMutation,useGetOwnerPlaceQuery,useUpdatePlaceMutation}=ownerPlaceApi
+export const {useGetOwnerPlacesQuery,useDeletePlaceMutation,useCreatePlaceMutation,useGetOwnerPlaceQuery,useUpdatePlaceMutation,useGetOwnerReviewsQuery,useReplyToReviewMutation,useUpdateReplyMutation,useDeleteReplyMutation}=ownerPlaceApi

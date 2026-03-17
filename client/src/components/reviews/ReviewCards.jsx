@@ -212,7 +212,7 @@ const ReviewCards = ({ review }) => {
                   </p>
 
                   <p className='text-sm text-text-secondary'>
-                      {review.ownerReply}
+                      {review.ownerReply.text}
                   </p>
               </div>
           )}

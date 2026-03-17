@@ -47,6 +47,45 @@ export const applyForOwner = asyncHandler(async (req, res) => {
     return res.status(201).json(new ApiResponse(200,{},"Owner verification request submitted"))
 });
 
+export const getOwnerReviews = asyncHandler(async (req, res) => {
+    const { placeId, page = 1, limit = 10 } = req.query;
+
+    const ownerPlaces = await Place.find({ owner: req.user._id }).select("_id");
+
+    if (ownerPlaces.length === 0) {
+        return res.status(200).json(new ApiResponse(200,{reviews:[],total:0},"No places found for this owner"))
+    }
+
+    const ownerPlaceIds = ownerPlaces.map(p => p._id);
+
+    if (placeId) {
+        const isOwned = ownerPlaceIds.some(id => id.toString() === placeId);
+
+        if (!isOwned) {
+            throw new ApiError(403,"You are not authorized to view reviews for this place")
+        }
+    }
+
+    const query = {
+        place: placeId ? placeId : { $in: ownerPlaceIds },
+        isDeleted:false
+    }
+
+    const skip = (Number(page) - 1) * Number(limit);
+
+    const [reviews, total] = await Promise.all([
+        Review.find(query)
+            .populate("user", "name email avatar")
+            .populate("place", "name")
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(Number(limit)),
+        Review.countDocuments(query)
+    ])
+
+    return res.status(200).json(new ApiResponse(200,{reviews,total},"Reviews fetched successfully"))
+})
+
 export const replyToReview = asyncHandler(async (req, res) => {
     const { reviewId } = req.params;
     const { text } = req.body;
