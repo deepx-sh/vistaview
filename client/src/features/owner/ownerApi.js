@@ -5,8 +5,17 @@ export const ownerApi = baseApi.injectEndpoints({
         getOwnerDashboard: builder.query({
             query: () => "/owners/dashboard",
             providesTags:["Dashboard"]
+        }),
+
+        applyForOwner: builder.mutation({
+            query: (formData) => ({
+                url: "/owners/apply",
+                method: "POST",
+                body:formData
+            }),
+            invalidatesTags:["User"]
         })
     })
 });
 
-export const {useGetOwnerDashboardQuery}=ownerApi
+export const {useGetOwnerDashboardQuery,useApplyForOwnerMutation}=ownerApi
