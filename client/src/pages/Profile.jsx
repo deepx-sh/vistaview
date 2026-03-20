@@ -7,17 +7,36 @@ import {
 } from "../features/user/userApi";
 import React from "react";
 import toast from "react-hot-toast";
+import ApplyForOwnerModal from "../components/owner/Applyforownermodal";
 
+const OwnerStatusBadge = ({ status }) => {
+  const map = {
+    not_applied: null,
+    pending:{label:"Pending Review",cls:"bg-amber-100 text-amber-700"},
+    approved:{label:"Verified Owner",cls:"bg-green-100 text-green-700"},
+    rejected:{label:"Application Rejected",cls:"bg-red-100 text-red-700"}
+  }
+
+  const badge = map[status]
+  if (!badge) return null
+  
+  return (
+    <span className={`inline-block rounded-full px-3 py-1 text-xs font-medium ${badge.cls}`}>{badge.label}</span>
+  )
+}
 const Profile = () => {
   const { data, isLoading } = useGetProfileQuery();
-  const [updateProfile] = useUpdateProfileMutation();
+  const [updateProfile,{isLoading:isUpdatingProfile}] = useUpdateProfileMutation();
   const [uploadAvatar] = useUploadAvatarMutation();
   const [deleteAvatar] = useDeleteAvatarMutation();
 
   const [name, setName] = useState("");
+  const [showOwnerModal, setShowOwnerModal] = useState(false);
 
   if (isLoading) return <p>Loading...</p>;
   const user = data?.data?.user;
+  const ownerProfile = user?.ownerProfile;
+  const ownerStatus = ownerProfile?.status ?? "not_applied"
 
   const handleUpdate = async (e) => {
     e.preventDefault();
@@ -29,7 +48,7 @@ const Profile = () => {
       if (error?.data?.errors.length > 0) {
         error.data.errors.map((e) => toast.error(e));
       } else {
-        toast.error(error?.data?.message);
+        toast.error(error?.data?.message || "Failed to update name");
       }
     }
   };
@@ -60,6 +79,9 @@ const Profile = () => {
       toast.error(error?.data?.message || "You can't remove default");
     }
   };
+
+  const canApply = ownerStatus === "not_applied" || ownerStatus === "rejected";
+  const isPending=ownerStatus==="pending"
   return (
     <div className="mx-auto max-w-5xl px-4 py-10">
       <h1 className="mb-4 text-2xl font-semibold">My Profile</h1>
@@ -125,32 +147,55 @@ const Profile = () => {
           </div>
 
           {/* Role */}
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-text-muted text-sm">Account Role</p>
-              <span className="bg-primary/10 text-primary mt-1 inline-block rounded-full px-3 py-1 text-sm">
-                {user.role}
-              </span>
-            </div>
-
+          <div>
+            <p className="text-text-muted text-sm">Account Role</p>
+            <span className="bg-primary/10 text-primary mt-1 inline-block rounded-full px-3 py-1 text-sm">
+              {user.role}
+            </span>
+          </div>
             {/* Apply Owner */}
 
             {user.role === "user" && (
-              <button className="bg-primary sm:word-break rounded-md px-4 py-2 text-sm text-white">
-                Apply for Owner
-              </button>
-            )}
-          </div>
+            <div className="border-t border-gray-100 pt-4">
+              <div className="flex items-center justify-between gap-3 flex-wrap">
+                <div>
+                  <p className="text-sm font-medium text-gray-700">Owner Verification</p>
+                  <p className="text-xs text-gray-400 mt-0.5">List and manage your own places on VistaView</p>
+                  {ownerStatus !== "not_applied" && (
+                    <div className="mt-2">
+                      <OwnerStatusBadge status={ownerStatus}/>
+                    </div>
+                  )}
+                </div>
+                {canApply && (
+                  <button onClick={() => setShowOwnerModal(true)} className="bg-primary text-white rounded-md px-4 py-2 text-sm hover:bg-primary-hover transition duration-200 shrink-0">
+                    {ownerStatus==="rejected"?"Reapply":"Apply for owner"}
+                  </button>
+                )}
 
-          {/* Update Button */}
-          <button
-            onClick={handleUpdate}
-            className="bg-primary hover:bg-primary-hover cursor-pointer rounded-md px-6 py-2 text-white transition duration-200"
-          >
-            Update Profile
-          </button>
+                {isPending && (
+                  <button onClick={() => setShowOwnerModal(true)} className="border border-amber-400 text-amber-600 rounded-md px-4 py-2 text-sm hover:bg-amber-50 transition duration-200 shrink-0">
+                    View Status
+                  </button>
+                )}
+                </div>
+                {ownerStatus === "rejected" && ownerProfile?.rejectedReason && (
+                  <p className="mt-2 text-xs text-red-500">
+                    Rejection reason: {ownerProfile.rejectedReason}
+                  </p>
+                )}
+              </div>
+              
+            )}
+    
+          <button onClick={handleUpdate} className="bg-primary hover:bg-primary-hover cursor-pointer rounded-md px-6 py-2 text-white transition duration-200">{isUpdatingProfile ? "Updating...": "Update Profile"}</button>
+    
         </div>
       </div>
+
+      {showOwnerModal && (
+        <ApplyForOwnerModal onClose={()=>setShowOwnerModal(false)} ownerProfile={ownerProfile} />
+      )}
     </div>
   );
 };
