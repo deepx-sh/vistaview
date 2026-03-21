@@ -13,6 +13,8 @@ import Places from "../pages/Place";
 import PlaceDetails from "../pages/PlaceDetails";
 import Wishlist from "../pages/Wishlist";
 import Profile from "../pages/Profile";
+
+
 import OwnerRoute from "../routes/OwnerRoutes";
 import OwnerLayout from "../components/layout/OwnerLayout";
 import { OwnerDashboard } from "../pages/owner/OwnerDashboard";
@@ -20,70 +22,61 @@ import OwnerPlaces from "../pages/owner/OwnerPlaces";
 import AddPlace from "../pages/owner/AddPlace";
 import EditPlace from "../pages/owner/EditPlace";
 import OwnerReviews from "../pages/owner/OwnerReviews";
-import OwnerAnalytics from "../pages/owner/OwnerAnalytics";  
+import OwnerAnalytics from "../pages/owner/OwnerAnalytics";
+
+import AdminRoute from "../routes/AdminRoute";
+import AdminLayout from "../components/layout/AdminLayout";
+import AdminDashboard from "../pages/admin/AdminDashboard";
+import AdminUsers from "../pages/admin/AdminUsers";
+import AdminPlaces from "../pages/admin/AdminPlaces";
+import AdminReviews from "../pages/admin/AdminReviews";
+import AdminOwners from "../pages/admin/AdminOwners";
+import AdminReports from "../pages/admin/AdminReports";
+
 export const router = createBrowserRouter([
   {
     path: "/",
     element: <PublicLayout />,
     children: [
-      {
-        index: true,
-        element: <Home></Home>,
-      },
-      {
-        path: "/places",
-        element:<Places/>
-      },
-      {
-        path: "/places/:id",
-        element:<PlaceDetails/>
-      },
-      {
-         path: "wishlist",
-      element: <ProtectedRoutes>
-          <Wishlist/>
-      </ProtectedRoutes>
-      },
-      {
-        path: "profile",
-        element: <ProtectedRoutes>
-          <Profile/>
-      </ProtectedRoutes>
-     }
+      {index: true,element:<Home/>},
+      {path: "places",element: <Places />},
+      {path: "places/:id",element: <PlaceDetails />},
+      {path: "wishlist",element: <ProtectedRoutes><Wishlist /></ProtectedRoutes>},
+      {path: "profile",element: <ProtectedRoutes><Profile /></ProtectedRoutes>}
     ],
   },
   {
     path: "/owner",
     element: (
       <OwnerRoute>
-        <OwnerLayout/>
+        <OwnerLayout />
       </OwnerRoute>
     ),
     children: [
-      {
-        index: true,
-        element:<OwnerDashboard/>
-      },
-      {
-        path: "places",
-        element:<OwnerPlaces/>
-      },
-      {
-        path: "add-place",
-        element:<AddPlace/>
-      },
-      {
-        path:"edit-place/:id",
-        element:<EditPlace/>
-      },
-      {
-        path: "reviews",
-        element:<OwnerReviews/>
-      },
-      {
-        path: "analytics",
-        element:<OwnerAnalytics/>
-      }
+      {index: true,element: <OwnerDashboard />},
+      {path: "dashboard",element: <OwnerDashboard />},
+      {path: "places",element: <OwnerPlaces />},
+      {path: "add-place",element: <AddPlace />},
+      {path: "edit-place/:id",element: <EditPlace />},
+      {path: "reviews",element: <OwnerReviews />},
+      {path: "analytics",element: <OwnerAnalytics />}
+    ]
+  },
+  {
+    path: "/admin",
+    element: (
+      <AdminRoute>
+        <AdminLayout/>
+      </AdminRoute>
+    ),
+    children: [
+      {index:true,element:<AdminDashboard/>},
+      {path:"dashboard",element:<AdminDashboard/>},
+      {path:"users",element:<AdminUsers/>},
+      {path:"places",element:<AdminPlaces/>},
+      {path:"reviews",element:<AdminReviews/>},
+      {path:"owners",element:<AdminOwners/>},
+      {path:"reports",element:<AdminReports/>},
     ]
   },
   {
