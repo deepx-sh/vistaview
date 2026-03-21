@@ -7,7 +7,7 @@ const OwnerSidebar = () => {
     const menu = [
         {
             name: "Dashboard",
-            path: "/owner",
+            path: "/owner/dashboard",
             icon:LayoutDashboard
         },
         {
