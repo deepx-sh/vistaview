@@ -42,7 +42,7 @@ export const reviewOwner = asyncHandler(async (req, res) => {
     }
 
     if (status === "rejected") {
-        if (!rejectedReason.trim()) {
+        if (!rejectedReason?.trim()) {
             throw new ApiError(400,"Rejected reason is required")
         } else {
             user.ownerProfile.status = "rejected";

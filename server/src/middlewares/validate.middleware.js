@@ -1,5 +1,5 @@
 const validate = (schema) => (req, res, next) => {
-    // console.log(req);
+    console.log(req.query);
     
     const dataToValidate = {
         ...req.body,
