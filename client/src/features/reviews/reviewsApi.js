@@ -3,7 +3,10 @@ import { baseApi } from "../../services/api/baseApi";
 export const reviewApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
         getPlaceReviews: builder.query({
-            query: (placeId) => `/reviews/place/${placeId}`,
+            query: ({ placeId, page = 1, limit = 5, rating, sort = "newest" }) => ({
+                url: `/reviews/place/${placeId}`,
+                params:{page,limit,rating,sort}
+            }),
             providesTags:["Review"]
         }),
 

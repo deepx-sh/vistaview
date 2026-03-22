@@ -14,13 +14,35 @@ import createNotification from "../utils/createNotification.js";
 export const getPlaceReviews = asyncHandler(async (req, res) => {
     const placeId = req.params.placeId;
 
-    const reviews = await Review.find({ place: placeId, isDeleted: false }).populate("user", "name avatar").sort({ createdAt: -1 });
+    const { rating, sort = "newest", page = 1, limit = 5 } = req.query;
 
-    if (!reviews) {
-        throw new ApiError(404,"No reviews found for this place")
+    const query = { place: placeId, isDeleted: false };
+
+    if (rating) {
+        query.rating = Number(rating);
     }
+    let sortOptions = {};
+
+    if (sort === "newest") sortOptions = { createdAt: -1 };
+    else if (sort === "oldest") sortOptions = { createdAt: 1 };
+    else if (sort === "highest") sortOptions = { rating: -1 };
+    else if (sort === "lowest") sortOptions = { rating: 1 };
+    else if (sort === "helpful") sortOptions = { helpfulVotes: -1 }
     
-    return res.status(200).json(new ApiResponse(200,reviews,"Reviews fetched successfully"))
+    const skip = (Number(page) - 1) * Number(limit);
+
+
+    const [reviews, total] = await Promise.all([
+        Review.find(query)
+            .populate("user", "name avatar")
+            .sort(sortOptions)
+            .skip(skip)
+            .limit(Number(limit)),
+        Review.countDocuments(query)
+    ])
+
+    const pages=Math.ceil(total/Number(limit))
+    return res.status(200).json(new ApiResponse(200,{reviews,total,page:Number(page),pages},"Reviews fetched successfully"))
 })
 // ADD REVIEW
 
