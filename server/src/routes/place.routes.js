@@ -20,7 +20,7 @@ const router = express.Router();
 router.get("/", getPlaces);
 router.get("/owner",authMiddleware,authorizeRoles("owner"),getOwnerPlaces)
 router.get("/search", validate(searchPlaceSchema), searchPlaces)
-router.get("/nearby",validate(geoSearchSchema),nearbyPlaces)
+router.get("/nearby",nearbyPlaces)
 router.get("/:id", getPlaceById);
 // Owner
 router.post("/", authMiddleware, authorizeRoles("owner"), uploadPlaceImages.array("images",5),parseMultiPartData,validate(createPlaceSchema), createPlace);

@@ -12,8 +12,12 @@ export const placeApi = baseApi.injectEndpoints({
         getPlaceById: builder.query({
             query: (id) => `/places/${id}`,
             providesTags:["Place"]
+        }),
+        getNearbyPlaces: builder.query({
+            query: ({ lat, lng, distance = 20 }) => `/places/nearby?lat=${lat}&lng=${lng}&distance=${distance}`,
+            providesTags:["Place"]
         })
     })
 });
 
-export const {useGetPlacesQuery,useGetPlaceByIdQuery}=placeApi
+export const {useGetPlacesQuery,useGetPlaceByIdQuery,useGetNearbyPlacesQuery}=placeApi
