@@ -108,7 +108,7 @@ export const addReview = asyncHandler(async (req, res) => {
         user: place.owner,
         type: "review",
         message: `New review added to your place "${place.name}"`,
-        link:`/owners/places/${place._id}`
+        link:`/places/${place._id}`
     })
 
     return res.status(201).json(new ApiResponse(201, review, "Review added successfully"));

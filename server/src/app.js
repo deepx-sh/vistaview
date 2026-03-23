@@ -9,6 +9,7 @@ import adminRoutes from './routes/admin.routes.js';
 import ownerRoutes from './routes/owner.routes.js'
 import reportRoutes from './routes/report.routes.js'
 import wishlistRoutes from './routes/wishlist.routes.js'
+import notificationRoutes from './routes/notifications.routes.js'
 import { ApiError } from './utils/ApiError.js';
 import multer from 'multer';
 const app = express();
@@ -32,7 +33,8 @@ app.use("/api/v1/wishlist",wishlistRoutes)
 app.use("/api/v1/reviews", reviewRoutes);
 app.use("/api/v1/reports",reportRoutes)
 app.use("/api/v1/owners", ownerRoutes);
-app.use("/api/v1/admin",adminRoutes)
+app.use("/api/v1/admin", adminRoutes)
+app.use("/api/v1/notifications",notificationRoutes)
 
 app.use((err, req, res, next) => {
   if (err instanceof ApiError) {

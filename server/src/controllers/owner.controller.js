@@ -122,7 +122,7 @@ export const replyToReview = asyncHandler(async (req, res) => {
         user: review.user,
         type: "reply",
         message: `Owner replied to your review on ${place.name}`,
-        link:`/place/${place._id}`
+        link:`/places/${place._id}`
     })
 
     await sendEmail({
