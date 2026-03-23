@@ -32,6 +32,7 @@ import AdminPlaces from "../pages/admin/AdminPlaces";
 import AdminReviews from "../pages/admin/AdminReviews";
 import AdminOwners from "../pages/admin/AdminOwners";
 import AdminReports from "../pages/admin/AdminReports";
+import Notifications from "../pages/Notifications";
 
 export const router = createBrowserRouter([
   {
@@ -42,7 +43,8 @@ export const router = createBrowserRouter([
       {path: "places",element: <Places />},
       {path: "places/:id",element: <PlaceDetails />},
       {path: "wishlist",element: <ProtectedRoutes><Wishlist /></ProtectedRoutes>},
-      {path: "profile",element: <ProtectedRoutes><Profile /></ProtectedRoutes>}
+      { path: "profile", element: <ProtectedRoutes><Profile /></ProtectedRoutes> },
+      {path:"notifications",element:<ProtectedRoutes><Notifications/></ProtectedRoutes>}
     ],
   },
   {

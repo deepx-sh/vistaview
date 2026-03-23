@@ -5,6 +5,7 @@ import { useLogoutMutation } from "../../features/auth/authApi";
 import { Menu, X } from "lucide-react";
 import { logout } from "../../features/auth/authSlice";
 import toast from "react-hot-toast";
+import NotificationBell from "../notifications/NotificationBell";
 
 const Navbar = () => {
   const { isAuthenticated, role} = useSelector((state) => state.auth);
@@ -56,6 +57,7 @@ const Navbar = () => {
               )}
               <Link to="/wishlist" className="hover:text-primary">Wishlist</Link>
               <Link to="/profile" className="hover:text-primary">Profile</Link>
+              <NotificationBell/>
               <button
                 onClick={handleLogout}
                 className="text-danger hover:underline"
