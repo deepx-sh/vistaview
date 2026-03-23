@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 const BlockModal = ({ user, onClose, onConfirm, isLoading }) => {
     const {register,handleSubmit,formState:{errors}}=useForm()
   return (
-      <div className='fixed inset-0 bg-black/50 z-0 flex items-center justify-center px-4'>
+      <div className='fixed inset-0 bg-black/50 z-50 flex items-center justify-center px-4'>
           <div className='bg-white rounded-xl w-full max-w-md p-6'>
               <h3 className='font-semibold mb-1'>Block {user.name}</h3>
               <p className='text-sm text-gray-500 mb-4'>Provide a reason for blocking this user</p>
