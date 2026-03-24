@@ -1,22 +1,38 @@
 import { Star, MapPin, ShieldCheck, Users, LayoutDashboard, Umbrella, Church, Mountain, Hotel, Waves, Castle, Trees } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 
 import React from 'react'
 import StatBox from "../components/ui/StatBox";
 import FeatureBox from "../components/ui/FeatureBox";
 import ReviewCard from "../components/ui/ReviewCard";
+import { useState } from "react";
 
 
 
 const Home = () => {
+    const navigate = useNavigate();
+    const [q, setQ] = useState("")
+    
+    const handleSearch = (e) => {
+        e.preventDefault();
+        const trimmed = q.trim();
+        if (trimmed) {
+            navigate(`/places?q=${encodeURIComponent(trimmed)}`)
+        } else {
+            navigate("/places")
+        }
+    }
+    const handleCategoryClick = (value) => {
+        navigate(`/places?category=${value}`)
+    }
     const categories = [
-  { category: "Beach", icon: <Umbrella size={24}/>, count: "142+" },
-    { category: "Temple", icon: <Church/>, count: "215+" },
-  { category: "Hill Station", icon: <Mountain/>, count: "227+" },
-  { category: "Hotel", icon: <Hotel/>, count: "163+" },
-  { category: "Lake", icon: <Waves/>, count: "283+" },
-  { category: "Fort", icon: <Castle/>, count: "199+" },
-  { category: "Park", icon: <Trees/>, count: "200+" }
+  { category: "Beach", icon: <Umbrella size={24}/>, count: "142+" ,value:"beach"},
+    { category: "Temple", icon: <Church/>, count: "215+" ,value:"temple"},
+  { category: "Hill Station", icon: <Mountain/>, count: "227+",value:"hill" },
+  { category: "Hotel", icon: <Hotel/>, count: "163+",value:"hotel" },
+  { category: "Lake", icon: <Waves/>, count: "283+",value:"lake" },
+  { category: "Fort", icon: <Castle/>, count: "199+",value:"fort" },
+  { category: "Park", icon: <Trees/>, count: "200+",value:"park" }
 ];
   return (
       <div>
@@ -43,14 +59,18 @@ const Home = () => {
 
 
                   {/* Search Box */}
-                  <div className="flex flex-col md:flex-row gap-3 justify-center max-w-2xl mx-auto">
+                  <form onSubmit={handleSearch} className="flex flex-col md:flex-row gap-3 justify-center max-w-2xl mx-auto">
                       <input type="text"
-                          placeholder="Search places, cities..."
-                          className="flex-1 px-4 py-3 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                          placeholder="Search places,cities..."
+                          value={q}
+                          onChange={((e) => setQ(e.target.value))}
+                          className="flex-1 px-3 py-3 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                       />
 
-                      <button className="bg-primary hover:bg-primary-hover text-white px-6 py-3 rounded-md transition duration-200">Search</button>
-                  </div>
+                      <button type="submit" className="bg-primary hover:bg-primary-hover text-white px-6 py-3 rounded-md transition duration-200">
+                          Search
+                      </button>
+                  </form>
 
                   {/* Stats Boxes */}
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-14">
@@ -76,13 +96,13 @@ const Home = () => {
 
                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-6">
                       {categories.map((cat) => (
-                          <div key={cat.category}
-      className="bg-background flex flex-col justify-center items-center border-border rounded-lg border p-6 text-center transition hover:shadow-md"
+                          <button key={cat.category} onClick={()=>handleCategoryClick(cat.value)}
+      className="bg-background flex flex-col justify-center items-center border-border rounded-lg border p-6 text-center transition hover:shadow-md hover:border-primary cursor-pointer"
     >
                               <div className="text-primary mx-auto mb-3">{ cat.icon}</div>
       <h3 className="font-medium">{cat.category}</h3>
                               <p className="text-text-muted mt-1 text-sm">{ cat.count}</p>
-    </div>
+    </button>
                       ))}
                   </div>
               </div>
