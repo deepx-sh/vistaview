@@ -36,6 +36,7 @@ import Notifications from "../pages/Notifications";
 import About from "../pages/About";
 import Contact from "../pages/Contact";
 import Privacy from "../pages/Privacy";
+import Terms from "../pages/Terms";
 
 export const router = createBrowserRouter([
   {
@@ -47,7 +48,8 @@ export const router = createBrowserRouter([
       { path: "places/:id", element: <PlaceDetails /> },
       { path: "/about", element: <About /> },
       { path: "/contact", element: <Contact /> },
-      {path:"/privacy",element:<Privacy/>},
+      { path: "/privacy", element: <Privacy /> },
+      {path:"/terms",element:<Terms/>},
       {path: "wishlist",element: <ProtectedRoutes><Wishlist /></ProtectedRoutes>},
       { path: "profile", element: <ProtectedRoutes><Profile /></ProtectedRoutes> },
       {path:"notifications",element:<ProtectedRoutes><Notifications/></ProtectedRoutes>}
