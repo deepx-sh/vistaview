@@ -28,7 +28,7 @@ const Pagination = ({ currentPage, totalPages }) => {
       <div className="flex justify-center mt-12">
           <div className="flex items-center gap-2">
               
-              <button disabled={currentPage == 11}
+              <button disabled={currentPage == 1}
                   onClick={() => changePage(currentPage - 1)}
                   className="px-3 py-2 border border-border rounded-md disabled:opacity-50"
               >Prev</button>
