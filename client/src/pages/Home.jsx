@@ -5,6 +5,7 @@ import React from 'react'
 import StatBox from "../components/ui/StatBox";
 import FeatureBox from "../components/ui/FeatureBox";
 import ReviewCard from "../components/ui/ReviewCard";
+import FeaturedPlaces from "../components/ui/FeaturedPlaces";
 import { useState } from "react";
 
 
@@ -108,6 +109,7 @@ const Home = () => {
               </div>
           </section>
 
+          <FeaturedPlaces/>
 
           {/* Why Choose Section */}
           <section className="py-20 px-6">
