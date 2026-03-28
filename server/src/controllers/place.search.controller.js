@@ -3,7 +3,7 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
 export const searchPlaces = asyncHandler(async (req, res) => {
-    const { q, category, city, minRating, minPrice, maxPrice, sortBy, sortOrder, page = 1, limit = 10 } = req.query;
+    const { q, category, city, minRating, minPrice, maxPrice, sortBy, sortOrder,isFeatured, page = 1, limit = 10 } = req.query;
     
     const query = { status: "approved" };
 
@@ -38,7 +38,9 @@ export const searchPlaces = asyncHandler(async (req, res) => {
             query["pricing.max"] ={...query["pricing.max"],$lte:Number(maxPrice)}
         }
     }
-    
+    if (isFeatured === "true" || isFeatured === true) {
+        query.isFeatured=true
+    }
     let sortOptions = {};
 
     if (q && !sortBy) {
@@ -55,6 +57,7 @@ export const searchPlaces = asyncHandler(async (req, res) => {
     //     .skip((Number(page) - 1) * Number(limit))
     //     .limit(Number(limit)); //if searching text is present then sort by best match first if not then sort by newest place
     
+    const skip = (Number(page) - 1) * Number(limit);
     let dbQuery = Place.find(query);
 
     if (q) {
@@ -66,13 +69,15 @@ export const searchPlaces = asyncHandler(async (req, res) => {
     //     dbQuery=dbQuery.sort({isFeatured:-1,createdAt:-1})
     // }
 
-    const places = await dbQuery
-        .sort(sortOptions)
+    const [places,total] = await Promise.all([
+        dbQuery.sort(sortOptions)
         .skip((Number(page) - 1) * Number(limit))
-        .limit(Number(limit))
+            .limit(Number(limit)),
+         Place.countDocuments(dbQuery),
+    ])
     
-    const total = await Place.countDocuments(dbQuery);
-    const pages = Math.ceil(total / limit);
+  
+    const pages = Math.ceil(total / Number(limit));
 
     const responseData = {
         page,
