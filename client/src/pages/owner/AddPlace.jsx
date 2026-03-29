@@ -4,13 +4,17 @@ import { useCreatePlaceMutation } from '../../features/owner/ownerPlaceApi';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import MapPicker from '../../components/common/MapPicker';
-import { X } from 'lucide-react';
+import { X,ImagePlus } from 'lucide-react';
+import useFileValidation from '../../hooks/useFileValidation';
+import handleApiError from '../../utils/handleApiError';
 
-const CATEGORIES=["beach","temple","hill","hotel","heritage","city","nature"]
+const CATEGORIES = ["beach", "temple", "hill", "hotel", "heritage", "city", "nature"]
+const MAX_IMAGES = 5;
+const MAX_MB = 5;
 const AddPlace = () => {
   const navigate = useNavigate();
   const [createPlace, { isLoading }] = useCreatePlaceMutation();
-
+  const {validate,IMAGE_TYPES}=useFileValidation()
   const [coordinates, setCoordinates] = useState(null);
   const [images, setImages] = useState([]);
 
@@ -46,11 +50,18 @@ const AddPlace = () => {
 
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
-    if (files.length + images.length > 5) {
-      toast.error("You can upload up to 5 images")
-      return
-    }
-    setImages((prev) => [...prev, ...files]);
+    e.target.value=""
+    
+    const valid = validate({
+      files,
+      allowedTypes: IMAGE_TYPES,
+      maxSizeMB: MAX_MB,
+      maxCount: MAX_IMAGES,
+      currentCount:images.length
+    })
+
+    if(valid.length>0)  setImages((prev) => [...prev, ...valid]);
+   
   }
 
   const removeImages = (index) => {
@@ -93,11 +104,7 @@ const AddPlace = () => {
       toast.success("Place submitted for approval");
       navigate("/owner/places")
     } catch (error) {
-      if (error?.data?.errors?.length > 0) {
-          error.data.errors.forEach((e)=>toast.error(e))
-      } else {
-        toast.error(error?.data?.message || "Failed to create place")
-        }
+      handleApiError(error,"Failed to create place")
     }
   }
   return (
@@ -256,21 +263,29 @@ const AddPlace = () => {
 
         {/* Image Upload */}
         <div>
-          <input type="file" multiple accept='image/*' onChange={handleImageChange} />
-          <p className='text-xs text-gray-400 mt-1'>Up to 5 images allowed</p>
-        </div>
-        {images.length > 0 && (
-          <div className='flex gap-3 flex-wrap'>
+          <p className='text-sm font-medium mb-2'>Place Images <span className='text-text-muted font-normal'>({images.length}/{MAX_IMAGES})</span></p>
+          <label className={`inline-flex items-center gap-2 text-sm border border-dashed border-border rounded-md px-4 py-2 cursor-pointer hover:border-primary hover:bg-primary/5 transition ${images.length >= MAX_IMAGES ? "opacity-40 pointer-events-none" : ""}`}>
+            <ImagePlus size={15} className="text-text-muted" />
+            Add photos
+            <input type="file" multiple accept='image/jpeg,image/jpg,image/png' onChange={handleImageChange} className='hidden' disabled={images.length>=MAX_IMAGES} />
+
+          </label>
+          <p className='text-xs text-text-muted mt-1'>JPG, PNG, max {MAX_MB}MB each up to {MAX_IMAGES} images</p>
+
+          {images.length > 0 && (
+          <div className='flex gap-3 flex-wrap mt-3'>
             {images.map((file, index) => (
               <div key={index} className='relative'>
-                <img src={URL.createObjectURL(file)} alt="Preview" className='w-20 h-20 object-cover rounded-md' />
-                <button type='button' onClick={()=> removeImages(index)} className='absolute -top-2 -right-2 bg-black text-white rounded-full p-1'><X size={12}/></button>
+                <img src={URL.createObjectURL(file)} alt="Preview" className='w-20 h-20 object-cover rounded-md border border-border' />
+                <button type='button' onClick={()=> removeImages(index)} className='absolute -top-2 -right-2 bg-black text-white rounded-full p-1 flex items-center justify-center'><X size={12}/></button>
               </div>
             ))}
           </div>
         )}
+        </div>
+        
 
-        <button type='submit' className='bg-primary text-white px-5 py-2 rounded disabled:opacity-60' disabled={isLoading}>{isLoading ? "Creating...":"Create Place"}</button>
+        <button type='submit'  className='bg-primary hover:bg-primary-hover text-white px-6 py-2.5 rounded-md transition disabled:opacity-60' disabled={isLoading}>{isLoading ? "Creating...":"Create Place"}</button>
       </form>
     </div>
   )

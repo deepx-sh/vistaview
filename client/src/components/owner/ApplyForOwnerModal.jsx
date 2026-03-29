@@ -4,44 +4,33 @@ import { useForm } from "react-hook-form";
 import { X, Upload, FileText, AlertCircle } from "lucide-react";
 import toast from "react-hot-toast";
 import { useApplyForOwnerMutation } from "../../features/owner/ownerApi";
+import useFileValidation from '../../hooks/useFileValidation';
+import handleApiError from '../../utils/handleApiError';
 
 
 const MAX_DOCS = 3;
-const ALLOWED_TYPES = ["image/jpg", "image/jpeg", "image/png", "application/pdf"];
-const MAX_SIZE_MB = 5;
+const MAX__MB = 5;
 
 const ApplyForOwnerModal = ({ onClose, ownerProfile }) => {
     const [documents, setDocuments] = useState([])
     const [applyForOwner, { isLoading }] = useApplyForOwnerMutation();
-
+    const {validate,DOC_TYPES}=useFileValidation()
     const { register, handleSubmit, formState: { errors } } = useForm();
     
     const status = ownerProfile?.status ?? "not_applied";
 
     const handleDocChange = (e) => {
-        const files = Array.from(e.target.files);
-
-        const valid = files.filter((f) => {
-            if (!ALLOWED_TYPES.includes(f.type)) {
-                toast.error(`${f.name} only JPG,PNG,PDF allowed`)
-                return false;
-            }
-
-            if (f.size > MAX_SIZE_MB * 1024 * 1024) {
-                toast.error(`${f.name}: max files size is ${MAX_SIZE_MB}MB`)
-                return
-            }
-            return true;
+        const files =  Array.from(e.target.files);
+        e.target.value=""
+        const valid = validate({
+            files,
+            allowedTypes: DOC_TYPES,
+            maxSizeMB: MAX__MB,
+            maxCount: MAX_DOCS,
+            currentCount:documents.length
         })
-
-        const combined = [...documents, ...valid];
-        if (combined.length > MAX_DOCS) {
-            toast.error(`Maximum ${MAX_DOCS} documents allowed`)
-            setDocuments(combined.slice(0, MAX_DOCS))
-            return
+        if (valid.length > 0) setDocuments((prev) => [...prev, ...valid]);
         }
-        setDocuments(combined);
-    }
 
     const removeDoc = (index) => {
         setDocuments((prev)=> prev.filter((_,i)=>i!==index))
@@ -64,11 +53,7 @@ const ApplyForOwnerModal = ({ onClose, ownerProfile }) => {
             toast.success("Application submitted We'll review it shortly")
             onClose()
         } catch (error) {
-            if (error?.data?.errors?.length > 0) {
-                error.data.errors.forEach((e)=>toast.error(e))
-            } else {
-                toast.error(error?.data?.message || "Failed to submit application")
-            }
+           handleApiError(error,"Failed to submit application")
       
       }
     }
@@ -176,7 +161,7 @@ const ApplyForOwnerModal = ({ onClose, ownerProfile }) => {
                               <span className='font-normal text-gray-400'>({documents.length}/{MAX_DOCS})</span>
                           </label>
                           <p className='mb-2 text-xs text-gray-400'>
-                              Upload business registration, GST, or any govt-issued ID, JPG, PDF max 5MB each
+                              Upload business registration, GST, or any govt-issued ID, JPG, PDF max {MAX__MB}MB each
                           </p>
 
                           <label className={`flex cursor-pointer items-center gap-2 rounded-md border-2 border-dashed px-4 py-2 text-sm transition hover:border-primary hover:bg-primary/5 ${documents.length >= MAX_DOCS ? "pointer-events-none opacity-50" : "border-gray-300"}`}>
@@ -184,7 +169,7 @@ const ApplyForOwnerModal = ({ onClose, ownerProfile }) => {
                               <span className='text-gray-500'>Click to upload documents</span>
                               <input type="file"
                                   multiple
-                                  accept='.jpg,.jpeg,.png,.pdf'
+                                  accept='image/jpeg,image/jpg,image/png,application/pdf'
                                   className='hidden'
                                   disabled={documents.length >=  MAX_DOCS}
                                     onChange={handleDocChange}
@@ -216,7 +201,7 @@ const ApplyForOwnerModal = ({ onClose, ownerProfile }) => {
                           <button type='submit' disabled={isLoading} className='flex-1 rounded-md bg-primary py-2 text-sm text-white disabled:opacity-60 hover:bg-primary-hover transition'>
                               {isLoading ? "Submitting...":"Submit Application"}
                           </button>
-                          <button type='button' onClick={onClose} className='flex-1 rounded-mdm border border-gray-300 py-2 text-sm hover:bg-gray-50 transition'>
+                          <button type='button' onClick={onClose} className='flex-1 rounded-md border border-gray-300 py-2 text-sm hover:bg-gray-50 transition'>
                               Cancel
                           </button>
                       </div>
