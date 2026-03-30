@@ -6,6 +6,7 @@ import { Menu, X } from "lucide-react";
 import { logout } from "../../features/auth/authSlice";
 import toast from "react-hot-toast";
 import NotificationBell from "../notifications/NotificationBell";
+import { baseApi } from "../../services/api/baseApi";
 
 const Navbar = () => {
   const { isAuthenticated, role} = useSelector((state) => state.auth);
@@ -17,7 +18,8 @@ const Navbar = () => {
   const handleLogout = async () => {
     try {
       await logoutUser();
-    dispatch(logout());
+      dispatch(logout());
+      dispatch(baseApi.util.resetApiState())
     toast.success("Logged out successfully");
     navigate("/login");
     } catch (error) {

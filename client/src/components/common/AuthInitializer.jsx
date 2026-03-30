@@ -7,7 +7,7 @@ import React from 'react'
 const AuthInitializer = ({ children }) => {
     const dispatch = useDispatch();
 
-    const { data, isSuccess, isError, isLoading } = useGetMeQuery();
+    const { data, isSuccess, isError, isLoading } = useGetMeQuery(undefined,{refetchOnMountOrArgChange:true});
     
     useEffect(() => {
         if (isSuccess && data?.data?.user) {
