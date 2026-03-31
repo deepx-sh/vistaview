@@ -7,7 +7,7 @@ import {
 } from "../features/user/userApi";
 import React from "react";
 import toast from "react-hot-toast";
-import ApplyForOwnerModal from "../components/owner/Applyforownermodal";
+import ApplyForOwnerModal from "../components/owner/ApplyForOwnerModal";
 
 const OwnerStatusBadge = ({ status }) => {
   const map = {
