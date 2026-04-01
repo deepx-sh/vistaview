@@ -32,8 +32,15 @@ export const userApi = baseApi.injectEndpoints({
         method:"DELETE"
       }),
       invalidatesTags:["User"]
+    }),
+    changePassword: builder.mutation({
+      query: (data) => ({
+        url: "/users/me/change-password",
+        method:"PUT",
+        body:data
+      })
     })
     })
 });
 
-export const {useGetProfileQuery,useUpdateProfileMutation,useUploadAvatarMutation,useDeleteAvatarMutation}=userApi
+export const {useGetProfileQuery,useUpdateProfileMutation,useUploadAvatarMutation,useDeleteAvatarMutation,useChangePasswordMutation}=userApi

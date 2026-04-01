@@ -8,6 +8,7 @@ import {
 import React from "react";
 import toast from "react-hot-toast";
 import ApplyForOwnerModal from "../components/owner/ApplyForOwnerModal";
+import ChangePasswordForm from "../components/ui/ChangePasswordForm";
 
 const OwnerStatusBadge = ({ status }) => {
   const map = {
@@ -33,16 +34,16 @@ const Profile = () => {
   const [name, setName] = useState("");
   const [showOwnerModal, setShowOwnerModal] = useState(false);
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <p className="text-center py-20 text-text-muted">Loading...</p>;
   const user = data?.data?.user;
   const ownerProfile = user?.ownerProfile;
   const ownerStatus = ownerProfile?.status ?? "not_applied"
 
   const handleUpdate = async (e) => {
     e.preventDefault();
-    if (!name) return;
+    if (!name.trim()) return;
     try {
-      await updateProfile({ name }).unwrap();
+      await updateProfile({ name:name.trim() }).unwrap();
       toast.success("Name updated successfully");
     } catch (error) {
       if (error?.data?.errors.length > 0) {
@@ -57,9 +58,18 @@ const Profile = () => {
     e.preventDefault();
 
     const file = e.target.files[0];
-    console.log(file);
     if (!file) return;
+    const allowed = ["image/png", "image/jpg", "image/jpeg"];
 
+    if (!allowed.includes(file.type)) {
+      toast.error("Only JPG and PNG images are allowed")
+      return;
+    }
+
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error("Profile picture must be under 2MB")
+      return
+    }
     const formData = new FormData();
     formData.append("avatar", file);
 
@@ -84,11 +94,11 @@ const Profile = () => {
   const isPending=ownerStatus==="pending"
   return (
     <div className="mx-auto max-w-5xl px-4 py-10">
-      <h1 className="mb-4 text-2xl font-semibold">My Profile</h1>
+      <h1 className="mb-8 text-2xl font-semibold">My Profile</h1>
 
       <div className="grid gap-8 md:grid-cols-3">
         {/* Avatar Section */}
-        <div className="bg-surface border-border flex flex-col items-center rounded-lg border p-6">
+        <div className="bg-surface max-h-max border-border flex flex-col items-center rounded-lg border p-6">
           {user.avatar ? (
             <img
               src={user.avatar}
@@ -102,47 +112,49 @@ const Profile = () => {
           )}
 
           <div className="mt-6 flex gap-3">
-            <label className="border-border cursor-pointer rounded-md border px-4 py-2 text-sm hover:bg-gray-100">
+            <label className="border-border cursor-pointer rounded-md border px-4 py-2 text-sm hover:bg-gray-100 transition">
               Upload
               <input
                 type="file"
-                accept="image/*"
+                accept="image/jpeg,image/png,image/jpg"
                 hidden
                 onChange={handleAvatarUpload}
               />
             </label>
 
-            {user.avatar && (
+            {user.avatarPublicId && (
               <button
                 onClick={handleAvatarDelete}
-                className="border-border rounded-md border px-4 py-2 text-sm hover:bg-gray-100"
+                className="border-border rounded-md border px-4 py-2 text-sm hover:bg-gray-100 transition"
               >
                 Remove
               </button>
             )}
           </div>
+          <p className="text-xs text-text-muted mt-3 text-center">JPG, PNG max 2MB</p>
         </div>
 
         {/* Profile Info */}
 
-        <div className="bg-surface border-border space-y-5 rounded-lg border p-6 md:col-span-2">
+        <div className="space-y-5 md:col-span-2">
+          <div className="bg-surface border-border space-y-5 rounded-lg border p-6">
           {/* Name */}
           <div>
-            <label className="text-text-muted text-sm">Name</label>
+            <label className="text-text-muted text-sm block mb-1">Name</label>
             <input
               defaultValue={user.name}
               onChange={(e) => setName(e.target.value)}
-              className="border-border mt-1 w-full rounded-md border px-3 py-2"
+              className="border-border mt-1 w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </div>
 
           {/* Email */}
           <div>
-            <label className="text-text-muted text-sm">Email</label>
+            <label className="text-text-muted text-sm block mb-1">Email</label>
             <input
               value={user.email}
               disabled
-              className="border-border mt-1 w-full cursor-not-allowed rounded-md border bg-gray-100 px-3 py-2"
+              className="border-border mt-1 w-full cursor-not-allowed rounded-md border text-sm bg-gray-100 px-3 py-2"
             />
           </div>
 
@@ -188,8 +200,11 @@ const Profile = () => {
               
             )}
     
-          <button onClick={handleUpdate} className="bg-primary hover:bg-primary-hover cursor-pointer rounded-md px-6 py-2 text-white transition duration-200">{isUpdatingProfile ? "Updating...": "Update Profile"}</button>
+          <button onClick={handleUpdate} className="bg-primary hover:bg-primary-hover cursor-pointer rounded-md px-6 py-2 text-white transition duration-200 text-sm">{isUpdatingProfile ? "Updating...": "Update Profile"}</button>
     
+          </div>
+          
+          <ChangePasswordForm/>
         </div>
       </div>
 
