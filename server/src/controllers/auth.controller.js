@@ -269,6 +269,30 @@ export const resetPassword = asyncHandler(async (req, res) => {
     return res.status(200).json(new ApiResponse(200,{},"Password reset successfully. You can now log in with your new password"))
 });
 
+export const changePassword = asyncHandler(async (req, res) => {
+    const { currentPassword, newPassword, confirmPassword } = req.body;
+
+    if (newPassword !== confirmPassword) {
+        throw new ApiError(400, "New passwords do not match");
+    }
+
+    const user = await User.findById(req.user._id).select("+password")
+    
+    const isMatch = await bcrypt.compare(currentPassword, user.password)
+    
+    if (!isMatch) {
+        throw new ApiError(400,"Current Password is incorrect")
+    }
+    if (currentPassword == newPassword) {
+        throw new ApiError(400,"New password must be different from your current password")
+    }
+    user.password = await bcrypt.hash(newPassword, 10);
+
+    user.refreshToken = undefined;
+    await user.save();
+
+    return res.status(200).json(new ApiResponse(200,{},"Password changed successfully. Please log in again"))
+})
 export const getMe = asyncHandler(async (req, res) => {
     const responseData = {
         user:req.user
