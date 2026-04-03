@@ -12,6 +12,7 @@ import wishlistRoutes from './routes/wishlist.routes.js'
 import notificationRoutes from './routes/notifications.routes.js'
 import { ApiError } from './utils/ApiError.js';
 import multer from 'multer';
+import { generalLimiter } from './config/rateLimiter.js';
 const app = express();
 
 app.use(express.json());
@@ -21,7 +22,7 @@ app.use(cors({
     credentials:true
 }));
 
-
+app.use("/api/v1",generalLimiter)
 app.get("/", (req, res) => {
     return res.send("<h1>Welcome to VistaView API</h1>")
 });
