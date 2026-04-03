@@ -64,7 +64,7 @@ const Navbar = () => {
               </div>
               <button
                 onClick={handleLogout}
-                className="text-danger hover:text-danger/80 font-medium transition-colors ml-2 border border-danger/20 px-4 py-1.5 rounded-md hover:bg-danger/5"
+                className="text-danger hover:text-danger/80 font-medium transition-colors ml-2 border border-danger/20 px-4 py-1.5 rounded-md cursor-pointer hover:bg-danger/5"
               >
                 Logout
               </button>
@@ -84,10 +84,17 @@ const Navbar = () => {
           )}
         </div>
 
-        {/* Mobile Toggle */}
+        <div className="md:hidden flex items-center gap-2">
+          {isAuthenticated && (
+            <div className="pt-1">
+              <NotificationBell/>
+            </div>
+          )}
+          {/* Mobile Toggle */}
         <button className="md:hidden text-text-secondary hover:text-primary p-2 transition-colors" onClick={() => setOpen(!open)}>
             {open ? <X size={20}/>: < Menu size={20}/>}
         </button>
+        </div>
       </div>
 
       <div className={`md:hidden absolute w-full bg-surface border-b border-border shadow-xl overflow-hidden transition-all duration-300 ease-in-out ${open ? "max-h-96 opacity-100":"max-h-0 opacity-0 border-transparent"}`}>
@@ -104,12 +111,10 @@ const Navbar = () => {
                 <Link to="/admin/dashboard" onClick={()=>setOpen(false)} className="block px-3 py-2.5 text-text-secondary hover:bg-primary/5 hover:text-primary rounded-md font-medium">Admin Panel</Link>
               )}
 
-              <Link to="/wishlist"  className=" block px-3 py-2.5 text-text-secondary hover:bg-primary/5 hover:text-primary rounded-md font-medium">Wishlist</Link>
-              <Link to="/profile"  className=" block px-3 py-2.5 text-text-secondary hover:bg-primary/5 hover:text-primary rounded-md font-medium">Profile</Link>
+              <Link to="/wishlist" onClick={()=>setOpen(false)} className=" block px-3 py-2.5 text-text-secondary hover:bg-primary/5 hover:text-primary rounded-md font-medium">Wishlist</Link>
+              <Link to="/profile" onClick={()=>setOpen(false)} className=" block px-3 py-2.5 text-text-secondary hover:bg-primary/5 hover:text-primary rounded-md font-medium">Profile</Link>
 
-              <div className="px-3 py-2.5">
-                <NotificationBell/>
-              </div>
+      
               <div className="border-t border-border mt-2 pt-2">
                  <button onClick={()=> {handleLogout(); setOpen(false)}} className="w-full text-center px-3 py-2.5 text-danger hover:bg-danger/5 rounded-md font-medium">
                 Logout
