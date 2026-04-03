@@ -7,17 +7,20 @@ import PasswordStrength from "../../components/ui/PasswordStrength";
 import toast from "react-hot-toast";
 import { useState } from "react";
 import React from 'react'
+import handleApiError from "../../utils/handleApiError";
+import { Eye, EyeOff } from "lucide-react";
 
 const schema = z.object({
     name: z.string().min(2, "Name is required"),
     email: z.string().email("Enter a valid email"),
-    password: z.string().min(8, "Password must be at least 8 character"),
+    password: z.string().min(8, "Password must be at least 8 character").regex(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/, "Password must include uppercase, lowercase, number, and special character")
 })
 const Register = () => {
     const navigate = useNavigate();
     const [registerUser, { isLoading }] = useRegisterMutation();
     const [passwordValue, setPasswordValue] = useState("");
-
+    const [showPassword, setShowPassword] = useState(false);
+    
     const {
         register,
         handleSubmit,
@@ -33,9 +36,7 @@ const Register = () => {
             toast.success("OTP send to your email");
             navigate("/verify-email",{state:{email:data.email}})
         } catch (error) {
-            console.log(error);
-            
-            toast.error(error?.data?.message || "Registration failed")
+            handleApiError(error,"Registration Failed")
         }
     }
   return (
@@ -56,6 +57,7 @@ const Register = () => {
                       <input type="text"
                           placeholder="Full Name"
                           {...register("name")}
+                          required
                           className="w-full px-4 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                       />
                       {errors.name && (
@@ -71,6 +73,7 @@ const Register = () => {
                       <input type="email"
                           placeholder="Email"
                           {...register("email")}
+                          required
                           className="w-full px-4 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                       />
 
@@ -83,12 +86,22 @@ const Register = () => {
 
                   {/* Password */}
                   <div>
-                      <input type="password"
+                      <div className="relative">
+                          <input type={showPassword ? "text":"password"}
                           placeholder="Password"
-                          {...register("password")}
+                              {...register("password")}
+                              required
                           onChange={(e) => setPasswordValue(e.target.value)}
-                          className="w-full px-4 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
-                      />
+                          className="w-full px-4 py-2 pr-10 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                          />
+                          <button type="button" onClick={() => setShowPassword(!showPassword)} className='absolute inset-y-0 right-0 flex items-center pr-3 text-text-secondary hover:text-primary transition-colors hover:cursor-pointer'>
+                                  {showPassword ? (
+                                      <Eye size={20} />
+                                  ) : (
+                                          <EyeOff size={20} />
+                                  )}
+                            </button>
+                      </div>
 
                       {errors.password && (
                           <p className="text-danger text-sm mt-1">
