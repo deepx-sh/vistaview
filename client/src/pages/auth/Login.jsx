@@ -6,8 +6,9 @@ import { useDispatch } from 'react-redux';
 import { setUser } from '../../features/auth/authSlice';
 import { useNavigate,Link } from 'react-router-dom';
 import toast from "react-hot-toast";
-import React from 'react'
-
+import React, { useState } from 'react'
+import {Eye, EyeOff} from "lucide-react"
+import handleApiError from '../../utils/handleApiError';
 
 const schema = z.object({
     email: z.string().email("Invalid email"),
@@ -19,7 +20,7 @@ const Login = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [login, { isLoading }] = useLoginMutation();
-
+    const [showPassword, setShowPassword] = useState(false);
     const { register, handleSubmit, formState: { errors } } = useForm({ resolver: zodResolver(schema) });
 
     const onSubmit = async (data) => {
@@ -37,12 +38,12 @@ const Login = () => {
             if (res.data.user.role === "admin") {
                 navigate("/admin/dashboard")
             } else if (res.data.user.role === "owner") {
-                navigate("/owner")
+                navigate("/owner/dashboard")
             } else {
                 navigate("/")
             }
         } catch (error) {
-            toast.error(error?.data?.message || "Login failed")
+            handleApiError(error,"Login Failed")
         }
     }
   return (
@@ -93,12 +94,20 @@ const Login = () => {
 
                       {/* Password */}
                       <div>
-                          <input type="password"
+                          <div className='relative'>
+                              <input type={showPassword ? "text":"password"}
                               placeholder='Password'
                               {...register("password")}
-                              className='w-full px-4 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary'
+                              className='w-full px-4 py-2 pr-10 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary'
                           />
-
+                              <button type="button" onClick={() => setShowPassword(!showPassword)} className='absolute inset-y-0 right-0 flex items-center pr-3 text-text-secondary hover:text-primary transition-colors hover:cursor-pointer'>
+                                  {showPassword ? (
+                                      <Eye size={20} />
+                                  ) : (
+                                          <EyeOff size={20} />
+                                  )}
+                            </button>
+                          </div>
                           {errors.password && (
                               <p className='text-danger text-sm mt-1'>
                                   {errors.password.message}
