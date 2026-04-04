@@ -36,7 +36,7 @@ const AdminReports = () => {
               <h1 className='text-2xl font-semibold'>Reports</h1>
               <div className='flex gap-2'>
                   {["all", "pending", "resolved", "rejected"].map((f) => (
-                      <button key={f} onClick={() => setFilter(f)} className={`text-xs px-3 py-1.5 rounded-md border transition ${filter === f ? "bg-primary text-white border-primary" : "border-gray-300 hover:bg-gray-50"}`}>
+                      <button key={f} onClick={() => setFilter(f)} className={`text-xs cursor-pointer px-3 py-1.5  rounded-md border transition ${filter === f ? "bg-primary text-white border-primary" : "border-gray-300 hover:border-gray-50"}`}>
                           {f.charAt(0).toUpperCase()+f.slice(1)}
                       </button>
                   ))}
@@ -60,7 +60,7 @@ const AdminReports = () => {
                       </div>
 
                       {report.message && (
-                          <p className='text-xs text-gray-600 bg-gray-50 rounded p-2'>
+                          <p className='text-xs text-gray-600 bg-gray-50 rounded p-2 border-l-2 border-red-400'>
                               {report.message}
                           </p>
                       )}
@@ -80,11 +80,11 @@ const AdminReports = () => {
                       </p>
                       {report.status === "pending" && (
                           <div className='flex gap-3 pt-1'>
-                              <button onClick={() => setModal({ report, action: "resolve" })} className='text-xs text-green-600 hover:underline'>
+                              <button onClick={() => setModal({ report, action: "resolve" })} className='text-xs cursor-pointer text-green-600 hover:underline'>
                                   Mark Resolved
                               </button>
 
-                              <button onClick={() => setModal({ report, action: "reject" })} className='text-xs text-red-500 hover:underline'>
+                              <button onClick={() => setModal({ report, action: "reject" })} className='text-xs cursor-pointer text-red-500 hover:underline'>
                                   Reject
                               </button>
                           </div>

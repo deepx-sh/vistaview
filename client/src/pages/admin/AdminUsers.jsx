@@ -49,9 +49,9 @@ const AdminUsers = () => {
                   className="border border-border rounded-md px-3 py-1.5 text-sm w-64"
               />
           </div>
-          <p className="text-sm text-gray-500">{filtered.length}</p>
+          <p className="text-sm text-gray-500">{filtered.length} User{filtered.length > 1 ? "s":""}</p>
 
-          <div className="border rounded-lg bg-white overflow-hidden">
+          <div className="border rounded-lg bg-white overflow-hidden overflow-x-auto">
               <table className="w-full text-sm">
                   <thead className="border-b">
                       <tr>
@@ -89,11 +89,11 @@ const AdminUsers = () => {
                               <td className="px-4 py-3 text-right">
                                   {user.role !== "admin" && (
                                       user.isBlocked ? (
-                                          <button onClick={() => handleUnblock(user._id)} disabled={isUnblocking} className="text-xs text-green-600 hover:underline disabled:opacity-50">
+                                          <button onClick={() => handleUnblock(user._id)} disabled={isUnblocking} className="text-xs text-green-600 cursor-pointer hover:underline disabled:opacity-50">
                                               Unblock
                                           </button>
                                       ) : (
-                                              <button onClick={()=>setBlockTarget(user)} className="text-xs text-red-500 hover:underline">Block</button>
+                                              <button onClick={()=>setBlockTarget(user)} className="text-xs text-red-500 cursor-pointer hover:underline">Block</button>
                                       )
                                   )}
                               </td>

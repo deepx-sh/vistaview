@@ -53,7 +53,7 @@ const AdminPlaces = () => {
                   {["all", "pending", "approved", "rejected"].map((f) => (
                       <button key={f}
                           onClick={() => setFilter(f)}
-                          className={`text-xs px-3 py-1.5 rounded-md border transition ${filter===f ?"bg-primary text-white border-primary":"border-gray-300 hover:border-gray-50"}`}
+                          className={`text-xs px-3 py-1.5 cursor-pointer rounded-md border transition ${filter===f ?"bg-primary text-white border-primary":"border-gray-300 hover:border-gray-50"}`}
                       >
                           {f.charAt(0).toUpperCase()+f.slice(1)}
                       </button>
@@ -104,19 +104,19 @@ const AdminPlaces = () => {
                                   <div className='flex items-center gap-3 justify-end flex-wrap'>
                                       {place.status === "pending" && (
                                           <>
-                                              <button onClick={() => handleApprove(place._id)} disabled={isApproving} className='text-xs text-green-600 hover:underline disabled:opacity-50'>Approve</button>
-                                              <button onClick={()=>setRejectTarget(place)} className='text-xs text-red-500 hover:underline'>Reject</button>
+                                              <button onClick={() => handleApprove(place._id)} disabled={isApproving} className='text-xs cursor-pointer text-green-600 hover:underline disabled:opacity-50'>Approve</button>
+                                              <button onClick={()=>setRejectTarget(place)} className='text-xs text-red-500 cursor-pointer hover:underline'>Reject</button>
                                           </>
                                       )}
 
                                       {place.status === "approved" && (
-                                          <button onClick={() => handleToggleFeature(place)} className={`text-xs hover:underline ${place.isFeatured ? "text-amber-500" : "text-gray-500"}`}>
+                                          <button onClick={() => handleToggleFeature(place)} className={`text-xs cursor-pointer hover:underline ${place.isFeatured ? "text-amber-500" : "text-gray-500"}`}>
                                               {place.isFeatured ? "Un-feature": "Feature"}
                                           </button>
                                       )}
 
                                       {place.status === "rejected" && (
-                                          <button onClick={() => handleApprove(place._id)} disabled={isApproving} className='text-xs text-green-600 hover:underline disabled:opacity-50'>
+                                          <button onClick={() => handleApprove(place._id)} disabled={isApproving} className='text-xs cursor-pointer text-green-600 hover:underline disabled:opacity-50'>
                                               Approve
                                           </button>
                                       )}
