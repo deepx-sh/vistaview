@@ -30,12 +30,12 @@ export const searchPlaces = asyncHandler(async (req, res) => {
         // query["pricing.min"] = {};
         if (minPrice) {
             // query["pricing.min"].$gte = Number(minPrice);
-            query["pricing.min"] ={...query["pricing.min"],$gte:Number(minPrice)}
+            query["pricing.max"] ={...query["pricing.max"],$gte:Number(minPrice)}
             
         }
         if (maxPrice) {
             // query["pricing.min"].$lte = Number(maxPrice);
-            query["pricing.max"] ={...query["pricing.max"],$lte:Number(maxPrice)}
+            query["pricing.min"] ={...query["pricing.min"],$lte:Number(maxPrice)}
         }
     }
     if (isFeatured === "true" || isFeatured === true) {
