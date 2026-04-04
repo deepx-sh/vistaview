@@ -79,42 +79,42 @@ const PlacesFilters = () => {
                   placeholder='Search Places...'
                   value={q}
                   onChange={(e) => setQ(e.target.value)}
-                  className='border border-border focus:right-2 focus:ring-primary rounded-md px-3 py-2'
+                  className='border border-border outline-none focus:ring-2 focus:ring-primary rounded-md px-3 py-2'
               />
 
               <input type="text"
                   placeholder='City'
                   value={city}
                   onChange={(e) => setCity(e.target.value)}
-                  className='border border-border focus:right-2 focus:ring-primary rounded-md px-3 py-2'
+                  className='border border-border outline-none focus:ring-2 focus:ring-primary rounded-md px-3 py-2'
               />
 
 
               <select
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}
-                  className='border border-border focus:right-2 focus:ring-primary rounded-md px-3 py-2'
+                  className='border border-border foutline-none focus:ring-2 focus:ring-primary rounded-md px-3 py-2'
               >
                   
                   <option value="">All Categories</option>
                   {categories.map((cat) => (
-                      <option key={cat} value={cat}>{cat}</option>
+                      <option key={cat} value={cat}>{cat.charAt(0).toUpperCase()+cat.slice(1)}</option>
                   ))}
               </select>
 
               <select
                   value={minRating}
                   onChange={(e) => setMinRating(e.target.value)}
-                  className='border border-border focus:right-2 focus:ring-primary rounded-md px-3 py-2'
+                  className='border border-border outline-none focus:ring-2 focus:ring-primary rounded-md px-3 py-2'
               >
                   <option value="">Any Rating</option>
-                  <option value="4">4 & Above</option>
-                  <option value="3">3 & Above</option>
-                  <option value="2">2 & Above</option>
+                  <option value="4">4★ & Above</option>
+                  <option value="3">3★ & Above</option>
+                  <option value="2">2★ & Above</option>
               </select>
               <select value={sort}
                   onChange={(e) => setSort(e.target.value)}
-                  className='border border-border focus:ring-2 focus:ring-primary rounded-md px-3 py-2'
+                  className='border border-border outline-none focus:ring-2 focus:ring-primary rounded-md px-3 py-2'
               >
                   
                   <option value="">Newest</option>
@@ -125,15 +125,17 @@ const PlacesFilters = () => {
               <input type="number"
                   placeholder='Min Budget'
                   value={minPrice}
+                  min={0}
                   onChange={(e) => setMinPrice(e.target.value)}
-                  className='border border-border focus:right-2 focus:ring-primary rounded-md px-3 py-2'
+                  className='border border-border outline-none focus:ring-2 focus:ring-primary rounded-md px-3 py-2'
               />
 
               <input type="number"
                   placeholder='Max Budget'
                   value={maxPrice}
+                  min={0}
                   onChange={(e) => setMaxPrice(e.target.value)}
-                  className='border border-border focus:right-2 focus:ring-primary rounded-md px-3 py-2'
+                  className='border border-border outline-none focus:ring-2 focus:ring-primary rounded-md px-3 py-2'
               />
             
               <div className='flex gap-2'>
