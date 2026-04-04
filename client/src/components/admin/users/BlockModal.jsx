@@ -21,11 +21,11 @@ const BlockModal = ({ user, onClose, onConfirm, isLoading }) => {
                   />
                   {errors.reason && <p className='text-xs text-red-500'>{errors.reason.message}</p>}
                   <div className='flex gap-3'>
-                      <button type='submit' disabled={isLoading} className='flex-1 bg-danger text-white rounded-md py-2 text-sm disabled:opacity-50:'>
+                      <button type='submit' disabled={isLoading} className='flex-1 bg-danger hover:bg-red-500 transition-colors duration-200 cursor-pointer text-white rounded-md py-2 text-sm disabled:opacity-50'>
                           {isLoading ?"Blocking...":"Block User"}
                       </button>
 
-                      <button type='button' onClick={onClose} className='flex-1 border border-gray-300 rounded-md py-2 text-sm hover:bg-gray-50'>
+                      <button type='button' onClick={onClose} className='flex-1 border border-gray-300 rounded-md py-2 text-sm cursor-pointer hover:bg-gray-100 transition-colors duration-200'>
                           Cancel
                       </button>
                   </div>

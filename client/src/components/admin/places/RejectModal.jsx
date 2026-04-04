@@ -20,10 +20,10 @@ const RejectModal = ({ place, onClose, onConfirm, isLoading }) => {
                   />
                   {errors.reason && <p className='text-xs text-red-500'>{errors.reason.message}</p>}
                   <div className='flex gap-3'>
-                      <button type="submit" disabled={isLoading} className='flex-1 bg-danger text-white rounded-md py-2 text-sm disabled:opacity-60'>
+                      <button type="submit" disabled={isLoading} className='flex-1 bg-danger cursor-pointer duration-200 transition-colors hover:bg-red-500 text-white rounded-md py-2 text-sm disabled:opacity-60'>
                           {isLoading ? "Rejecting...":"Reject Place"}
                       </button>
-                      <button type="button" onClick={onClose} className='flex-1 border border-gray-300 rounded-md py-2 text-sm hover:bg-gray-50'>Cancel</button>
+                      <button type="button" onClick={onClose} className='flex-1 border cursor-pointer duration-200 transition-colors border-gray-300 rounded-md py-2 text-sm hover:bg-gray-100'>Cancel</button>
                   </div>
               </form>
           </div>

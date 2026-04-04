@@ -22,10 +22,10 @@ const ActionModal = ({ report, action, onClose, onConfirm, isLoading }) => {
                   {errors.adminNote && <p className='text-xs text-red-500'>{errors.adminNote.message}</p>}
 
                   <div className='flex gap-3'>
-                      <button type="submit" disabled={isLoading} className={`flex-1 text-white rounded-md py-2 text-sm disabled:opacity-60 ${action === "resolve" ? "bg-primary" : "bg-danger"}`}>
+                      <button type="submit" disabled={isLoading} className={`flex-1 text-white rounded-md py-2 text-sm disabled:opacity-60 cursor-pointer transition-colors duration-200 ${action === "resolve" ? "bg-primary hover:bg-primary-hover" : "bg-danger hover:bg-red-500"}`}>
                           {isLoading ? "Saving...": action==="resolve"?"Mark Resovled":"Reject Report"}
                       </button>
-                      <button type="button" onClick={onClose} className='flex-1 border border-gray-300 rounded-md py-2 text-sm hover:bg-gray-50'>Cancel</button>
+                      <button type="button" onClick={onClose} className='flex-1 border border-gray-300 rounded-md py-2 text-sm hover:bg-gray-100 transition-colors duration-200 cursor-pointer'>Cancel</button>
                   </div>
               </form>
           </div>
