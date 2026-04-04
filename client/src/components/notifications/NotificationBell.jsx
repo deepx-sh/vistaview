@@ -97,7 +97,7 @@ const NotificationBell = () => {
     }
   return (
       <div className='relative' ref={panelRef}>
-          <button onClick={() => setOpen((prev) => !prev)} className='relative p-1.5 rounded-md hover:bg-border/50 transition duration-200' aria-label='Notifications'>
+          <button onClick={() => setOpen((prev) => !prev)} className='relative cursor-pointer p-1.5 rounded-md hover:bg-border/50 transition duration-200' aria-label='Notifications'>
               <Bell size={20} />
               {unreadCount > 0 && (
                   <span className='absolute -top-0.5 -right-0.5 min-w-4.5 h-4.5 px-1 bg-danger text-white text-[10px] font-medium rounded-full flex items-center justify-center leading-none'>
