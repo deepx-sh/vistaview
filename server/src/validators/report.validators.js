@@ -21,7 +21,7 @@ export const createReportSchema = Joi.object({
             'string.empty': 'Reason cannot be empty',
         }),
     
-    message: Joi.string().max(300).messages({
+    message: Joi.string().max(300).allow('',null).messages({
         'string.max': 'Message cannot exceed 300 characters',
         'string.base': 'Message must be a string',
     })
