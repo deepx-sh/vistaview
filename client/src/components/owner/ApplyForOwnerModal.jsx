@@ -60,7 +60,7 @@ const ApplyForOwnerModal = ({ onClose, ownerProfile }) => {
     const isPending = status === "pending"
     const isRejected=status==="rejected"
   return (
-      <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4'>
+      <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 overflow-y-auto'>
           <div className='w-full max-w-lg rounded-xl bg-white p-6 shadow-xl'>
               {/* Header */}
               <div className='mb-5 flex items-center justify-between'>
@@ -103,6 +103,7 @@ const ApplyForOwnerModal = ({ onClose, ownerProfile }) => {
                           <label className='mb-1 block text-sm font-medium text-gray-700'>Business Name</label>
                           <input type="text"
                               placeholder='e.g. Royal Heritage Stays'
+                              required
                               className={`w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary ${errors.businessName ? "border-red-400":"border-gray-300"}`}
                               {...register("businessName", {
                                   required: "Business name is required",
@@ -119,6 +120,7 @@ const ApplyForOwnerModal = ({ onClose, ownerProfile }) => {
                       <div>
                           <label className='mb-1 block text-sm font-medium text-gray-700'>Business Address</label>
                           <textarea rows={2}
+                              required
                               placeholder='Full business address'
                               className={`w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary resize-none ${errors.businessAddress ? "border-red-400" : "border-gray-300"}`}
                               {...register("businessAddress", {
@@ -139,6 +141,7 @@ const ApplyForOwnerModal = ({ onClose, ownerProfile }) => {
                           </label>
 
                           <input type="text"
+                              required
                               placeholder='10 digit mobile number'
                               maxLength={10}
                               className={`w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary ${errors.contactNumber ? "border-red-400" : "border-gray-300"}`}
