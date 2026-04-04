@@ -5,13 +5,14 @@ import recalculatePlaceRating from './../utils/recalculatePlaceRating.js';
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
+import deleteImageFromCloudinary from "../utils/deleteImageFromCloudinary.js";
 
 // GET FLAGGED REVIEWS
 
 export const getFlaggedReviews = asyncHandler(async (req, res) => {
     const reviews = await Review.find({
         spamScore: { $gte: 50 }
-    }).populate("user", "name email").populate("place", "name");
+    }).populate("user", "name email").populate("place", "name avatar");
 
     if (!reviews) {
         throw new ApiError(404,"No review found")
@@ -29,7 +30,7 @@ export const getFlaggedReviews = asyncHandler(async (req, res) => {
 // GET ALL REVIEWS
 
 export const getAllReviewsAdmin = asyncHandler(async (req, res) => {
-    const reviews = await Review.find().populate("user", "name email").populate("place", "name").sort({ createdAt: -1 })
+    const reviews = await Review.find().populate("user", "name email avatar").populate("place", "name").sort({ createdAt: -1 })
 
     if (!reviews) {
         throw new ApiError(404,"No review found")
@@ -89,6 +90,9 @@ export const hardDeleteReview = asyncHandler(async (req, res) => {
         throw new ApiError(404,"No review found")
     }
 
+    for (const img of review.images) {
+        await deleteImageFromCloudinary(img.publicId)
+    }
     await review.deleteOne();
 
     await recalculatePlaceRating(review.place);

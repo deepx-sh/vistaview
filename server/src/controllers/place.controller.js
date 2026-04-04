@@ -3,6 +3,7 @@ import { asyncHandler } from '../utils/asyncHandler.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
 import { ApiError } from '../utils/ApiError.js';
 import deleteImageFromCloudinary from '../utils/deleteImageFromCloudinary.js';
+import { Review } from '../models/review.model.js';
 
 
 // Create Place (OWNER)
@@ -137,6 +138,17 @@ export const deletePlace = asyncHandler(async (req, res) => {
     for (const img of place.images) {
         await deleteImageFromCloudinary(img.publicId);
     }
+
+    // Delete all reviews and their images for this place
+    const reviews = await Review.find({ place: place._id })
+    
+    for (const review of reviews) {
+        for (const img of review.images) {
+            await deleteImageFromCloudinary(img.publicId)
+        }
+    }
+
+    await Review.deleteMany({place:place._id})
     await place.deleteOne();
 
     return res.status(200).json(new ApiResponse(200,{},"Place deleted successfully"))
