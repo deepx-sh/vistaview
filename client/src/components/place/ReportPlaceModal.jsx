@@ -41,7 +41,7 @@ const ReportPlaceModal = ({ placeId, onClose }) => {
           <div className="bg-white rounded-xl w-full max-w-md p-6">
               <div className="flex items-center justify-between mb-4">
                   <h3 className="font-semibold">Report this place</h3>
-                  <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
+                  <button onClick={onClose} className="text-gray-400 cursor-pointer hover:text-gray-600">
                       <X size={18}/>
                   </button>
               </div>
@@ -84,12 +84,12 @@ const ReportPlaceModal = ({ placeId, onClose }) => {
                       <button
                           type="submit"
                           disabled={isLoading}
-                          className="flex-1 bg-danger text-white py-2 rounded-md text-sm disabled:opacity-60 hover:bg-danger/90 transition"
+                          className="flex-1 bg-danger text-white py-2 cursor-pointer rounded-md text-sm disabled:opacity-60 hover:bg-danger/90 transition"
                       >
                           {isLoading? "Submitting...":"Submit Report"}
                       </button>
 
-                      <button type="button" onClick={onClose} className="flex-1 border border-gray-300 py-2 rounded-md text-sm hover:bg-gray-50 transition">
+                      <button type="button" onClick={onClose} className="flex-1 border border-gray-300 py-2 rounded-md text-sm cursor-pointer hover:bg-gray-100 transition">
                           Cancel
                       </button>
                   </div>
