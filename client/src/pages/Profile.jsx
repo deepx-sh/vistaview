@@ -22,7 +22,7 @@ const OwnerStatusBadge = ({ status }) => {
   if (!badge) return null
   
   return (
-    <span className={`inline-block rounded-full px-3 py-1 text-xs font-medium ${badge.cls}`}>{badge.label}</span>
+    <span className={`inline-block rounded-full px-3 py-1 text-xs font-medium c ${badge.cls}`}>{badge.label}</span>
   )
 }
 const Profile = () => {
@@ -30,7 +30,8 @@ const Profile = () => {
   const [updateProfile,{isLoading:isUpdatingProfile}] = useUpdateProfileMutation();
   const [uploadAvatar] = useUploadAvatarMutation();
   const [deleteAvatar] = useDeleteAvatarMutation();
-
+  const [upload, setUpload] = useState(false);
+  const [remove, setRemove] = useState(false);
   const [name, setName] = useState("");
   const [showOwnerModal, setShowOwnerModal] = useState(false);
 
@@ -74,19 +75,25 @@ const Profile = () => {
     formData.append("avatar", file);
 
     try {
+      setUpload(true);
       await uploadAvatar(formData).unwrap();
       toast.success("Avatar updated successfully");
     } catch (error) {
       toast.error(error?.data?.message || "Avatar upload failed");
+    }finally {
+       setUpload(false);
     }
   };
 
   const handleAvatarDelete = async () => {
     try {
+      setRemove(true);
       await deleteAvatar().unwrap();
       toast.success("Avatar deleted successfully and reverted to default");
     } catch (error) {
       toast.error(error?.data?.message || "You can't remove default");
+    } finally {
+      setRemove(false);
     }
   };
 
@@ -112,8 +119,8 @@ const Profile = () => {
           )}
 
           <div className="mt-6 flex gap-3">
-            <label className="border-border cursor-pointer rounded-md border px-4 py-2 text-sm hover:bg-gray-100 transition">
-              Upload
+            <label  className="border-border cursor-pointer rounded-md border px-4 py-2 text-sm disabled:opacity-60 hover:bg-gray-100 transition">
+              {upload ? "Uploading...":"Upload"}
               <input
                 type="file"
                 accept="image/jpeg,image/png,image/jpg"
@@ -125,9 +132,10 @@ const Profile = () => {
             {user.avatarPublicId && (
               <button
                 onClick={handleAvatarDelete}
-                className="border-border rounded-md border px-4 py-2 text-sm hover:bg-gray-100 transition"
+                disabled={remove}
+                className="border-border rounded-md border px-4 py-2 text-sm hover:bg-gray-100 transition cursor-pointer"
               >
-                Remove
+                {remove ? "Removing...":"Remove"}
               </button>
             )}
           </div>
@@ -162,7 +170,7 @@ const Profile = () => {
           <div>
             <p className="text-text-muted text-sm">Account Role</p>
             <span className="bg-primary/10 text-primary mt-1 inline-block rounded-full px-3 py-1 text-sm">
-              {user.role}
+              {user.role.charAt(0).toUpperCase()+user.role.slice(1)}
             </span>
           </div>
             {/* Apply Owner */}
@@ -180,13 +188,13 @@ const Profile = () => {
                   )}
                 </div>
                 {canApply && (
-                  <button onClick={() => setShowOwnerModal(true)} className="bg-primary text-white rounded-md px-4 py-2 text-sm hover:bg-primary-hover transition duration-200 shrink-0">
+                  <button onClick={() => setShowOwnerModal(true)} className="bg-primary  text-white rounded-md px-4 py-2 text-sm hover:bg-primary-hover transition duration-200 shrink-0 cursor-pointer">
                     {ownerStatus==="rejected"?"Reapply":"Apply for owner"}
                   </button>
                 )}
 
                 {isPending && (
-                  <button onClick={() => setShowOwnerModal(true)} className="border border-amber-400 text-amber-600 rounded-md px-4 py-2 text-sm hover:bg-amber-50 transition duration-200 shrink-0">
+                  <button onClick={() => setShowOwnerModal(true)} className="border border-amber-400 text-amber-600 rounded-md cursor-pointer px-4 py-2 text-sm hover:bg-amber-50 transition duration-200 shrink-0">
                     View Status
                   </button>
                 )}

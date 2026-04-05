@@ -98,7 +98,7 @@ const ChangePasswordForm = () => {
                   }}
               />
 
-              <button type='submit' disabled={isLoading} className='bg-primary hover:bg-primary-hover text-white px-6 py-2 rounded-md text-sm transition duration-200 disabled:opacity-60'>{isLoading?"Changing...":"Change Password"}</button>
+              <button type='submit' disabled={isLoading} className='bg-primary hover:bg-primary-hover text-white px-6 py-2 rounded-md text-sm transition duration-200 disabled:opacity-60 cursor-pointer'>{isLoading?"Changing...":"Change Password"}</button>
           </form>
     </div>
   )

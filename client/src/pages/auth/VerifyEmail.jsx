@@ -64,7 +64,7 @@ const VerifyEmail = () => {
 
               <OtpInput value={otp} onChange={setOtp} />
               
-              <button onClick={handleVerify} disabled={isLoading} className='w-full mt-6 bg-primary hover:bg-primary-hover text-white py-2 rounded-md transition duration-200'>
+              <button onClick={handleVerify} disabled={isLoading} className='w-full mt-6 bg-primary cursor-pointer hover:bg-primary-hover text-white py-2 rounded-md transition duration-200'>
                   {isLoading ? "Verifying...":"Verify Email"}
               </button>
 
@@ -73,7 +73,7 @@ const VerifyEmail = () => {
                   {timer > 0 ? (
                       <span className='text-text-muted'>Resend in {timer}s</span>
                   ) : (
-                          <button onClick={handleResend} className='text-primary hover:underline font-medium'>Resend OTP</button>
+                          <button onClick={handleResend} className='text-primary hover:underline cursor-pointer font-medium'>Resend OTP</button>
                   )}
               </div>
           </div>
