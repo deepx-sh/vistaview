@@ -148,11 +148,11 @@ const ReviewCards = ({ review }) => {
                   {/* Owner Actions */}
                   {isOwner && !isEditing && (
                       <>
-                          <button onClick={() => setIsEditing(true)} className='text-primary'>
+                          <button onClick={() => setIsEditing(true)} className='text-primary cursor-pointer '>
                               <Pencil size={16}/>
                           </button>
                           
-                          <button onClick={handleDelete} className='text-danger'>
+                          <button onClick={handleDelete} className='text-danger cursor-pointer'>
                               <Trash size={16}/>
                           </button>
                       </>
@@ -171,7 +171,7 @@ const ReviewCards = ({ review }) => {
               </p>
           ) : (
                   <div className='space-y-3'>
-                      <textarea value={comment} onChange={(e) => setComment(e.target.value)} className='w-full border border-border rounded-md px-3 py-2 text-sm'></textarea>
+                      <textarea value={comment} onChange={(e) => setComment(e.target.value)} className='w-full border border-border outline-none focus:ring-2 focus:ring-primary rounded-md px-3 py-2 text-sm'></textarea>
                       <input type="file" multiple accept='image/*' onChange={handleImageChange}/>
                       <div className="flex gap-3 flex-wrap">
                           
@@ -190,9 +190,9 @@ const ReviewCards = ({ review }) => {
                           ))}
                                 </div>
                       <div className='flex gap-3'>
-                          <button onClick={handleUpdate} className='bg-primary text-white px-4 py-1 rounded-md text-sm'>{isLoading ? "Saving..." : "Update"}</button>
+                          <button onClick={handleUpdate} className='bg-primary text-white px-4 py-1 rounded-md text-sm hover:bg-primary-hover cursor-pointer transition-colors duration-200'>{isLoading ? "Saving..." : "Update"}</button>
 
-                          <button onClick={()=>setIsEditing(false)} className='border border-border px-4 py-1 rounded-md text-sm'>Cancel</button>
+                          <button onClick={()=>setIsEditing(false)} className='border border-border px-4 py-1 rounded-md text-sm hover:bg-gray-100 cursor-pointer'>Cancel</button>
                       </div>
                   </div>
 
@@ -219,8 +219,8 @@ const ReviewCards = ({ review }) => {
 
           {/* Helpful Button */}
           <div className='mt-4 flex items-center gap-4'>
-              <button onClick={handleHelpful} className={`flex items-center gap-2 text-sm ${isHelpful ? "text-primary" : "text-text-muted"}`}><ThumbsUp size={16} className={isHelpful ? "fill-primary" : ""} />{review.helpfulVotes?.length||0}</button>
-              <button onClick={()=>setShowReportModal(true)} className='flex items-center gap-2 text-sm text-text-muted'><Flag size={16}/>Report</button>
+              <button onClick={handleHelpful} className={`flex items-center gap-2 text-sm cursor-pointer hover:text-primary ${isHelpful ? "text-primary" : "text-text-muted"}`}><ThumbsUp size={16} className={isHelpful ? "fill-primary" : ""} />{review.helpfulVotes?.length||0}</button>
+              <button onClick={()=>setShowReportModal(true)} className='flex items-center gap-2 text-sm cursor-pointer hover:text-danger text-text-muted'><Flag size={16}/>Report</button>
           </div>
         
           

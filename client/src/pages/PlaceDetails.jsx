@@ -34,6 +34,8 @@ const PlaceDetails = () => {
     const [showReportModal,setShowReportModal]=useState(false)
     
     const reviews = reviewData?.data?.reviews || []
+    
+    
     const totalReviews = reviewData?.data?.total || 0;
     const totalPages = reviewData?.data?.pages || 1;
 
@@ -118,7 +120,7 @@ const PlaceDetails = () => {
                   {/* Wishlist Button */}
                   <WishlistButton placeId={place.data._id} />
                   
-                  <button onClick={() => setShowReportModal(true)} className='flex items-center gap-1.5 text-xs text-text-muted hover:text-danger transition'>
+                  <button onClick={() => setShowReportModal(true)} className='flex items-center cursor-pointer gap-1.5 text-xs text-text-muted hover:text-danger transition'>
                       <Flag size={13} />
                       Report this place
                   </button>
@@ -131,7 +133,7 @@ const PlaceDetails = () => {
                   About this place
               </h2>
 
-              <p className='text-text-secondary leading-relaxed'>
+              <p className='text-text-secondary leading-relaxed wrap-break-word'>
                   {p.description}
               </p>
           </div>
@@ -165,12 +167,12 @@ const PlaceDetails = () => {
               <div className='flex flex-wrap items-baseline gap-3 my-6'>
                   <div className='flex items-center gap-2 flex-wrap'>
                       <span className='text-sm text-text-secondary'>Filter:</span>
-                      <button onClick={() => hanldeFilterChange("")} className={`text-sm px-3 py-1 rounded-full border transition duration-200 ${ratingFilter === "" ? "bg-primary text-white border-primary" : "border-border hover:border-primary"}`}>All</button>
+                      <button onClick={() => hanldeFilterChange("")} className={`text-sm px-3 py-1 rounded-full border transition cursor-pointer duration-200 ${ratingFilter === "" ? "bg-primary text-white border-primary" : "border-border hover:border-primary"}`}>All</button>
                       {[5, 4, 3, 2, 1].map((star) => (
                           <button
                               key={star}
                               onClick={() => hanldeFilterChange(String(star))}
-                              className={`flex items-center gap-1 text-sm px-3 py-1 rounded-full border transition duration-200 ${ratingFilter===String(star)? "bg-primary text-white border-primary":"border-border hover:border-primary"}`}
+                              className={`flex items-center cursor-pointer gap-1 text-sm px-3 py-1 rounded-full border transition duration-200 ${ratingFilter===String(star)? "bg-primary text-white border-primary":"border-border hover:border-primary"}`}
                           >  {star}
                               <Star size={12} className={ratingFilter===String(star) ? "fill-white text-white" : "fill-warning text-warning"} /> 
                           </button>

@@ -68,7 +68,7 @@ const Home = () => {
                           className="flex-1 px-3 py-3 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                       />
 
-                      <button type="submit" className="bg-primary hover:bg-primary-hover text-white px-6 py-3 rounded-md transition duration-200">
+                      <button type="submit" className="bg-primary hover:bg-primary-hover text-white px-6 py-3 rounded-md cursor-pointer transition duration-200">
                           Search
                       </button>
                   </form>

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
 // import { useNavigate } from "react-router-dom";
-import { useAddReviewMutation } from "../../features/reviews/reviewsApi";
+import { useAddReviewMutation, useGetPlaceReviewsQuery } from "../../features/reviews/reviewsApi";
 import StarRating from "./StarRating";
 import React from 'react'
 import toast from "react-hot-toast";
@@ -14,12 +14,17 @@ const MAX_MB = 5;
 
 const AddReviewForm = ({placeId,reviews}) => {
   const { user, isAuthenticated } = useSelector((state) => state.auth);
+  const { data: reviewData } = useGetPlaceReviewsQuery({placeId});
+  
+  
   // const navigate = useNavigate();
   const {validate,IMAGE_TYPES}=useFileValidation()
-  const alreadyReviewed = reviews?.some(
-    (review)=>review.user?._id===user?._id
-  )
-
+  // const alreadyReviewed = reviews?.some(
+  //   (review)=>review.user?._id===user?._id
+  // )
+  const alreadyReviewed=reviewData?.data?.reviews?.some((review)=>review.user?._id===user?._id)
+  
+  
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
   const [images,setImages]=useState([])
@@ -87,7 +92,7 @@ const AddReviewForm = ({placeId,reviews}) => {
   }
   if (!isAuthenticated) {
     return (
-      <div className="border border-border rounded-lg p-6 bg-surface text-center">
+      <div className="border border-border rounded-lg p-6 bg-surface text-center mt-2">
         <p className="text-text-muted">
           Please login to write a review
         </p>
@@ -105,7 +110,7 @@ const AddReviewForm = ({placeId,reviews}) => {
     )
   }
   return (
-    <div className="border border-border rounded-lg p-6 bg-surface">
+    <div className="border border-border rounded-lg p-6 bg-surface mt-2">
       <h3 className="font-semibold mb-4">
         Write a review
       </h3>
@@ -113,7 +118,7 @@ const AddReviewForm = ({placeId,reviews}) => {
       <form onSubmit={handleSubmit} className="space-y-4">
         <StarRating rating={rating} setRating={setRating} />
         
-        <textarea value={comment} onChange={(e) => setComment(e.target.value)} placeholder="Share your experience" className="w-full border border-border rounded-md px-3 py-2" rows="4" required></textarea>
+        <textarea value={comment} onChange={(e) => setComment(e.target.value)} placeholder="Share your experience" className="w-full border border-border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-primary" rows="4" required></textarea>
         <div>
           <label className={`inline-flex items-center gap-2 text-sm border border-dashed border-border rounded-md px-4 py-2 cursor-pointer hover:border-primary hover:bg-primary/5 transition ${images.length >= MAX_IMAGES ? "opacity-40 pointer-events-none" : ""}`}>
             <ImagePlus size={15} className="text-text-muted" />
@@ -132,7 +137,7 @@ const AddReviewForm = ({placeId,reviews}) => {
             ))}
           </div>
         )}
-        <button type="Submit" disabled={isLoading} className="bg-primary hover:bg-primary-hover text-white px-5 py-2 rounded-md text-sm transition disabled:opacity-60">{isLoading?"Posting...":"Submit Review"}</button>
+        <button type="Submit" disabled={isLoading} className="bg-primary cursor-pointer hover:bg-primary-hover text-white px-5 py-2 rounded-md text-sm transition disabled:opacity-60">{isLoading?"Posting...":"Submit Review"}</button>
       </form>
     </div>
   )
