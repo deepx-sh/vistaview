@@ -10,21 +10,39 @@ const rawBaseQuery = fetchBaseQuery({
 
 const baseQueryWithReauth = async (args, api, extraOptions) => {
     let result = await rawBaseQuery(args, api, extraOptions);
-    console.log(result);
-    
-    if (result.error && result.error.status === 401 && (result.error.data.message==="Invalid access token" || result.error.data.message==="Invalid or expired access token" || result.error.data.message==="Not authenticated")) {
-        const refreshResult = await rawBaseQuery(
+
+    if (result.error && result.error.status === 401) {
+        const url = typeof args === 'string' ? args : args?.url ?? '';
+        const isLogoutRequest = url.includes('/auth/logout');
+
+        if(isLogoutRequest){
+            return result;
+        }
+        const message = result.error.data?.message;
+
+        const isExpiredToken = message === "Invalid access token" || message === "Invalid or expired access token" || message === "Not authenticated";
+
+        if (isExpiredToken) {
+            const refreshResult = await rawBaseQuery(
             { url: "/auth/refresh-token", method: "POST" },
             api,
             extraOptions
-        )
-
-        if (refreshResult.data) {
+            )
+             if (refreshResult.data) {
             result=await rawBaseQuery(args,api,extraOptions)
-        } else {
-            toast.error("Session expired Please login again")
+             } else {
+                 const state = api.getState();
+                 const wasLoggedIn = Boolean(state.auth?.user);
+
+                 if (wasLoggedIn) {
+                     toast.error("Session expired Please login again")
+                 }
+            
             api.dispatch(logout());
         }
+        }
+
+       
     }
 
     return result;
