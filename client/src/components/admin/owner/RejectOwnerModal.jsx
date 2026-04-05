@@ -20,11 +20,11 @@ const RejectOwnerModal = ({ owner, onClose, onConfirm, isLoading }) => {
                   {errors.rejectedReason && <p className='text-xs text-red-500'>{errors.rejectedReason.message}</p>}
 
                   <div className='flex gap-3'>
-                      <button type="submit" disabled={isLoading} className='flex-1 bg-danger text-white rounded-md py-2 text-sm disabled:opacity-60'>
+                      <button type="submit" disabled={isLoading} className='flex-1 bg-danger cursor-pointer hover:bg-red-500 transition-colors text-white rounded-md py-2 text-sm disabled:opacity-60'>
                           {isLoading?"Rejecting...":"Reject"}
                       </button>
 
-                      <button type="button" onClick={onClose} className='flex-1 border border-gray-300 rounded-md py-2 text-sm hover:bg-gray-150'>
+                      <button type="button" onClick={onClose} className='flex-1 border border-gray-300 cursor-pointer hover:bg-gray-100 transition duration-200 rounded-md py-2 text-sm hover:bg-gray-150'>
                           Cancel
                       </button>
                   </div>

@@ -110,8 +110,8 @@ const AdminOwners = () => {
 
                           {/* Actions */}
                           <div className='flex gap-3 pt-1'>
-                              <button onClick={() => handleApprove(owner._id)} disabled={isReviewing} className='bg-primary text-white text-sm px-4 py-1.5 rounded-md disabled:open: hover:bg-primary-hover transition'>Approve</button>
-                              <button onClick={()=>setRejectTarget(owner)} className='border border-red-300 text-red-500 text-sm px-4 py-1.5 rounded-md hover:bg-red-50 transition'>Reject</button>
+                              <button onClick={() => handleApprove(owner._id)} disabled={isReviewing} className='bg-primary text-white text-sm px-4 py-1.5 rounded-md cursor-pointer disabled:opacity-60 hover:bg-primary-hover transition'>Approve</button>
+                              <button onClick={()=>setRejectTarget(owner)} className='border border-red-300 text-red-500 text-sm px-4 py-1.5 rounded-md cursor-pointer hover:bg-red-50 transition'>Reject</button>
                           </div>
                       </div>
                   )

@@ -201,10 +201,10 @@ const ApplyForOwnerModal = ({ onClose, ownerProfile }) => {
                       </div>
 
                       <div className='flex gap-3 pt-1'>
-                          <button type='submit' disabled={isLoading} className='flex-1 rounded-md bg-primary py-2 text-sm text-white disabled:opacity-60 hover:bg-primary-hover transition'>
+                          <button type='submit' disabled={isLoading} className='flex-1 rounded-md bg-primary cursor-pointer py-2 text-sm text-white disabled:opacity-60 hover:bg-primary-hover transition'>
                               {isLoading ? "Submitting...":"Submit Application"}
                           </button>
-                          <button type='button' onClick={onClose} className='flex-1 rounded-md border border-gray-300 py-2 text-sm hover:bg-gray-50 transition'>
+                          <button type='button' onClick={onClose} className='flex-1 rounded-md border cursor-pointer border-gray-300 py-2 text-sm hover:bg-gray-100 transition duration-200'>
                               Cancel
                           </button>
                       </div>
@@ -212,7 +212,7 @@ const ApplyForOwnerModal = ({ onClose, ownerProfile }) => {
               )}
 
               {isPending && (
-                  <button onClick={onClose} className='mt-2 w-full rounded-md border border-gray-50 py-2 text-sm hover:bg-gray-50 transition'>Close</button>
+                  <button onClick={onClose} className='mt-2 w-full rounded-md border border-gray-50 cursor-pointer duration-200 py-2 text-sm hover:bg-gray-100 transition'>Close</button>
               )}
           </div>
     </div>
