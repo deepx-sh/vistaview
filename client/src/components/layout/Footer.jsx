@@ -40,18 +40,19 @@ const Footer = () => {
                   <div>
                       <h3 className="font-medium mb-4">Explore</h3>
                       <ul className="space-y-2 text-sm text-text-secondary">
-                          <li><Link to="/categories" className="hover:text-primary">Categories</Link></li>
-                          <li><Link to="/featured" className="hover:text-primary">Featured Places</Link></li>
-                          <li><Link to="/top-rated" className="hover:text-primary">Top Rated</Link></li>
-                          <li><Link to="/nearby" className="hover:text-primary">Nearby</Link></li>
+                          <li><Link to="/places" className="hover:text-primary">All Places</Link></li>
+                          <li><Link to="/places?category=temple" className="hover:text-primary">Temple</Link></li>
+                          <li><Link to="/places?category=hill" className="hover:text-primary">Hill Stations</Link></li>
+                          <li><Link to="/places?category=heritage" className="hover:text-primary">Heritage Sites</Link></li>
                       </ul>
                   </div>
 
                   <div>
                       <h3 className="font-medium mb-4">For Owners</h3>
                         <ul className="space-y-2 text-sm text-text-secondary">
-                          <li><Link to="/owner/apply" className="hover:text-primary">List Your Place</Link></li>
+                          <li><Link to="/profile" className="hover:text-primary">Apply as Owner</Link></li>
                           <li><Link to="/owner/dashboard" className="hover:text-primary">Dashboard</Link></li>
+                          <li><Link to="/owner/add-place" className="hover:text-primary">Add a Place</Link></li>
                           <li><Link to="/owner/analytics" className="hover:text-primary">Analytics</Link></li>
                       </ul>
                   </div>
@@ -70,7 +71,7 @@ const Footer = () => {
               {/* Bottom Section */}
 
               <div className="border-t border-border mt-10 pt-6 text-center text-sm text-text-muted">
-                   © 2026 VistaView. All rights reserved.
+                   © {new Date().getFullYear()} VistaView. All rights reserved.
               </div>
           </div>
     </footer>

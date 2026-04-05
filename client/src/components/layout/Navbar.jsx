@@ -91,7 +91,7 @@ const Navbar = () => {
             </div>
           )}
           {/* Mobile Toggle */}
-        <button className="md:hidden text-text-secondary hover:text-primary p-2 transition-colors" onClick={() => setOpen(!open)}>
+        <button className="md:hidden cursor-pointer text-text-secondary hover:text-primary p-2 transition-colors" onClick={() => setOpen(!open)}>
             {open ? <X size={20}/>: < Menu size={20}/>}
         </button>
         </div>
