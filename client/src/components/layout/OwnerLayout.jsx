@@ -11,7 +11,7 @@ const OwnerLayout = () => {
           
       <div className='flex-1 flex flex-col overflow-hidden'>
         <header className='lg:hidden flex items-center justify-between h-16 px-4 bg-surface border-b border-border z-30'>
-          <button onClick={() => setSiderBarOpen(true)} className='text-text-secondary p-2 -ml-2 hover:bg-gray-100 rounded-md transition-colors'>
+          <button onClick={() => setSiderBarOpen(true)} className='text-text-secondary cursor-pointer p-2 -ml-2 hover:bg-gray-100 rounded-md transition-colors'>
             <Menu size={24}/>
           </button>
 
