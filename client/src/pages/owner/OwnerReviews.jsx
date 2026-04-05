@@ -30,8 +30,8 @@ const ReplyForm = ({ defaultValue = "", onSubmit, onCancel, isLoading }) => {
       {errors.text && <p className='text-red-500 text-xs'>{errors.text.message}</p>}
 
       <div className='flex gap-2'>
-        <button type='submit' disabled={isLoading} className='bg-primary text-white text-sm px-4 py-1.5 rounded disabled:opacity-60'>{isLoading ? "Saving..." : "Submit"}</button>
-        <button type='button' onClick={onCancel} className='text-sm px-4 py-1.5 rounded border border-gray-300 hover:bg-gray-50'>Cancel</button>
+        <button type='submit' disabled={isLoading} className='bg-primary hover:bg-primary-hover transition-colors cursor-pointer duration-200 text-white text-sm px-4 py-1.5 rounded disabled:opacity-60'>{isLoading ? "Saving..." : "Submit"}</button>
+        <button type='button' onClick={onCancel} className='text-sm cursor-pointer duration-200 transition-colors px-4 py-1.5 rounded border border-gray-300 hover:bg-gray-100'>Cancel</button>
       </div>
     </form>
   )
@@ -128,8 +128,8 @@ const ReviewCard = ({ review }) => {
           </p>
 
           <div className='flex gap-3 pt-1'>
-            <button onClick={() => setMode("edit")} className='flex items-center gap-1 text-xs text-blue-500 hover:underline'><Pencil size={12} />Edit</button>
-            <button onClick={handleDelete} disabled={isDeleting} className='flex items-center gap-1 text-xs text-red-500 hover:underline disabled:opacity-50'><Trash2 size={12} />{isDeleting ? "Deleting...":"Delete"}</button>
+            <button onClick={() => setMode("edit")} className='flex items-center gap-1 text-xs cursor-pointer text-blue-500 hover:underline'><Pencil size={12} />Edit</button>
+            <button onClick={handleDelete} disabled={isDeleting} className='flex items-center cursor-pointer gap-1 text-xs text-red-500 hover:underline disabled:opacity-50'><Trash2 size={12} />{isDeleting ? "Deleting...":"Delete"}</button>
           </div>
         </div>
       )}
@@ -145,7 +145,7 @@ const ReviewCard = ({ review }) => {
       )}
       {/* Add reply button */}
       {!hasReply && mode !== "reply" && (
-        <button onClick={() => setMode("reply")} className='flex items-center gap-1 text-xs text-primary hover:underline'>
+        <button onClick={() => setMode("reply")} className='flex items-center cursor-pointer gap-1 text-xs text-primary hover:underline'>
           <MessageSquare size={13}/> Reply to this review
         </button>
       )}

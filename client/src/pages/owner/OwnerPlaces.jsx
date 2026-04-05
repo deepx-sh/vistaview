@@ -29,7 +29,7 @@ const OwnerPlaces = () => {
           My Places
         </h1>
 
-        <Link to="/owner/add-place" className='bg-primary text-white px-4 py-2 rounded-md text-sm text-center'>
+        <Link to="/owner/add-place" className='bg-primary text-white px-4 py-2 hover:bg-primary-hover transition-colors duration-200 rounded-md text-sm text-center'>
             Add Place
         </Link>
       </div>

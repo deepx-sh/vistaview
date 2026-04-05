@@ -115,6 +115,7 @@ const AddPlace = () => {
         {/* Name */}
         <div>
           <input type="text"
+          required
             placeholder='Place Name'
             className={`w-full border p-2 rounded ${errors.name ? "border-red-500" : ""}`}
             {...register("name", {
@@ -130,6 +131,7 @@ const AddPlace = () => {
         {/* Description */}
         <div>
           <textarea placeholder='Description'
+          required
             rows={4}
             className={`w-full border p-2 rounded ${errors.description ? "border-red-500" : ""}`}
             {...register("description", {
@@ -161,6 +163,7 @@ const AddPlace = () => {
         {/* Address */}
         <div>
           <input type="text"
+          required
             placeholder='Address'
             className={`w-full border p-2 rounded ${errors.address ? "border-red-500" : ""}`}
             {...register("address",{required:"Address is required"})}
@@ -172,6 +175,7 @@ const AddPlace = () => {
         <div className='grid grid-cols-2 gap-4'>
           <div>
             <input type="text"
+            required
               placeholder='City'
               className={`w-full border p-2 rounded ${errors.city ? "border-red-500" : ""}`}
               {...register("city",{required:"City is required"})}
@@ -181,6 +185,7 @@ const AddPlace = () => {
             
           <div>
             <input type="text"
+            required
               placeholder='State'
               className={`w-full border p-2 rounded ${errors.city ? "border-red-500" : ""}`}
               {...register("state",{required:"State is required"})}
@@ -285,7 +290,7 @@ const AddPlace = () => {
         </div>
         
 
-        <button type='submit'  className='bg-primary hover:bg-primary-hover text-white px-6 py-2.5 rounded-md transition disabled:opacity-60' disabled={isLoading}>{isLoading ? "Creating...":"Create Place"}</button>
+        <button type='submit'  className='bg-primary hover:bg-primary-hover cursor-pointer text-white px-6 py-2.5 rounded-md transition disabled:opacity-60' disabled={isLoading}>{isLoading ? "Creating...":"Create Place"}</button>
       </form>
     </div>
   )

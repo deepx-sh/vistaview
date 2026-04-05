@@ -382,7 +382,7 @@ const EditPlace = () => {
                   Saving changes will re-submit this place for admin approval
               </p>
 
-              <button type="submit" className="bg-primary text-white px-5 py-2 rounded disabled:opacity-60" disabled={isUpdating}>{isUpdating?"Saving...":"Save Changes"}</button>
+              <button type="submit" className="bg-primary text-white px-5 transition-colors hover:bg-primary-hover duration-200 cursor-pointer py-2 rounded disabled:opacity-60" disabled={isUpdating}>{isUpdating?"Saving...":"Save Changes"}</button>
       </form>
     </div>
   );
