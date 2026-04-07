@@ -1,6 +1,6 @@
 import React from 'react'
 import ReviewCards from './ReviewCards'
-const ReviewList = ({ reviews, isLoading }) => {
+const ReviewList = ({ reviews, isLoading,placeId }) => {
     if (isLoading) return <p>Loading reviews...</p>
     
     if (!reviews.length) {
@@ -9,7 +9,7 @@ const ReviewList = ({ reviews, isLoading }) => {
   return (
       <div className='space-y-6'>
           {reviews.map((review) => (
-              <ReviewCards key={review._id} review={review}/>
+              <ReviewCards key={review._id} review={review} placeId={placeId} />
           ))}
     </div>
   )

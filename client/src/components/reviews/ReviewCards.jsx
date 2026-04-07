@@ -1,11 +1,16 @@
 import React, { useState } from 'react'
-import { Star, Pencil, Trash, Form, X,ThumbsUp,Flag } from 'lucide-react'
+import { Star, Pencil, Trash, Form, X,ThumbsUp,Flag, ImagePlus } from 'lucide-react'
 import { useUpdateReviewMutation,useDeleteReviewMutation,useToggleHelpfulMutation } from '../../features/reviews/reviewsApi'
 import { useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
 import ImageModal from '../common/ImageModal';
 import ReportReviewModal from './ReportReviewModal';
-const ReviewCards = ({ review }) => {
+import useFileValidation from '../../hooks/useFileValidation';
+import handleApiError from '../../utils/handleApiError';
+
+const MAX_IMAGES = 3;
+const MAX_MB = 5;
+const ReviewCards = ({ review,placeId }) => {
     const { user: currentUser } = useSelector((state) => state.auth);
     const user = review.user
     const isOwner = currentUser && user?._id === currentUser._id;
@@ -23,6 +28,8 @@ const ReviewCards = ({ review }) => {
     const [currentImageIndex, setCurrentImageIndex] = useState(0)
     const [showReportModal,setShowReportModal]=useState(false)
     
+    const { validate, IMAGE_TYPES } = useFileValidation()
+    const totalImages=existingImages.length+ newImages.length
     const handleUpdate = async () => {
         if (comment.trim().length < 10) {
             toast.error("Comment must be at least 10 characters long")
@@ -34,10 +41,7 @@ const ReviewCards = ({ review }) => {
             return
         }
 
-        if (existingImages.length - deletedImages.length + newImages.length > 3) {
-            toast.error("You can upload up to 3 images per review")
-            return
-        }
+        
         const formData = new FormData();
         formData.append("comment", comment);
         formData.append("rating", rating);
@@ -50,37 +54,44 @@ const ReviewCards = ({ review }) => {
         try {
             await updateReview({
             reviewId: review._id,
-            data:formData
-           }).unwrap()
+                data: formData,
+            placeId
+            }).unwrap()
+            toast.success("Review updated")
+            setIsEditing(false)
+            setNewImages([])
+            setDeletedImages([])
         } catch (error) {
-            console.log(error);
-            
+                handleApiError(error,"Failed to update review")            
         }
         setIsEditing(false);
     }
     const handleImageChange = (e) => {
         const files = Array.from(e.target.files);
-        
-        const currentTotal = existingImages.length + newImages.length;
+        e.target.value=''
 
-        if (currentTotal + files.length > 3) {
-            toast.error("Total images cannot exceed 3. Only the first were added")
-            const allowedCount = 3 - currentTotal;
-            const allowedFiles = files.slice(0, allowedCount);
-            setNewImages((prev)=>[...prev,...allowedFiles])
-        } else {
-            setNewImages((prev) => [...prev, ...files]);
-        }
+        const valid = validate({
+            files,
+            allowedTypes: IMAGE_TYPES,
+            maxSizeMB:MAX_MB,
+            maxCount: MAX_IMAGES,
+            currentCount:totalImages
+       })
 
+       if(valid.length>0) setNewImages((prev)=>[...prev,...valid])
     }
     const removeExistingImage = (index) => {
         const imageToDelete = existingImages[index]
         setDeletedImages((prev) => [...prev, imageToDelete.publicId]);
         setExistingImages((prev) => prev.filter((_, i) => i !== index));
     }
+
+    const removeNewImage = (index) => {
+        setNewImages((prev)=>prev.filter((_,i)=>i!==index))
+    }
     const handleDelete = async () => {
         if (confirm("Are you sure you want to delete this review?")) {
-            await deleteReview(review._id);
+            await deleteReview({reviewId:review._id,placeId});
         }
     }
     const initials = user?.name
@@ -172,27 +183,63 @@ const ReviewCards = ({ review }) => {
           ) : (
                   <div className='space-y-3'>
                       <textarea value={comment} onChange={(e) => setComment(e.target.value)} className='w-full border border-border outline-none focus:ring-2 focus:ring-primary rounded-md px-3 py-2 text-sm'></textarea>
-                      <input type="file" multiple accept='image/*' onChange={handleImageChange}/>
-                      <div className="flex gap-3 flex-wrap">
-                          
-                                  {existingImages.map((file, index) => (
-                                    <div key={`existing-${index}`} className="relative">
-                                      <img src={ file.url} alt="Existing Preview" className="w-20 h-20 object-cover rounded-md" />
-                                      <button type="button" onClick={()=>removeExistingImage(index)} className="absolute -top-2 -right-2 bg-black text-white rounded-full p-1"><X size={12}/></button>
-                                    </div>
-                                  ))}
-                          
-                          {newImages.map((file, index) => (
-                              <div key={`new-${index}`} className='relative'>
-                                  <img src={URL.createObjectURL(file)} alt="New Preview" className='w-20 h-20 object-cover rounded-md' />
-                                  <button type='button' onClick={() => setNewImages(prev => prev.filter((_, i) => i !== index))} className="absolute -top-2 -right-2 bg-black text-white rounded-full p-1"><X size={12}/></button>
-                              </div>
-                          ))}
-                                </div>
-                      <div className='flex gap-3'>
-                          <button onClick={handleUpdate} className='bg-primary text-white px-4 py-1 rounded-md text-sm hover:bg-primary-hover cursor-pointer transition-colors duration-200'>{isLoading ? "Saving..." : "Update"}</button>
+                      <div>
+                          <label className={`inline-flex items-center gap-2 text-sm border border-dashed border-border rounded-md px-3 py-1.5 cursor-pointer hover:border-primary hover:bg-primary/5 transition ${totalImages >= MAX_IMAGES ? 'opacity-40 pointer-events-none' : ''}`}>
+                              <ImagePlus size={14} className='text-text-muted' />
+                              Add Photos ({totalImages}/{MAX_IMAGES})
 
-                          <button onClick={()=>setIsEditing(false)} className='border border-border px-4 py-1 rounded-md text-sm hover:bg-gray-100 cursor-pointer'>Cancel</button>
+                              <input type="file"
+                                  multiple
+                                  accept='image/jpg,image/jpeg,image/png,image/webp'
+                                  className='hidden'
+                                  disabled={totalImages >= MAX_IMAGES}
+                                  onChange={handleImageChange}
+                              />
+                          </label>
+                          <p className='text-xs text-text-muted mt-1'>JPG, PNG, WEBP max {MAX_IMAGES}MB each</p>
+                            </div>
+                      {existingImages.length > 0 && (
+                          <div>
+                              <p className='text-xs text-text-muted mb-1.5'>Current Images</p>
+                              <div className='flex gap-3 flex-wrap'>
+                                  {existingImages.map((img, index) => (
+                                      <div key={`existing-${index}`} className='relative'>
+                                          <img src={img.url} alt="Preview" className='w-20 h-20 rounded-md object-cover  border border-border' />
+                                          <button type="button" onClick={() => removeExistingImage(index)} className='absolute -top-2 -right-2 w-5 h-5 bg-danger text-white rounded-full flex items-center justify-center'>
+                                              <X size={11}/>
+                                          </button>
+                                      </div>
+                                  ))}
+                              </div>
+                          </div>
+                          )}
+                      {newImages.length > 0 && (
+                          <div>
+                              <p className='text-xs text-text-muted mb-1.5'>New Images</p>
+                              <div className='flex gap-3 flex-wrap'>
+                                  {newImages.map((file, index) => (
+                                      <div key={`new-${index}`} className='relative'>
+                                          <img src={URL.createObjectURL(file)} alt="Preview" className='w-20 h-20 object-cover rounded-md border border-border ring-2 ring-primary' />
+                                          <button type="button" onClick={() => removeNewImage(index)} className='absolute -top-2 -right-2 w-5 h-5 bg-danger text-white rounded-full flex items-center justify-center'>
+                                              <X size={11}/>
+                                          </button>
+                                      </div>
+                                  ))}
+                              </div>
+                          </div>
+                          )}
+                                
+                      <div className='flex gap-3'>
+                          <button onClick={handleUpdate} disabled={isLoading} className='bg-primary text-white px-4 py-1 rounded-md disabled:opacity-55 text-sm hover:bg-primary-hover cursor-pointer transition-colors duration-200'>{isLoading ? "Saving..." : "Update"}</button>
+
+                          <button onClick={() => {
+                              setIsEditing(false);
+                              setNewImages([]);
+                              setDeletedImages([]);
+                              setExistingImages(review.images || []);
+                              setComment(review.comment);
+                              setRating(review.rating);
+                          }} className='border border-border px-4 py-1 rounded-md text-sm hover:bg-gray-100 cursor-pointer'>Cancel</button>
                       </div>
                   </div>
 

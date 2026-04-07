@@ -196,7 +196,7 @@ const PlaceDetails = () => {
                       {ratingFilter ? `${totalReviews} review${totalReviews!==1 ?"s":""} with ${ratingFilter}★` :`${totalReviews} review${totalReviews!==1 ? "s":""} total`}
                   </p>
               )}
-            <ReviewList reviews={reviews} isLoading={reviewLoading} />
+            <ReviewList reviews={reviews} isLoading={reviewLoading} placeId={id} />
 
               {/* Pagination */}
 
