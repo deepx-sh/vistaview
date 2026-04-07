@@ -3,21 +3,34 @@ import { useGetPendingOwnersQuery, useReviewOwnerMutation } from '../../features
 import toast from 'react-hot-toast';
 import { FileText } from 'lucide-react';
 import RejectOwnerModal from '../../components/admin/owner/RejectOwnerModal';
-
+import ConfirmModal from '../../components/common/ConfirmModal';
 const AdminOwners = () => {
     const { data: res, isLoading } = useGetPendingOwnersQuery()
     const [reviewOwner, { isLoading: isReviewing }] = useReviewOwnerMutation()
     const [rejectTarget, setRejectTarget] = useState(null)
     
+    const [approveModal, setApproveModal] = useState({
+        isOpen: false,
+        owner:null
+    })
     const owners = res?.data ?? []
-    const handleApprove = async (userId) => {
-        if (!window.confirm("Approve this owner application?")) return
+    const openApproveConfirm = (owner) => {
+        setApproveModal({isOpen:true,owner})
+    }
+
+    const closeApproveConfirm = () => {
+        setApproveModal({isOpen:false,owner:null})
+    }
+    const handleApprove = async () => {
+       
         
         try {
-            await reviewOwner({ userId, status: "approved" }).unwrap()
+            await reviewOwner({ userId:approveModal.owner._id, status: "approved" }).unwrap()
             toast.success("Owner approved")
+            closeApproveConfirm()
         } catch (error) {
             toast.error(error?.data?.message || "Failed to approve")
+            closeApproveConfirm()
         }
     }
 
@@ -110,7 +123,7 @@ const AdminOwners = () => {
 
                           {/* Actions */}
                           <div className='flex gap-3 pt-1'>
-                              <button onClick={() => handleApprove(owner._id)} disabled={isReviewing} className='bg-primary text-white text-sm px-4 py-1.5 rounded-md cursor-pointer disabled:opacity-60 hover:bg-primary-hover transition'>Approve</button>
+                              <button onClick={() => openApproveConfirm(owner)} disabled={isReviewing} className='bg-primary text-white text-sm px-4 py-1.5 rounded-md cursor-pointer disabled:opacity-60 hover:bg-primary-hover transition'>Approve</button>
                               <button onClick={()=>setRejectTarget(owner)} className='border border-red-300 text-red-500 text-sm px-4 py-1.5 rounded-md cursor-pointer hover:bg-red-50 transition'>Reject</button>
                           </div>
                       </div>
@@ -118,6 +131,16 @@ const AdminOwners = () => {
               })}
           </div>
 
+          <ConfirmModal
+              isOpen={approveModal.isOpen}
+              onClose={closeApproveConfirm}
+              onConfirm={handleApprove}
+              isLoading={isReviewing}
+              title={`Approve ${approveModal.owner?.name}`}
+              message="This will grant owner access. They'll be able to list and manage places on VistaView"
+              confirmLabel="Approve Owner"
+              variant="warning"
+          />
           {rejectTarget && (
               <RejectOwnerModal owner={rejectTarget}
                   onClose={() => setRejectTarget(null)}

@@ -2,21 +2,42 @@ import React from 'react'
 import { Link } from 'react-router-dom';
 import { useGetOwnerPlacesQuery, useDeletePlaceMutation } from '../../features/owner/ownerPlaceApi';
 import toast from 'react-hot-toast';
-
+import handleApiError from '../../utils/handleApiError';
+import ConfirmModal from '../../components/common/ConfirmModal';
+import { useState } from 'react';
 const OwnerPlaces = () => {
   const { data, isLoading } = useGetOwnerPlacesQuery();
-  const [deletePlace] = useDeletePlaceMutation();
+  const [deletePlace,{isLoading:isDeleting}] = useDeletePlaceMutation();
 
+
+  const [confirmModal, setConfirmModal] = useState({
+    isOpen: false,
+    placeId: null,
+    placeName:""
+  })
+
+  const openDeleteConfirm = (place) => {
+    setConfirmModal({
+      isOpen: true,
+      placeId: place._id,
+      placeName:place.name
+    })
+  }
+
+  const closeDeleteConfirm = () => {
+    setConfirmModal({isOpen:false,placeId:null,placeName:""})
+  }
   const places = data?.data?.places || [];
 
-  const handleDelete = async (id) => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this place?")
-    if(!confirmDelete) return
+  const handleDelete = async () => {
+    
     try {
-      await deletePlace(id).unwrap();
+      await deletePlace(confirmModal.placeId).unwrap();
       toast.success("Place deleted successfully")
+      closeDeleteConfirm()
     } catch (error) {
-        console.log(error);
+      handleApiError(error, "Failed to delete place")
+      closeDeleteConfirm()
     }
   }
 
@@ -66,10 +87,12 @@ const OwnerPlaces = () => {
                       <td className='p-4'>{place.averageRating?.toFixed(1) || "0.0"}</td>
                       <td className='p-4'><span className={`px-3 py-1 rounded-full text-xs ${place.status === "approved" ? "bg-green-100 text-green-700" : place.status === "pending" ? "bg-yellow-100 text-yellow-700" : "bg-red-100 text-red-700"}`}>{place.status}</span></td>
 
-                      <td className='px-4 flex gap-3'>
-                        <Link to={`/owner/edit-place/${place._id}`} className='text-primary'>Edit</Link>
-                        <button onClick={() => handleDelete(place._id)} className='text-red-600'>Delete</button>
+                      <td className='p-4'>
+                        <div className='flex items-baseline gap-3'>
+                          <Link to={`/owner/edit-place/${place._id}`} className='text-primary'>Edit</Link>
+                        <button onClick={() => openDeleteConfirm(place)} className='text-red-600'>Delete</button>
                         <Link to={`/places/${place._id}`} className='text-gray-600'>View</Link>
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -100,7 +123,7 @@ const OwnerPlaces = () => {
 
                   <div className='flex gap-4 text-sm'>
                     <Link to={`/owner/edit-place/${place._id}`} className='text-primary'>Edit</Link>
-                    <button onClick={() => handleDelete(place._id)} className='text-red-600'>Delete</button>
+                    <button onClick={() => openDeleteConfirm(place)} className='text-red-600'>Delete</button>
                     <Link to={`/places/${place._id}`} className='text-gray-600'>View</Link>
                   </div>
                 </div>
@@ -109,6 +132,19 @@ const OwnerPlaces = () => {
             </div>
           </>
       )}
+
+      {
+        <ConfirmModal
+          isOpen={confirmModal.isOpen}
+          onClose={closeDeleteConfirm}
+          onConfirm={handleDelete}
+          isLoading={isDeleting}
+          title='Delete place?'
+          message={`${confirmModal.placeName} will be permanently deleted along with all its reviews and images. This cannot be undone`}
+          confirmLabel='Delete Place'
+          variant="danger"
+        />
+      }
     </div>
   )
 }

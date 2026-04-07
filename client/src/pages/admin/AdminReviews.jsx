@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { Star, AlertTriangle } from "lucide-react";
 import toast from "react-hot-toast";
-
+import ConfirmModal from "../../components/common/ConfirmModal";
 import { useGetAllReviewsAdminQuery, useAdminDeleteReviewMutation, useRestoreReviewMutation, useHardDeleteReviewMutation } from "../../features/admin/adminApi";
 
 import React from 'react'
+import handleApiError from "../../utils/handleApiError";
 
 const Stars = ({ rating }) => (
     <div className="flex gap-0.5">
@@ -22,23 +23,35 @@ const AdminReviews = () => {
     const [filter, setFilter] = useState("all")
     
     const reviews = res?.data?.reviews ?? []
-    console.log(reviews);
     
+    const [confirmModal, setConfirmModal] = useState({
+        isOpen: false,
+        type: null,
+        reviewId:null
+      })
+    
+    const openConfirm = (type, reviewId) => {
+        setConfirmModal({isOpen:true,type,reviewId})
+    }
+
+    const closeConfirm = () => {
+        setConfirmModal({isOpen:false,type:null,reviewId:null})
+    }
     const filtered = reviews.filter((r) => {
         if (filter === "flagged") return r.spamScore >= 50
         if (filter === "deleted") return r.isDeleted
         return true;
     })
 
-    const handleSoftDelete = async (id) => {
-        if (!window.confirm("Soft-delete this review")) return
-        try {
-            await softDelete(id).unwrap()
-            toast.success("Review soft deleted")
-        } catch (error) {
-            toast.error(error?.data?.message || "Failed to soft delete review")
-        }
-    }
+    // const handleSoftDelete = async (id) => {
+    //     if (!window.confirm("Soft-delete this review")) return
+    //     try {
+    //         await softDelete(id).unwrap()
+    //         toast.success("Review soft deleted")
+    //     } catch (error) {
+    //         toast.error(error?.data?.message || "Failed to soft delete review")
+    //     }
+    // }
 
     const handleRestore = async (id) => {
         try {
@@ -49,17 +62,47 @@ const AdminReviews = () => {
         }
     }
 
-    const handleHardDelete = async (id) => {
-        if (!window.confirm("Permanently delete? This cannot be undone")) return
-        try {
-            await hardDelete(id).unwrap()
+    // const handleHardDelete = async (id) => {
+    //     if (!window.confirm("Permanently delete? This cannot be undone")) return
+    //     try {
+    //         await hardDelete(id).unwrap()
+    //         toast.success("Review permanently deleted")
+    //     } catch (error) {
+    //         toast.error(error?.data?.message || "Failed to hard delete review")
+    //     }
+    // }
+
+    const handleConfirm = async()=> {
+    try {
+        if (confirmModal.type === "soft") {
+            await softDelete(confirmModal.reviewId).unwrap()
+            toast.success("Review soft deleted")
+        } else {
+            await hardDelete(confirmModal.reviewId).unwrap()
             toast.success("Review permanently deleted")
-        } catch (error) {
-            toast.error(error?.data?.message || "Failed to hard delete review")
+        }
+        closeConfirm()
+    } catch (error) {
+        handleApiError(error, "Failed to delete review")
+        closeConfirm()
+    }
+    }
+    if(isLoading) return <p className="text-gray-400 text-center py-20">Loading...</p>
+
+    const modalConfig = {
+        soft: {
+            title: "Soft delete this review?",
+            message: "The review will be hidden from users but can be restored later",
+            confirmLabel: "Soft Delete",
+            variant:"warning"
+        },
+        hard: {
+            title: "Permanently delete this review",
+            message: "This will delete the review and all its images forever. This cannot be undone",
+            confirmLabel: "Delete Forever",
+            variant:"danger"
         }
     }
-
-    if(isLoading) return <p className="text-gray-400 text-center py-20">Loading...</p>
   return (
       <div className="max-w-5xl mx-auto space-y-5">
           <div className="flex items-center justify-between gap-3 flex-wrap">
@@ -113,7 +156,7 @@ const AdminReviews = () => {
 
                       <div className="flex gap-4">
                           {!review.isDeleted ? (
-                              <button onClick={() => handleSoftDelete(review._id)} disabled={isSoftDeleting} className="text-xs text-amber-600 cursor-pointer hover:underline disabled:opacity-50">
+                              <button onClick={() => openConfirm("soft",review._id)} disabled={isSoftDeleting} className="text-xs text-amber-600 cursor-pointer hover:underline disabled:opacity-50">
                                   Soft Delete
                               </button>
                           ) : (
@@ -124,7 +167,7 @@ const AdminReviews = () => {
                                   >Restore</button>
                           )}
 
-                          <button onClick={()=> handleHardDelete(review._id)} disabled={isHardDeleting} className="text-xs cursor-pointer text-red-500 hover:underline disabled:opacity-50">Hard Delete</button>
+                          <button onClick={()=> openConfirm("hard",review._id)} disabled={isHardDeleting} className="text-xs cursor-pointer text-red-500 hover:underline disabled:opacity-50">Hard Delete</button>
                       </div>
                   </div>
               ))}
@@ -133,6 +176,16 @@ const AdminReviews = () => {
                   <p className="text-gray-400 text-sm text-center py-10">No reviews found</p>
               )}
           </div>
+
+          {confirmModal.type && (
+              <ConfirmModal
+                  isOpen={confirmModal.isOpen}
+                  onClose={closeConfirm}
+                  onConfirm={handleConfirm}
+                  isLoading={isSoftDeleting || isHardDeleting}
+                  {...modalConfig[confirmModal.type]}
+              />
+          )}
     </div>
   )
 }
