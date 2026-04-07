@@ -73,7 +73,7 @@ export const searchPlaces = asyncHandler(async (req, res) => {
         dbQuery.sort(sortOptions)
         .skip((Number(page) - 1) * Number(limit))
             .limit(Number(limit)),
-         Place.countDocuments(dbQuery),
+         Place.countDocuments(query),
     ])
     
   
