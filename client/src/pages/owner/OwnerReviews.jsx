@@ -38,7 +38,7 @@ const ReplyForm = ({ defaultValue = "", onSubmit, onCancel, isLoading }) => {
 }
 
 const ReviewCard = ({ review }) => {
-  console.log(review);
+ 
   
   const [mode, setMode] = useState(null)
   

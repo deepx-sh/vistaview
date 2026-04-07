@@ -6,7 +6,7 @@ import React from 'react'
 
 const PublicRoutes = ({children}) => {
     const { isAuthenticated,role } = useSelector((state) => state.auth)
-    console.log(isAuthenticated,role);
+
     
     if (isAuthenticated) {
         if(role==="admin") return <Navigate to="/admin/dashboard" replace/>

@@ -6,7 +6,7 @@ const connectDB = async () => {
             dbName:"vistaview"
         })
 
-        console.log(`MongoDB Connected Successfully: ${conn.connection.host}`);
+        console.log(`MongoDB Connected Successfully`);
         
     } catch (error) {
         console.error("MongoDB connection failed");

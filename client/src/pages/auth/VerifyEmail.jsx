@@ -38,7 +38,7 @@ const VerifyEmail = () => {
             toast.success("Email verified successfully")
             navigate("/login")
         } catch (error) {
-            console.log(error);
+           
             
             toast.error(error?.data?.message || "Verification failed")
         }
