@@ -5,8 +5,8 @@ import { getNotifications, markAsRead, markAllAsRead, deleteNotification, clearA
 const router = express.Router();
 
 router.get("/", authMiddleware, getNotifications);
-router.patch("/:id/read", authMiddleware, markAsRead);
 router.patch("/read-all", authMiddleware, markAllAsRead);
+router.patch("/:id/read", authMiddleware, markAsRead);
 router.delete("/:id", authMiddleware, deleteNotification);
 router.delete("/", authMiddleware, clearAllNotification);
 

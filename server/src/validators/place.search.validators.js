@@ -12,7 +12,7 @@ export const searchPlaceSchema = Joi.object({
     
     minPrice: Joi.number().min(0),
     maxPrice: Joi.number().min(0),
-    
+    isFeatured:Joi.boolean().optional(),
     page: Joi.number().min(1).default(1),
     limit:Joi.number().min(1).max(100).default(10)
 })
