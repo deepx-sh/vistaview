@@ -30,6 +30,12 @@ app.get("/", (req, res) => {
     return res.send("<h1>Welcome to VistaView API</h1>")
 });
 
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    status: 'healthy',
+    timestamp: new Date().toISOString()
+  })
+})
 app.use("/api/v1/auth", authRoutes)
 app.use("/api/v1/places", placeRoutes)
 app.use("/api/v1/users", userRoutes)
