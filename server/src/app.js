@@ -20,7 +20,9 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
     origin: process.env.NODE_ENV==="production" ? process.env.FRONTEND_URL_PROD : process.env.FRONTEND_URL_LOCAL,
-    credentials:true
+    credentials:true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders:['Content-Type','Authorization']
 }));
 
 app.use("/api/v1", generalLimiter)
