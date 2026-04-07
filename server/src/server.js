@@ -17,7 +17,7 @@ const REQUIRED_ENV_VARS = [
     "BREVO_API_KEY",
     "BREVO_SMTP_PASS",
     "BREVO_FROM_EMAIL",
-    // "FRONTEND_URL_PROD"
+    "FRONTEND_URL_PROD"
 ]
 
 const missing = REQUIRED_ENV_VARS.filter((key) => !process.env[key]);
