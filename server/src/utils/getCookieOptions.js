@@ -5,5 +5,6 @@ export const getCookieOptions = (maxAge) => ({
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: isProduction ? isCrossSite ? "none":"lax":"lax",
-    maxAge
+    maxAge,
+    path:"/"
 })
