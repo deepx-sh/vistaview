@@ -10,16 +10,20 @@ import { Toaster } from 'react-hot-toast'
 import "leaflet/dist/leaflet.css"
 import "./utils/leafletIconFix.js"
 import AuthInitializer from './components/common/AuthInitializer';
-
+import ErrorBoundary from './components/common/ErrorBoundary.jsx'
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <Provider store={store}>
-      <AuthInitializer>
+    <ErrorBoundary>
+      <Provider store={store}>
+        <ErrorBoundary>
+           <AuthInitializer>
         <RouterProvider router={router}>
         <App />
         </RouterProvider>
         <Toaster/>
       </AuthInitializer>
+        </ErrorBoundary>
     </Provider>
+    </ErrorBoundary>
   </StrictMode>,
 )

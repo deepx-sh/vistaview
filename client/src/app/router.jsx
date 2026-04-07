@@ -1,5 +1,15 @@
 import { createBrowserRouter } from "react-router-dom";
 import ProtectedRoutes from "../components/common/ProtectedRoutes";
+import ErrorBoundary from "../components/common/ErrorBoundary";
+import SectionErrorFallback from "../components/common/SectionErrorFallback";
+
+const withBoundary = (Component) => (
+  <ErrorBoundary fallback={({ error, reset }) => (
+    <SectionErrorFallback error={error} reset={reset} />
+  )}>
+    <Component/>
+  </ErrorBoundary>
+)
 import Login from "../pages/auth/Login";
 import Register from "../pages/auth/Register";
 import VerifyEmail from "../pages/auth/VerifyEmail";
@@ -43,16 +53,16 @@ export const router = createBrowserRouter([
     path: "/",
     element: <PublicLayout />,
     children: [
-      {index: true,element:<Home/>},
-      {path: "places",element: <Places />},
-      { path: "places/:id", element: <PlaceDetails /> },
-      { path: "/about", element: <About /> },
-      { path: "/contact", element: <Contact /> },
-      { path: "/privacy", element: <Privacy /> },
-      {path:"/terms",element:<Terms/>},
-      {path: "wishlist",element: <ProtectedRoutes><Wishlist /></ProtectedRoutes>},
-      { path: "profile", element: <ProtectedRoutes><Profile /></ProtectedRoutes> },
-      {path:"notifications",element:<ProtectedRoutes><Notifications/></ProtectedRoutes>}
+      {index: true,element:withBoundary(Home)},
+      {path: "places",element: withBoundary(Places)},
+      { path: "places/:id", element: withBoundary(PlaceDetails) },
+      { path: "/about", element: withBoundary(About) },
+      { path: "/contact", element: withBoundary(Contact) },
+      { path: "/privacy", element: withBoundary(Privacy)},
+      {path:"/terms",element:withBoundary(Terms)},
+      { path: "wishlist", element: <ProtectedRoutes>{withBoundary(Wishlist)}</ProtectedRoutes>},
+      { path: "profile", element: <ProtectedRoutes>{withBoundary(Profile)}</ProtectedRoutes> },
+      { path: "notifications", element: <ProtectedRoutes>{withBoundary(Notifications)}</ProtectedRoutes>}
     ],
   },
   {
@@ -63,13 +73,13 @@ export const router = createBrowserRouter([
       </OwnerRoute>
     ),
     children: [
-      {index: true,element: <OwnerDashboard />},
-      {path: "dashboard",element: <OwnerDashboard />},
-      {path: "places",element: <OwnerPlaces />},
-      {path: "add-place",element: <AddPlace />},
-      {path: "edit-place/:id",element: <EditPlace />},
-      {path: "reviews",element: <OwnerReviews />},
-      {path: "analytics",element: <OwnerAnalytics />}
+      {index: true,element: withBoundary(OwnerDashboard)},
+      {path: "dashboard",element: withBoundary(OwnerDashboard)},
+      {path: "places",element:withBoundary(OwnerPlaces)},
+      {path: "add-place",element: withBoundary(AddPlace)},
+      {path: "edit-place/:id",element: withBoundary(EditPlace)},
+      {path: "reviews",element: withBoundary(OwnerReviews)},
+      {path: "analytics",element: withBoundary(OwnerAnalytics)}
     ]
   },
   {
@@ -80,13 +90,13 @@ export const router = createBrowserRouter([
       </AdminRoute>
     ),
     children: [
-      {index:true,element:<AdminDashboard/>},
-      {path:"dashboard",element:<AdminDashboard/>},
-      {path:"users",element:<AdminUsers/>},
-      {path:"places",element:<AdminPlaces/>},
-      {path:"reviews",element:<AdminReviews/>},
-      {path:"owners",element:<AdminOwners/>},
-      {path:"reports",element:<AdminReports/>},
+      {index:true,element:withBoundary(AdminDashboard)},
+      {path:"dashboard",element:withBoundary(AdminDashboard)},
+      {path:"users",element:withBoundary(AdminUsers)},
+      {path:"places",element:withBoundary(AdminPlaces)},
+      {path:"reviews",element:withBoundary(AdminReviews)},
+      {path:"owners",element:withBoundary(AdminOwners)},
+      {path:"reports",element:withBoundary(AdminReports)},
     ]
   },
   {
