@@ -13,16 +13,19 @@ import notificationRoutes from './routes/notifications.routes.js'
 import { ApiError } from './utils/ApiError.js';
 import multer from 'multer';
 import { generalLimiter } from './config/rateLimiter.js';
+import { sanitizeInputs } from './middlewares/sanitize.middleware.js';
 const app = express();
 
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: process.env.NODE_ENV==="production" ? process.env.FRONTEND_URL_PROD : process.env.FRONTEND_URL_LOCAL,
     credentials:true
 }));
 
-app.use("/api/v1",generalLimiter)
+app.use("/api/v1", generalLimiter)
+
+app.use(sanitizeInputs)
 app.get("/", (req, res) => {
     return res.send("<h1>Welcome to VistaView API</h1>")
 });
