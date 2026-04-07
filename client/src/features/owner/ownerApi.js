@@ -13,7 +13,7 @@ export const ownerApi = baseApi.injectEndpoints({
                 method: "POST",
                 body:formData
             }),
-            invalidatesTags:["User"]
+            invalidatesTags:["User","Profile"]
         })
     })
 });

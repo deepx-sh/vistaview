@@ -7,7 +7,9 @@ export const reviewApi = baseApi.injectEndpoints({
                 url: `/reviews/place/${placeId}`,
                 params:{page,limit,rating,sort}
             }),
-            providesTags:["Review"]
+            providesTags: (result, error, { placeId }) => [
+                {type:"Review",id:placeId}
+            ]
         }),
 
         addReview: builder.mutation({
@@ -16,24 +18,33 @@ export const reviewApi = baseApi.injectEndpoints({
                 method: "POST",
                 body:data
             }),
-            invalidatesTags:["Review","Place"]
+            invalidatesTags: (result, error, { placeId }) => [
+                { type: "Review", id: placeId },
+                {type:"Place",id:placeId}
+            ]
         }),
 
         updateReview: builder.mutation({
-            query: ({ reviewId, data }) => ({
+            query: ({ reviewId, data,placeId }) => ({
                 url: `/reviews/${reviewId}`,
                 method: "PUT",
                 body:data
             }),
-            invalidatesTags:["Review","Place"]
+            invalidatesTags: (result, error, { placeId }) => [
+                { type: "Review", id: placeId },
+                {type:"Place",id:placeId}
+            ]
         }),
 
         deleteReview: builder.mutation({
-            query: (reviewId) => ({
+            query: ({reviewId,placeId}) => ({
                 url: `/reviews/${reviewId}`,
                 method: "DELETE",
             }),
-            invalidatesTags:["Review","Place"]
+            invalidatesTags: (result, error, { placeId }) => [
+                { type: "Review", id: placeId },
+                {type:"Place",id:placeId}
+            ]
         }),
         toggleHelpful: builder.mutation({
             query: (reviewId) => ({

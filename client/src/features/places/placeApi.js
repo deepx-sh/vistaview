@@ -7,11 +7,16 @@ export const placeApi = baseApi.injectEndpoints({
                 url: "/places/search",
                 params
             }),
-            providesTags:["Place"]
+            providesTags: (result) =>
+                result?.data?.places ? [
+                    ...result.data.places.map(({ _id }) => ({ type: "Place", id: _id })),
+                    {type:"Place",id:"LIST"}
+                ]
+                :[{type:"Place",id:"LIST"}]
         }),
         getPlaceById: builder.query({
             query: (id) => `/places/${id}`,
-            providesTags:["Place"]
+            providesTags:(result,error,id)=>[{type:"Place",id}]
         }),
         getNearbyPlaces: builder.query({
             query: ({ lat, lng, distance = 20 }) => `/places/nearby?lat=${lat}&lng=${lng}&distance=${distance}`,

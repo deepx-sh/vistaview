@@ -4,7 +4,13 @@ export const ownerPlaceApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getOwnerPlaces: builder.query({
       query: () => "/places/owner",
-      providesTags:["Place"]
+      providesTags: (result) =>
+        result?.data?.data 
+          ? [
+            ...result.data.data.map(({ _id }) => ({ type: "Place", id: _id })),
+            {type:"Place",id:"OWNER_LIST"}
+          ]
+          :[{type:"Place",id:"OWNER_LIST"}]
     }),
 
     deletePlace: builder.mutation({
@@ -12,7 +18,11 @@ export const ownerPlaceApi = baseApi.injectEndpoints({
         url: `places/${id}`,
         method:"DELETE"
       }),
-      invalidatesTags:["Place"]
+      invalidatesTags: (result, error, id) => [
+        { type: "Place", id },
+        { type: "Place", id: "OWNER_LIST" },
+        {type:"Place",id:"LIST"}
+      ]
     }),
 
     createPlace: builder.mutation({
@@ -21,7 +31,10 @@ export const ownerPlaceApi = baseApi.injectEndpoints({
         method: "POST",
         body:formData
       }),
-      invalidatesTags:["Place"]
+      invalidatesTags: [
+        { type: "Place", id: "OWNER_LIST" },
+        {type:"Place",id:"LIST"}
+      ]
     }),
     getOwnerPlace: builder.query({
       query:(id)=>`/places/${id}`
@@ -33,14 +46,23 @@ export const ownerPlaceApi = baseApi.injectEndpoints({
         method: "PUT",
         body:formData
       }),
-      invalidatesTags:["Place"]
+      invalidatesTags: (result, error, { id }) => [
+        { type: "Place", id },
+        {type:"Place",id:"OWNER_LIST"}
+      ]
     }),
     getOwnerReviews: builder.query({
       query: (params) => ({
         url: "/owners/reviews",
         params
       }),
-      providesTags:["Review"]
+      providesTags: (result) =>
+        result?.data?.data
+          ? [
+            ...result.data.data.map(({ _id }) => ({ type: "Review", id: _id })),
+            {type:"Review",id:"OWNER_LIST"}
+          ]
+          :[{type:"Review",id:"OWNER_LIST"}]
     }),
     replyToReview: builder.mutation({
       query: ({ reviewId, text }) => ({
@@ -48,7 +70,10 @@ export const ownerPlaceApi = baseApi.injectEndpoints({
         method: "POST",
         body:{text}
       }),
-      invalidatesTags:["Review"]
+      invalidatesTags: (result, error, { reviewId }) => [
+        { type: "Review", id: reviewId },
+        {type:"Review",id:"OWNER_LIST"}
+      ]
     }),
     updateReply: builder.mutation({
       query: ({ reviewId, text }) => ({
@@ -56,14 +81,20 @@ export const ownerPlaceApi = baseApi.injectEndpoints({
         method: "PUT",
         body:{text}
       }),
-      invalidatesTags:["Review"]
+      invalidatesTags: (result, error, { reviewId }) => [
+        { type: "Review", id: reviewId },
+        {type:"Review",id:"OWNER_LIST"}
+      ]
     }),
     deleteReply: builder.mutation({
       query: (reviewId) => ({
         url: `/owners/reviews/${reviewId}/reply`,
         method:"DELETE"
       }),
-      invalidatesTags:["Review"]
+      invalidatesTags: (result, error, reviewId) => [
+        { type: "Review", id: reviewId },
+        {type:"Reviwe",id:"OWNER_LIST"}
+      ]
     })
   })
 });

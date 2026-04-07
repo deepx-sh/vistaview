@@ -7,7 +7,11 @@ export const reportApi = baseApi.injectEndpoints({
                 url: "/reports",
                 method: "POST",
                 body:data
-            })
+            }),
+            invalidatesTags: (result, error, { targetId }) => [
+                { type: "Review", id: targetId },
+                {type:"Place",id:targetId}
+            ]
         })
     })
 })

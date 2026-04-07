@@ -5,7 +5,7 @@ export const userApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getProfile: builder.query({
       query: () => "/users/me",
-      providesTags:["User"]
+      providesTags:["User","Profile"]
     }),
     
     updateProfile: builder.mutation({
