@@ -33,7 +33,7 @@ export const verifyEmailTemplate = (name,otp) => {
 
             <tr>
               <td style="padding:20px 0;color:#334155;font-size:14px;">
-                Hi , ${safeName}<br /><br />
+                Hi, ${safeName}<br /><br />
                 Thanks for signing up on <b>VistaView</b>.
                 Use the verification code below to complete your registration.
               </td>
