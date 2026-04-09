@@ -14,9 +14,12 @@ import { ApiError } from './utils/ApiError.js';
 import multer from 'multer';
 import { generalLimiter } from './config/rateLimiter.js';
 import { sanitizeInputs } from './middlewares/sanitize.middleware.js';
+import helmet from 'helmet'
 const app = express();
 
 app.set("trust proxy", 1);
+
+app.use(helmet())
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
