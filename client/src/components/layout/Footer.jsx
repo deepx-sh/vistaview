@@ -27,10 +27,10 @@ const Footer = () => {
                           <a href="" className="text-text-muted hover:text-primary transition duration-200">
                               <Instagram size={18}/>
                           </a>
-                          <a href="" className="text-text-muted hover:text-primary transition duration-200">
+                          <a href="https://in.linkedin.com/in/deep-prajapati-63b6491b6" className="text-text-muted hover:text-primary transition duration-200">
                               <Linkedin size={18}/>
                           </a>
-                          <a href="" className="text-text-muted hover:text-primary transition duration-200">
+                          <a href="https://github.com/deepx-sh" className="text-text-muted hover:text-primary transition duration-200">
                               <Github size={18}/>
                           </a>
                       </div>
