@@ -1,6 +1,6 @@
 import React from 'react'
 
-const ReviewCard = ({name}) => {
+const ReviewCard = ({name,content}) => {
   return (
       <div className='bg-background border border-border rounded-lg p-6 text-left'>
           <div className='flex items-center gap-3 mb-3'>
@@ -15,7 +15,7 @@ const ReviewCard = ({name}) => {
           </div>
 
           <p className='text-sm text-text-secondary'>
-              Amazing platform! Found hidden gems I never knew existed. Highly recommended!
+              {content}
           </p>
     </div>
   )

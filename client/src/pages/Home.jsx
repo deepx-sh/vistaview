@@ -145,9 +145,9 @@ const Home = () => {
                   </p>
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                      <ReviewCard name="Deep" />
-                      <ReviewCard name="Madison Beer" />
-                      <ReviewCard name="Taylor Swift"/>
+                      <ReviewCard name="Deep" content="Found a hidden beach in Goa that wasn't on any other platform. Absolutely stunning  and the reviews were spot on"/>
+                      <ReviewCard name="Madison Beer" content="The verified reviews saved me from a bad hotel in Jaipur. Every rating here actually means something, unlike other sites." />
+                      <ReviewCard name="Taylor Swift" content="Planned my entire Himachal trip using only VistaView. Every single recommendation was exactly as described"/>
                   </div>
               </div>
           </section>
