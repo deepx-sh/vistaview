@@ -16,7 +16,6 @@ A full-stack tourism review platform where travelers discover authentic places, 
 - [Environment Variables](#environment-variables)
 - [API Endpoints](#api-endpoints)
 - [Project Structure](#project-structure)
-- [Screenshots](#screenshots)
 
 ---
 
