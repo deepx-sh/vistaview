@@ -52,7 +52,7 @@ const ForgotPassword = () => {
                   )}
 
 
-                  <button type='submit' disabled={isLoading} className='w-full bg-primary hover:bg-primary-hover text-white py-2 rounded-md transition-colors duration-200'>
+                  <button type='submit' disabled={isLoading} className='w-full bg-primary hover:bg-primary-hover cursor-pointer text-white py-2 rounded-md transition-colors duration-200'>
                       {isLoading ?"Sending...":"Send Reset Code"}
                   </button>
               </form>

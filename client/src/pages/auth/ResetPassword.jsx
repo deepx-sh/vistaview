@@ -125,7 +125,7 @@ const ResetPassword = () => {
                               className="w-full px-4 py-2 border border-border rounded-md mt-4 focus:ring-2 focus:outline-none focus:ring-primary"
                           />
 
-                          <button onClick={handleResetPassword} disabled={isLoading} className="w-full mt-6 bg-primary hover:bg-primary-hover text-white py-2 rounded-md">
+                          <button onClick={handleResetPassword} disabled={isLoading} className="w-full mt-6 bg-primary hover:bg-primary-hover cursor-pointer text-white py-2 rounded-md">
                               {isLoading ? "Resetting...":"Reset Password"}
                           </button>
                       </>
